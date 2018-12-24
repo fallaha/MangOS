@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.40629.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Kernel", "Kernel\Kernel.vcxproj", "{0F200861-8424-4C76-B9EA-C9CA9FA75E21}"
+	ProjectSection(ProjectDependencies) = postProject
+		{63D42845-E37B-43EC-8A1A-E9A5D9074C66} = {63D42845-E37B-43EC-8A1A-E9A5D9074C66}
+		{40318AF7-ECB6-434D-8DB7-A47667ED2174} = {40318AF7-ECB6-434D-8DB7-A47667ED2174}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HAL", "HAL\HAL.vcxproj", "{40318AF7-ECB6-434D-8DB7-A47667ED2174}"
+	ProjectSection(ProjectDependencies) = postProject
+		{63D42845-E37B-43EC-8A1A-E9A5D9074C66} = {63D42845-E37B-43EC-8A1A-E9A5D9074C66}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lib", "Lib\Lib.vcxproj", "{63D42845-E37B-43EC-8A1A-E9A5D9074C66}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0F200861-8424-4C76-B9EA-C9CA9FA75E21}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0F200861-8424-4C76-B9EA-C9CA9FA75E21}.Debug|Win32.Build.0 = Debug|Win32
+		{0F200861-8424-4C76-B9EA-C9CA9FA75E21}.Release|Win32.ActiveCfg = Release|Win32
+		{0F200861-8424-4C76-B9EA-C9CA9FA75E21}.Release|Win32.Build.0 = Release|Win32
+		{40318AF7-ECB6-434D-8DB7-A47667ED2174}.Debug|Win32.ActiveCfg = Debug|Win32
+		{40318AF7-ECB6-434D-8DB7-A47667ED2174}.Debug|Win32.Build.0 = Debug|Win32
+		{40318AF7-ECB6-434D-8DB7-A47667ED2174}.Release|Win32.ActiveCfg = Release|Win32
+		{40318AF7-ECB6-434D-8DB7-A47667ED2174}.Release|Win32.Build.0 = Release|Win32
+		{63D42845-E37B-43EC-8A1A-E9A5D9074C66}.Debug|Win32.ActiveCfg = Debug|Win32
+		{63D42845-E37B-43EC-8A1A-E9A5D9074C66}.Debug|Win32.Build.0 = Debug|Win32
+		{63D42845-E37B-43EC-8A1A-E9A5D9074C66}.Release|Win32.ActiveCfg = Release|Win32
+		{63D42845-E37B-43EC-8A1A-E9A5D9074C66}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
