@@ -1,0 +1,293 @@
+; 1397/08 (c) AliFallah 
+bits 16
+org 0x500
+jmp main
+
+
+%include "gdt.inc"
+%include "stdio.inc"
+%include "A20.inc"
+LoadingMsg db "Preparing to load operating system...", 0x0D, 0x0A, 0x00
+KernelName db "KRNL32  EXE",0 ; UPPER Char
+kernel_cluster dw 0
+kernel_sector_size dw 0
+faulterr db "oooh!",0
+Kernelnotfound db "Sorry KERNEL.EXE not Found! :(",0
+
+;*************************************************;
+; OEM Parameter block
+;*************************************************;
+bpbBytesPerSector: DW 512
+bpbSectorsPerCluster: DB 1
+bpbReservedSectors: DW 1
+bpbNumberOfFATs: DB 2
+bpbRootEntries: DW 224
+bpbSectorsPerFAT: DW 9
+bpbSectorsPerTrack: DW 18
+bpbHeadsPerCylinder: DW 2
+
+;*************************************************;
+; Bootloader Entry Point
+;*************************************************;
+
+fault:
+mov si,faulterr
+call Puts16
+cli
+hlt
+
+;******************************************
+;   Load Root
+;******************************************
+loadRoot:
+;Calculate Size sector of Root
+; you mul 224 *[32] that it is wrong
+xor dx,dx
+mov ax, 0x20 ; 32 byte in each entries
+mul word [bpbRootEntries] ; 224
+div word [bpbBytesPerSector] ;512
+push ax ; size of Root directory
+
+;Calculate First Sector 
+mov ax,word [bpbNumberOfFATs]
+mul word [bpbSectorsPerFAT]
+add ax,[bpbReservedSectors]
+call LBA2CHS
+pop ax
+mov bx,0x0
+push ax
+mov ax,0x7c0
+mov es,ax
+pop ax
+
+
+call readSector
+ret
+
+;   Convert LBA to CHS
+LBA2CHS:
+    div word [bpbSectorsPerTrack] ; ax/18 = head
+    mov cl,dl ; number sector
+    add cl,1
+    xor dx,dx
+    div word [bpbHeadsPerCylinder]
+    mov ch,al  ; head/2 = track
+    mov dh,dl ;; number head error rrrrrrrrrrr
+    ret
+
+
+;******************************************
+;   Read Some Sector and Write to ram
+;   al : numbers of sector to read
+;   ch : number Track 1
+;   cl : number sector 4
+;   dh : number head 3
+;*******************************************
+readSector:
+    pusha
+    .reset:
+    mov ah,0
+    mov dl,0
+    int 0x13
+    jc .reset
+    popa
+
+    .read:
+    mov ah, 0x02  ; function number
+    mov dl, 0     ; number Drive (0 : A:\)
+    int 0x13
+    jc fault
+    ret
+
+
+
+;******************************************
+;   LOOKup for Kernel
+;******************************************
+lookUp:
+    mov cx,224
+    push ax
+    mov ax,0x7c0
+    mov es,ax
+    pop ax
+    mov di,0x00
+    .search:
+    push cx 
+    push di
+    mov cx,11
+    mov si,KernelName
+    rep cmpsb
+    jcxz .done
+    pop di
+    pop cx
+    add di,0x20
+    loop .search
+    mov si,Kernelnotfound
+    call Puts16
+    call fault
+    ret
+    .done:
+    pop di ; address file in root
+    pop cx
+    add di,26
+    mov ax,[es:di] ;;;;;;;;;;;;;;;;;;;;; this last Problem mov ax,[di]
+    mov [kernel_cluster], ax
+    ret
+
+;   Load File Allocation Table
+loadFat:
+    mov ax,1
+    xor dx,dx ; error div 
+    call LBA2CHS
+    mov al,[bpbSectorsPerFAT]
+    push ax
+    mov ax,0x5c0
+    mov es,ax
+    pop ax
+    mov bx,0x00
+    call readSector
+    ret
+
+
+
+;*****************************
+; load Kernel
+;*****************************
+loadKernel:
+    push ax
+    mov ax,0x5c0
+    mov es,ax
+    pop ax
+    mov bx,0x2000 ; 0x5c0 : 0x2000 = 0x7c00
+    push bx
+
+    .write:
+    mov ax,[kernel_cluster]
+    add ax,31
+    xor dx,dx
+    call LBA2CHS
+    mov al,1
+    pop bx
+    call readSector
+    add bx,512
+    push bx
+
+    mov ax,[kernel_cluster]
+    mov cx,ax
+    shr cx,1
+    add cx,ax ; dx is index of fat array
+    mov si,0x000 ; 0x500 where the fat loaded!
+    add si,cx   ; realay cx is a index for the Fat table 
+    mov dx,word[es:si]
+    test ax,1 ; it is odd?
+    jnz .odd 
+.even:
+and dx,0000111111111111b
+jmp .done
+
+.odd:
+mov cl,4
+shr dx,cl
+    .done:
+    inc word[kernel_sector_size]
+    mov [kernel_cluster],dx
+    cmp dx,0xFF0
+    jb  .write
+    pop bx
+    ret
+
+
+main:
+; init Segments
+    cli
+    xor ax,ax 
+    mov ds,ax
+    mov es,ax
+    mov ax,0x9000
+    mov ss,ax
+    mov sp,0xFFFF
+    sti 
+
+
+
+
+
+   
+
+; Load Kernel!
+;load_kernel:
+    call loadRoot
+    call lookUp
+    call loadFat
+    call loadKernel
+
+
+
+; init GDT
+    call init_gdt
+
+;   Enable A20
+    call enA20
+
+    ; print initilizing GDT
+	mov	si, LoadingMsg
+	call	Puts16
+
+;goto_pmode:
+    cli
+    mov eax,cr0
+    or eax,1 ; Bit 0 (PE) : Puts the system into protected mode
+    mov cr0,eax
+    jmp 08h:stage3
+
+    ; note : we dont use sti for reEnable interrupt because it occur GPT
+
+
+
+
+
+
+
+
+bits 32
+%include "stdio32.inc"
+wlcome db 0xA,"             Welcome to Modern operating system! :)",0x0A,0
+stage3:
+    mov ax,0x10
+    mov ds,ax
+    mov es,ax
+    mov ss,ax
+    mov esp,0x90000
+
+    cld
+    mov esi,0x7c00
+    mov edi,0x100000
+    xor eax,eax 
+    mov ax,word[kernel_sector_size]
+    mov ecx,128
+    mul cx ; 512/4 (4 because doubleWord Transfer)
+    mov ecx,eax 
+    rep movsd
+
+
+    mov ebx,dword[0x100000+0x3c]
+    mov esi,ebx
+    add esi,0x100000
+    mov edi,PEtext
+    cmpsw 
+    jnz  kernel_error
+    add esi,2+20+4*4 ; Image Base
+    mov ebx,dword[esi]
+    add ebx,0x100000
+    cli
+    jmp ebx
+kernel_error:
+    mov ebx,kernel_PE_error_msg
+    call puts32
+stop:
+    cli
+    hlt
+
+
+PEtext db "PE"
+kernel_PE_error_msg db "Kernel Not Supported!",0
