@@ -107,11 +107,13 @@
       <RuntimeTypeInfo Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</RuntimeTypeInfo>
     </ClCompile>
     <ClCompile Include="panic.cpp" />
+    <ClCompile Include="pmm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugDisplay.h" />
     <ClInclude Include="exception.h" />
     <ClInclude Include="panic.h" />
+    <ClInclude Include="pmm.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>

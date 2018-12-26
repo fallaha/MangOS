@@ -33,6 +33,9 @@
     <ClCompile Include="panic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="pmm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugDisplay.h">
@@ -45,6 +48,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="panic.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="pmm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

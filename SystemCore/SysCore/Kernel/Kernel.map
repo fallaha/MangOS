@@ -1,24 +1,24 @@
  KRNL32
 
- Timestamp is 5c232f73 (Tue Dec 25 23:36:19 2018)
+ Timestamp is 5c2412b0 (Wed Dec 26 15:45:52 2018)
 
  Preferred load address is 00100000
 
  Start         Length     Name                   Class
- 0001:00000000 00000c2fH .text$mn                CODE
- 0002:00000000 000003bcH .rdata                  DATA
+ 0001:00000000 0000106fH .text$mn                CODE
+ 0002:00000000 000004c4H .rdata                  DATA
  0003:00000000 00000018H .data                   DATA
- 0003:00000018 0000086eH .bss                    DATA
+ 0003:00000018 0000087eH .bss                    DATA
  0004:00000000 00000058H .rsrc$01                DATA
  0004:00000060 000002f8H .rsrc$02                DATA
 
   Address         Publics by Value              Rva+Base       Lib:Object
 
- 0000:00000000       ___guard_fids_count        00000000     <absolute>
  0000:00000000       ___guard_fids_table        00000000     <absolute>
- 0000:00000000       ___safe_se_handler_table   00000000     <absolute>
- 0000:00000000       ___safe_se_handler_count   00000000     <absolute>
  0000:00000000       ___guard_flags             00000000     <absolute>
+ 0000:00000000       ___safe_se_handler_count   00000000     <absolute>
+ 0000:00000000       ___guard_fids_count        00000000     <absolute>
+ 0000:00000000       ___safe_se_handler_table   00000000     <absolute>
  0001:00000000       ?DebugPutc@@YAXE@Z         00100400 f   DebugDisplay.obj
  0001:00000090       ?DebugGotoXY@@YAXEE@Z      00100490 f   DebugDisplay.obj
  0001:000000b0       ?DebugClrScreen@@YAXE@Z    001004b0 f   DebugDisplay.obj
@@ -47,35 +47,49 @@
  0001:00000660       ?machine_check_abort@@YAXIII@Z 00100a60 f   exception.obj
  0001:00000680       ?simd_fpu_fault@@YAXIII@Z  00100a80 f   exception.obj
  0001:000006a0       _main                      00100aa0 f   main.obj
- 0001:00000870       ?kernel_panic@@YAXPBDZZ    00100c70 f   panic.obj
- 0001:000008b0       ?get_tick@@YAIXZ           00100cb0 f   HAL:Hal.obj
- 0001:000008c0       ?hal_initialize@@YAXXZ     00100cc0 f   HAL:Hal.obj
- 0001:000008f0       ?intdone@@YAXE@Z           00100cf0 f   HAL:Hal.obj
- 0001:00000900       ?interrupt_disable@@YAXXZ  00100d00 f   HAL:Hal.obj
- 0001:00000910       ?interrupt_enable@@YAXXZ   00100d10 f   HAL:Hal.obj
- 0001:00000920       ?outportb@@YAXGE@Z         00100d20 f   HAL:Hal.obj
- 0001:00000930       ?setvect@@YAXIA6AXXZ@Z     00100d30 f   HAL:Hal.obj
- 0001:00000950       ?cpu_initialize@@YAXXZ     00100d50 f   HAL:cpu.obj
- 0001:00000960       ?IA32_pic_eoi@@YAXE@Z      00100d60 f   HAL:pic.obj
- 0001:00000990       ?IA32_pic_initialize@@YAXEE@Z 00100d90 f   HAL:pic.obj
- 0001:00000a00       ?IA32_pit_get_tick_count@@YAIXZ 00100e00 f   HAL:pit.obj
- 0001:00000a10       ?IA32_pit_initialize@@YAXXZ 00100e10 f   HAL:pit.obj
- 0001:00000a20       ?IA32_pit_irq@@YAXXZ       00100e20 f   HAL:pit.obj
- 0001:00000a40       ?IA32_pit_set_counter@@YAXEGE@Z 00100e40 f   HAL:pit.obj
- 0001:00000ad0       ?idt_default_handler@@YAXXZ 00100ed0 f   HAL:idt.obj
- 0001:00000b00       ?idt_initialize@@YAXG@Z    00100f00 f   HAL:idt.obj
- 0001:00000b60       ?idt_install_ir@@YAXIEGP6AXXZ@Z 00100f60 f   HAL:idt.obj
- 0001:00000ba0       ?gdt_initialize@@YAXXZ     00100fa0 f   HAL:gdt.obj
- 0001:00000c00       ?strcpy@@YAPADPADPBD@Z     00101000 f   Lib:string.obj
- 0001:00000c20       ?strlen@@YAIPBD@Z          00101020 f   Lib:string.obj
- 0002:000003a0       ??_C@_0BM@PLBHKJHJ@Exception?5not?5Define?5now?5?3?$CI?$AA@ 001015a0     HAL:idt.obj
- 0003:00000000       ?video_memory@@3PAGA       00101600     DebugDisplay.obj
- 0003:00000004       ?_color@@3GA               00101604     DebugDisplay.obj
- 0003:00000008       ?bchars@@3PADA             00101608     DebugDisplay.obj
- 0003:00000018       ?_curX@@3EA                00101618     DebugDisplay.obj
- 0003:00000019       ?_curY@@3EA                00101619     DebugDisplay.obj
- 0003:0000001c       ?tbuf@@3PADA               0010161c     DebugDisplay.obj
- 0003:0000003c       ?Debugstr@@3PADA           0010163c     DebugDisplay.obj
+ 0001:00000940       ?kernel_panic@@YAXPBDZZ    00100d40 f   panic.obj
+ 0001:00000980       ?pmm_initialize@@YAXII@Z   00100d80 f   pmm.obj
+ 0001:000009c0       ?pmm_set_region@@YAXII@Z   00100dc0 f   pmm.obj
+ 0001:00000a10       ?pmm_clr_region@@YAXII@Z   00100e10 f   pmm.obj
+ 0001:00000a70       ?pmm_alloc_block@@YAPAXXZ  00100e70 f   pmm.obj
+ 0001:00000ac0       ?pmm_free_block@@YAXPAI@Z  00100ec0 f   pmm.obj
+ 0001:00000af0       ?pmm_alloc_block_s@@YAPAXI@Z 00100ef0 f   pmm.obj
+ 0001:00000b70       ?pmm_free_block_s@@YAXPAII@Z 00100f70 f   pmm.obj
+ 0001:00000bc0       ?pmm_get_memory_size@@YAIXZ 00100fc0 f   pmm.obj
+ 0001:00000bd0       ?pmm_get_max_blocks@@YAIXZ 00100fd0 f   pmm.obj
+ 0001:00000be0       ?pmm_get_free_block_count@@YAIXZ 00100fe0 f   pmm.obj
+ 0001:00000bf0       ?pmm_get_used_block_count@@YAIXZ 00100ff0 f   pmm.obj
+ 0001:00000c00       ?pmm_first_free@@YAHXZ     00101000 f   pmm.obj
+ 0001:00000c50       ?pmm_first_free_s@@YAHI@Z  00101050 f   pmm.obj
+ 0001:00000cd0       ?get_tick@@YAIXZ           001010d0 f   HAL:Hal.obj
+ 0001:00000ce0       ?hal_initialize@@YAXXZ     001010e0 f   HAL:Hal.obj
+ 0001:00000d10       ?intdone@@YAXE@Z           00101110 f   HAL:Hal.obj
+ 0001:00000d20       ?interrupt_disable@@YAXXZ  00101120 f   HAL:Hal.obj
+ 0001:00000d30       ?interrupt_enable@@YAXXZ   00101130 f   HAL:Hal.obj
+ 0001:00000d40       ?outportb@@YAXGE@Z         00101140 f   HAL:Hal.obj
+ 0001:00000d50       ?setvect@@YAXIA6AXXZ@Z     00101150 f   HAL:Hal.obj
+ 0001:00000d70       ?cpu_initialize@@YAXXZ     00101170 f   HAL:cpu.obj
+ 0001:00000d80       ?IA32_pic_eoi@@YAXE@Z      00101180 f   HAL:pic.obj
+ 0001:00000db0       ?IA32_pic_initialize@@YAXEE@Z 001011b0 f   HAL:pic.obj
+ 0001:00000e20       ?IA32_pit_get_tick_count@@YAIXZ 00101220 f   HAL:pit.obj
+ 0001:00000e30       ?IA32_pit_initialize@@YAXXZ 00101230 f   HAL:pit.obj
+ 0001:00000e40       ?IA32_pit_irq@@YAXXZ       00101240 f   HAL:pit.obj
+ 0001:00000e60       ?IA32_pit_set_counter@@YAXEGE@Z 00101260 f   HAL:pit.obj
+ 0001:00000ef0       ?idt_default_handler@@YAXXZ 001012f0 f   HAL:idt.obj
+ 0001:00000f20       ?idt_initialize@@YAXG@Z    00101320 f   HAL:idt.obj
+ 0001:00000f80       ?idt_install_ir@@YAXIEGP6AXXZ@Z 00101380 f   HAL:idt.obj
+ 0001:00000fc0       ?gdt_initialize@@YAXXZ     001013c0 f   HAL:gdt.obj
+ 0001:00001020       ?memset@@YAPAXPAXDI@Z      00101420 f   Lib:string.obj
+ 0001:00001040       ?strcpy@@YAPADPADPBD@Z     00101440 f   Lib:string.obj
+ 0001:00001060       ?strlen@@YAIPBD@Z          00101460 f   Lib:string.obj
+ 0002:000004a8       ??_C@_0BM@PLBHKJHJ@Exception?5not?5Define?5now?5?3?$CI?$AA@ 00101aa8     HAL:idt.obj
+ 0003:00000000       ?video_memory@@3PAGA       00101c00     DebugDisplay.obj
+ 0003:00000004       ?_color@@3GA               00101c04     DebugDisplay.obj
+ 0003:00000008       ?bchars@@3PADA             00101c08     DebugDisplay.obj
+ 0003:00000018       ?_curX@@3EA                00101c18     DebugDisplay.obj
+ 0003:00000019       ?_curY@@3EA                00101c19     DebugDisplay.obj
+ 0003:0000001c       ?tbuf@@3PADA               00101c1c     DebugDisplay.obj
+ 0003:0000003c       ?Debugstr@@3PADA           00101c3c     DebugDisplay.obj
 
  entry point at        0000:00000000
 
@@ -83,36 +97,45 @@
 
  0001:00000368       $LN71                      00100768     DebugDisplay.obj
  0001:0000037c       $LN64                      0010077c     DebugDisplay.obj
- 0002:00000000       $SG2694                    00101200     exception.obj
- 0002:0000000c       $SG2703                    0010120c     exception.obj
- 0002:00000018       $SG2712                    00101218     exception.obj
- 0002:00000024       $SG2721                    00101224     exception.obj
- 0002:00000034       $SG2730                    00101234     exception.obj
- 0002:00000044       $SG2739                    00101244     exception.obj
- 0002:00000058       $SG2748                    00101258     exception.obj
- 0002:00000068       $SG2757                    00101268     exception.obj
- 0002:0000007c       $SG2767                    0010127c     exception.obj
- 0002:0000008c       $SG2777                    0010128c     exception.obj
- 0002:00000098       $SG2787                    00101298     exception.obj
- 0002:000000a8       $SG2797                    001012a8     exception.obj
- 0002:000000b4       $SG2807                    001012b4     exception.obj
- 0002:000000d0       $SG2817                    001012d0     exception.obj
- 0002:000000dc       $SG2826                    001012dc     exception.obj
- 0002:000000e8       $SG2836                    001012e8     exception.obj
- 0002:000000f8       $SG2845                    001012f8     exception.obj
- 0002:00000108       $SG2854                    00101308     exception.obj
- 0002:00000118       $SG2805                    00101318     main.obj
- 0002:0000016c       $SG2806                    0010136c     main.obj
- 0002:000001a0       $SG2808                    001013a0     main.obj
- 0002:000001b0       $SG2809                    001013b0     main.obj
- 0002:00000204       $SG2817                    00101404     main.obj
- 0002:00000230       $SG2818                    00101430     main.obj
- 0002:00000244       $SG2822                    00101444     main.obj
- 0002:00000250       $SG2655                    00101450     panic.obj
- 0002:00000390       $SG2656                    00101590     panic.obj
- 0003:0000005c       __pit_ticks                0010165c     HAL:pit.obj
- 0003:00000060       __idtr                     00101660     HAL:idt.obj
- 0003:00000068       __idt                      00101668     HAL:idt.obj
- 0003:00000868       __gdt                      00101e68     HAL:gdt.obj
- 0003:00000880       __gdtr                     00101e80     HAL:gdt.obj
- 0004:00000060       $R000000                   00102060     Kernel.res
+ 0002:00000000       $SG2694                    00101600     exception.obj
+ 0002:0000000c       $SG2703                    0010160c     exception.obj
+ 0002:00000018       $SG2712                    00101618     exception.obj
+ 0002:00000024       $SG2721                    00101624     exception.obj
+ 0002:00000034       $SG2730                    00101634     exception.obj
+ 0002:00000044       $SG2739                    00101644     exception.obj
+ 0002:00000058       $SG2748                    00101658     exception.obj
+ 0002:00000068       $SG2757                    00101668     exception.obj
+ 0002:0000007c       $SG2767                    0010167c     exception.obj
+ 0002:0000008c       $SG2777                    0010168c     exception.obj
+ 0002:00000098       $SG2787                    00101698     exception.obj
+ 0002:000000a8       $SG2797                    001016a8     exception.obj
+ 0002:000000b4       $SG2807                    001016b4     exception.obj
+ 0002:000000d0       $SG2817                    001016d0     exception.obj
+ 0002:000000dc       $SG2826                    001016dc     exception.obj
+ 0002:000000e8       $SG2836                    001016e8     exception.obj
+ 0002:000000f8       $SG2845                    001016f8     exception.obj
+ 0002:00000108       $SG2854                    00101708     exception.obj
+ 0002:00000118       $SG2828                    00101718     main.obj
+ 0002:0000016c       $SG2829                    0010176c     main.obj
+ 0002:000001a0       $SG2831                    001017a0     main.obj
+ 0002:000001b0       $SG2832                    001017b0     main.obj
+ 0002:00000204       $SG2840                    00101804     main.obj
+ 0002:00000234       $SG2842                    00101834     main.obj
+ 0002:00000248       $SG2843                    00101848     main.obj
+ 0002:000002a8       $SG2846                    001018a8     main.obj
+ 0002:000002c4       $SG2849                    001018c4     main.obj
+ 0002:000002f0       $SG2852                    001018f0     main.obj
+ 0002:0000030c       $SG2854                    0010190c     main.obj
+ 0002:0000034c       $SG2858                    0010194c     main.obj
+ 0002:00000358       $SG2655                    00101958     panic.obj
+ 0002:00000498       $SG2656                    00101a98     panic.obj
+ 0003:0000005c       __pmm_memory_size          00101c5c     pmm.obj
+ 0003:00000060       __pmm_used_blocks          00101c60     pmm.obj
+ 0003:00000064       __pmm_max_blocks           00101c64     pmm.obj
+ 0003:00000068       __pmm_memory_map           00101c68     pmm.obj
+ 0003:0000006c       __pit_ticks                00101c6c     HAL:pit.obj
+ 0003:00000070       __idtr                     00101c70     HAL:idt.obj
+ 0003:00000078       __idt                      00101c78     HAL:idt.obj
+ 0003:00000878       __gdt                      00102478     HAL:gdt.obj
+ 0003:00000890       __gdtr                     00102490     HAL:gdt.obj
+ 0004:00000060       $R000000                   00102660     Kernel.res

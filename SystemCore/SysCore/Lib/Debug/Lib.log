@@ -1,18 +1,9 @@
-﻿Build started 04/10/1397 09:27:41 ب.ظ.
-     1>Project "C:\Users\Ali\Desktop\OperatingSystem\SystemCore\SysCore\Lib\Lib.vcxproj" on node 2 (Rebuild target(s)).
-     1>ClCompile:
-         G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\Include\ /Zi /nologo /W4 /WX- /O2 /Oy /D ARCH_X86 /X /Gm- /MD /Zp1 /GS- /fp:precise /Zc:wchar_t /Zc:forScope /GR- /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt cstd.cpp stdio.cpp string.cpp
-         cstd.cpp
-         stdio.cpp
-         string.cpp
-         Generating Code...
-       Lib:
-         G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"C:\Users\Ali\Desktop\OperatingSystem\SystemCore\SysCore\Debug\Lib.lib" /NOLOGO Debug\cstd.obj
-         Debug\stdio.obj
-         Debug\string.obj
-         Lib.vcxproj -> C:\Users\Ali\Desktop\OperatingSystem\SystemCore\SysCore\Debug\Lib.lib
-     1>Done Building Project "C:\Users\Ali\Desktop\OperatingSystem\SystemCore\SysCore\Lib\Lib.vcxproj" (Rebuild target(s)).
+﻿Build started 05/10/1397 12:49:30 ق.ظ.
+     1>Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Lib\Lib.vcxproj" on node 2 (Build target(s)).
+     1>Lib:
+         Lib.vcxproj -> C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Debug\Lib.lib
+     1>Done Building Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Lib\Lib.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:00.90
+Time Elapsed 00:00:00.75
