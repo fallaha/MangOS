@@ -1,8 +1,12 @@
-﻿Build started 03/10/1397 08:56:24 ب.ظ.
+﻿Build started 04/10/1397 11:36:18 ب.ظ.
      1>Project "C:\Users\Ali\Desktop\OperatingSystem\SystemCore\SysCore\Kernel\Kernel.vcxproj" on node 2 (Build target(s)).
+     1>ClCompile:
+         G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\Include\ /I..\Include /nologo /W4 /WX- /Ox /Oy /D ARCH_X86 /D _DEBUG /X /GF- /Gm- /MD /Zp1 /GS- /fp:precise /Zc:wchar_t /Zc:forScope /GR- /FAs /Fa"Debug\\" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt /Oy main.cpp
+         main.cpp
+     1>c:\users\ali\desktop\operatingsystem\systemcore\syscore\kernel\main.cpp(76): warning C4702: unreachable code
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(1193,5): warning MSB8012: TargetPath(C:\Users\Ali\Desktop\OperatingSystem\SystemCore\SysCore\Debug\Kernel.exe) does not match the Linker's OutputFile property value (A:\KRNL32.EXE). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(1195,5): warning MSB8012: TargetName(Kernel) does not match the Linker's OutputFile property value (KRNL32). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
-     1>Link:
+       Link:
          G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"A:\KRNL32.EXE" /INCREMENTAL:NO /NOLOGO /LIBPATH:..\Lib\ /LIBPATH:..\Debug\ /NODEFAULTLIB /MANIFEST:NO /PDB:"C:\Users\Ali\Desktop\OperatingSystem\SystemCore\SysCore\Debug\Kernel.pdb" /MAP:"Kernel.map" /SUBSYSTEM:NATIVE /Driver /OPT:REF /OPT:ICF /TLBID:1 /ENTRY:"kernel_entry" /BASE:"0x100000" /DYNAMICBASE /FIXED:NO /NXCOMPAT /IMPLIB:"C:\Users\Ali\Desktop\OperatingSystem\SystemCore\SysCore\Debug\Kernel.lib" /MACHINE:X86 /SAFESEH /ALIGN:512 Debug\Kernel.res
          Debug\DebugDisplay.obj
          Debug\entry.obj
@@ -16,4 +20,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:04.76
+Time Elapsed 00:00:00.90

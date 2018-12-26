@@ -1,4 +1,4 @@
-; 1397/08 (c) AliFallah 
+; 1397/08 (c) AliFallah - powerd by : www.brokenthorn.com
 bits 16
 org 0x500
 jmp main
@@ -7,12 +7,42 @@ jmp main
 %include "gdt.inc"
 %include "stdio.inc"
 %include "A20.inc"
+%include "memory.inc"
+%include "multiboot.inc"
 LoadingMsg db "Preparing to load operating system...", 0x0D, 0x0A, 0x00
 KernelName db "KRNL32  EXE",0 ; UPPER Char
 kernel_cluster dw 0
 kernel_sector_size dw 0
 faulterr db "oooh!",0
 Kernelnotfound db "Sorry KERNEL.EXE not Found! :(",0
+mem_size dd 0
+
+boot_info:
+istruc multiboot_info
+	at multiboot_info.flags,			dd 0
+	at multiboot_info.memoryLo,			dd 0
+	at multiboot_info.memoryHi,			dd 0
+	at multiboot_info.bootDevice,		dd 0
+	at multiboot_info.cmdLine,			dd 0
+	at multiboot_info.mods_count,		dd 0
+	at multiboot_info.mods_addr,		dd 0
+	at multiboot_info.syms0,			dd 0
+	at multiboot_info.syms1,			dd 0
+	at multiboot_info.syms2,			dd 0
+	at multiboot_info.mmap_length,		dd 0
+	at multiboot_info.mmap_addr,		dd 0
+	at multiboot_info.drives_length,	dd 0
+	at multiboot_info.drives_addr,		dd 0
+	at multiboot_info.config_table,		dd 0
+	at multiboot_info.bootloader_name,	dd 0
+	at multiboot_info.apm_table,		dd 0
+	at multiboot_info.vbe_control_info,	dd 0
+	at multiboot_info.vbe_mode_info,	dw 0
+	at multiboot_info.vbe_interface_seg,dw 0
+	at multiboot_info.vbe_interface_off,dw 0
+	at multiboot_info.vbe_interface_len,dw 0
+iend
+
 
 ;*************************************************;
 ; OEM Parameter block
@@ -222,7 +252,6 @@ main:
     call loadKernel
 
 
-
 ; init GDT
     call init_gdt
 
@@ -232,6 +261,30 @@ main:
     ; print initilizing GDT
 	mov	si, LoadingMsg
 	call	Puts16
+
+    call get_memory_size
+    mov word[boot_info+multiboot_info.memoryLo],ax
+    mov word[boot_info+multiboot_info.memoryHi],bx
+
+
+;   ;Get and Save Memory Size (KB)
+    ;push eax 
+    ;mov eax,ebx 
+    ;mov bx,64
+    ;mul bx 
+    ;mov ebx,eax 
+    ;pop eax 
+    ;add eax,ebx
+    ;add eax,1024 ; For 1 MB Low Memory (Conventional Memory) 
+    ;mov dword[mem_size],eax  ; Save it
+
+;   Get MemoryMap
+
+   
+	mov		eax, 0x0
+    mov es,ax   ; errror wrong mov ds,ax
+    mov		di, 0x1000
+    call get_memory_map
 
 ;goto_pmode:
     cli
@@ -279,8 +332,14 @@ stage3:
     add esi,2+20+4*4 ; Image Base
     mov ebx,dword[esi]
     add ebx,0x100000
+    mov ebp,ebx
     cli
-    jmp ebx
+    mov dx,word[kernel_sector_size]
+    mov eax,0x2BADB002
+    mov ebx,0
+    push dword boot_info
+
+    call ebp ; in this place last error jmp ebp
 kernel_error:
     mov ebx,kernel_PE_error_msg
     call puts32
@@ -291,3 +350,4 @@ stop:
 
 PEtext db "PE"
 kernel_PE_error_msg db "Kernel Not Supported!",0
+mem_map_buff db 's'

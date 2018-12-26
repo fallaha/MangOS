@@ -10,15 +10,19 @@ INCLUDELIB MSVCRT
 INCLUDELIB OLDNAMES
 
 CONST	SEGMENT
-$SG2760	DB	'    Mango  Operating System is Loading ....             '
+$SG2805	DB	'    Mango  Operating System is Loading ....             '
 	DB	'                        ', 00H
 	ORG $+3
-$SG2761	DB	'we are optimizing th operating system WindowsX!', 0aH, 00H
+$SG2806	DB	'we are optimizing th operating system WindowsX!', 0aH, 00H
 	ORG $+3
-$SG2762	DB	'CTRL+ALT+DEL to restart                                 '
+$SG2808	DB	'ram Amount : %d', 00H
+$SG2809	DB	'CTRL+ALT+DEL to restart                                 '
 	DB	'                        ', 00H
 	ORG $+3
-$SG2769	DB	'Count = %d       ', 00H
+$SG2817	DB	'Base : 0x%x%x and limit 0x%x%x type: %d ', 0aH, 00H
+	ORG $+2
+$SG2818	DB	'Kernel Block : %d ', 0aH, 00H
+$SG2822	DB	'Count = %d', 00H
 CONST	ENDS
 PUBLIC	_main
 EXTRN	?DebugGotoXY@@YAXEE@Z:PROC			; DebugGotoXY
@@ -51,192 +55,270 @@ EXTRN	?simd_fpu_fault@@YAXIII@Z:PROC			; simd_fpu_fault
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\operatingsystem\systemcore\syscore\kernel\main.cpp
 _TEXT	SEGMENT
+_kernel_img_size$ = -4					; size = 4
+_info$ = 8						; size = 4
 _main	PROC
 
-; 7    : 	hal_initialize();
+; 16   : int _cdecl main(multiboot_info* info) {
+
+	push	ecx
+	push	esi
+	push	edi
+
+; 17   : 	uint32_t kernel_img_size;
+; 18   : 	_asm mov word ptr[kernel_img_size], dx /*Get Kernel Image Size form Bootloader*/
+
+	mov	WORD PTR _kernel_img_size$[esp+12], dx
+
+; 19   : 	hal_initialize();
 
 	call	?hal_initialize@@YAXXZ			; hal_initialize
 
-; 8    : 	//! install our exception handlers
-; 9    : 	setvect(0, (void(__cdecl &)(void))divide_by_zero_fault);
+; 20   : 
+; 21   : 	//! install our exception handlers
+; 22   : 	setvect(0, (void(__cdecl &)(void))divide_by_zero_fault);
 
 	push	OFFSET ?divide_by_zero_fault@@YAXIII@Z	; divide_by_zero_fault
 	push	0
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 10   : 	setvect(1, (void(__cdecl &)(void))single_step_trap);
+; 23   : 	setvect(1, (void(__cdecl &)(void))single_step_trap);
 
 	push	OFFSET ?single_step_trap@@YAXIII@Z	; single_step_trap
 	push	1
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 11   : 	setvect(2, (void(__cdecl &)(void))nmi_trap);
+; 24   : 	setvect(2, (void(__cdecl &)(void))nmi_trap);
 
 	push	OFFSET ?nmi_trap@@YAXIII@Z		; nmi_trap
 	push	2
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 12   : 	setvect(3, (void(__cdecl &)(void))breakpoint_trap);
+; 25   : 	setvect(3, (void(__cdecl &)(void))breakpoint_trap);
 
 	push	OFFSET ?breakpoint_trap@@YAXIII@Z	; breakpoint_trap
 	push	3
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 13   : 	setvect(4, (void(__cdecl &)(void))overflow_trap);
+; 26   : 	setvect(4, (void(__cdecl &)(void))overflow_trap);
 
 	push	OFFSET ?overflow_trap@@YAXIII@Z		; overflow_trap
 	push	4
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 14   : 	setvect(5, (void(__cdecl &)(void))bounds_check_fault);
+; 27   : 	setvect(5, (void(__cdecl &)(void))bounds_check_fault);
 
 	push	OFFSET ?bounds_check_fault@@YAXIII@Z	; bounds_check_fault
 	push	5
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 15   : 	setvect(6, (void(__cdecl &)(void))invalid_opcode_fault);
+; 28   : 	setvect(6, (void(__cdecl &)(void))invalid_opcode_fault);
 
 	push	OFFSET ?invalid_opcode_fault@@YAXIII@Z	; invalid_opcode_fault
 	push	6
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 16   : 	setvect(7, (void(__cdecl &)(void))no_device_fault);
+; 29   : 	setvect(7, (void(__cdecl &)(void))no_device_fault);
 
 	push	OFFSET ?no_device_fault@@YAXIII@Z	; no_device_fault
 	push	7
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 	add	esp, 64					; 00000040H
 
-; 17   : 	setvect(8, (void(__cdecl &)(void))double_fault_abort);
+; 30   : 	setvect(8, (void(__cdecl &)(void))double_fault_abort);
 
 	push	OFFSET ?double_fault_abort@@YAXIIII@Z	; double_fault_abort
 	push	8
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 18   : 	setvect(10, (void(__cdecl &)(void))invalid_tss_fault);
+; 31   : 	setvect(10, (void(__cdecl &)(void))invalid_tss_fault);
 
 	push	OFFSET ?invalid_tss_fault@@YAXIIII@Z	; invalid_tss_fault
 	push	10					; 0000000aH
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 19   : 	setvect(11, (void(__cdecl &)(void))no_segment_fault);
+; 32   : 	setvect(11, (void(__cdecl &)(void))no_segment_fault);
 
 	push	OFFSET ?no_segment_fault@@YAXIIII@Z	; no_segment_fault
 	push	11					; 0000000bH
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 20   : 	setvect(12, (void(__cdecl &)(void))stack_fault);
+; 33   : 	setvect(12, (void(__cdecl &)(void))stack_fault);
 
 	push	OFFSET ?stack_fault@@YAXIIII@Z		; stack_fault
 	push	12					; 0000000cH
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 21   : 	setvect(13, (void(__cdecl &)(void))general_protection_fault);
+; 34   : 	setvect(13, (void(__cdecl &)(void))general_protection_fault);
 
 	push	OFFSET ?general_protection_fault@@YAXIIII@Z ; general_protection_fault
 	push	13					; 0000000dH
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 22   : 	setvect(14, (void(__cdecl &)(void))page_fault);
+; 35   : 	setvect(14, (void(__cdecl &)(void))page_fault);
 
 	push	OFFSET ?page_fault@@YAXIIII@Z		; page_fault
 	push	14					; 0000000eH
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 23   : 	setvect(16, (void(__cdecl &)(void))fpu_fault);
+; 36   : 	setvect(16, (void(__cdecl &)(void))fpu_fault);
 
 	push	OFFSET ?fpu_fault@@YAXIII@Z		; fpu_fault
 	push	16					; 00000010H
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 24   : 	setvect(17, (void(__cdecl &)(void))alignment_check_fault);
+; 37   : 	setvect(17, (void(__cdecl &)(void))alignment_check_fault);
 
 	push	OFFSET ?alignment_check_fault@@YAXIIII@Z ; alignment_check_fault
 	push	17					; 00000011H
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 	add	esp, 64					; 00000040H
 
-; 25   : 	setvect(18, (void(__cdecl &)(void))machine_check_abort);
+; 38   : 	setvect(18, (void(__cdecl &)(void))machine_check_abort);
 
 	push	OFFSET ?machine_check_abort@@YAXIII@Z	; machine_check_abort
 	push	18					; 00000012H
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 26   : 	setvect(19, (void(__cdecl &)(void))simd_fpu_fault);
+; 39   : 	setvect(19, (void(__cdecl &)(void))simd_fpu_fault);
 
 	push	OFFSET ?simd_fpu_fault@@YAXIII@Z	; simd_fpu_fault
 	push	19					; 00000013H
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 27   : 	interrupt_enable();
+; 40   : 
+; 41   : 	interrupt_enable(); /*Enabling interrupt*/
 
 	call	?interrupt_enable@@YAXXZ		; interrupt_enable
 
-; 28   : 	DebugClrScreen(0x1f);
+; 42   : 
+; 43   : 	DebugClrScreen(0x1f);
 
 	push	31					; 0000001fH
 	call	?DebugClrScreen@@YAXE@Z			; DebugClrScreen
 
-; 29   : 	DebugSetColor(0x78);
+; 44   : 	DebugSetColor(0x78);
 
 	push	120					; 00000078H
 	call	?DebugSetColor@@YAXG@Z			; DebugSetColor
 
-; 30   : 	DebugPuts("    Mango  Operating System is Loading ....                                     ");
+; 45   : 	DebugPuts("    Mango  Operating System is Loading ....                                     ");
 
-	push	OFFSET $SG2760
+	push	OFFSET $SG2805
 	call	?DebugPuts@@YAXPAD@Z			; DebugPuts
 
-; 31   : 	DebugSetColor(0x19);
+; 46   : 	DebugSetColor(0x19);
 
 	push	25					; 00000019H
 	call	?DebugSetColor@@YAXG@Z			; DebugSetColor
 
-; 32   : 	DebugPuts("we are optimizing th operating system WindowsX!\n");
+; 47   : 	DebugPuts("we are optimizing th operating system WindowsX!\n");
 
-	push	OFFSET $SG2761
+	push	OFFSET $SG2806
 	call	?DebugPuts@@YAXPAD@Z			; DebugPuts
 
-; 33   : 	DebugGotoXY(0, 24);
+; 48   : 
+; 49   : 	unsigned int ram_amount = 1024;
+; 50   : 	ram_amount += info->m_memoryLo;
+; 51   : 	ram_amount += info->m_memoryHi * 64;
+; 52   : 	DebugPrintf("ram Amount : %d", ram_amount);
+
+	mov	eax, DWORD PTR _info$[esp+44]
+	mov	ecx, DWORD PTR [eax+8]
+	add	ecx, 16					; 00000010H
+	shl	ecx, 6
+	add	ecx, DWORD PTR [eax+4]
+	push	ecx
+	push	OFFSET $SG2808
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+
+; 53   : 
+; 54   : 	DebugGotoXY(0, 24);
 
 	push	24					; 00000018H
 	push	0
 	call	?DebugGotoXY@@YAXEE@Z			; DebugGotoXY
 
-; 34   : 	DebugSetColor(0x78);
+; 55   : 	DebugSetColor(0x78);
 
 	push	120					; 00000078H
 	call	?DebugSetColor@@YAXG@Z			; DebugSetColor
 
-; 35   : 	DebugPuts("CTRL+ALT+DEL to restart                                                         ");
+; 56   : 	DebugPuts("CTRL+ALT+DEL to restart                                                         ");
 
-	push	OFFSET $SG2762
+	push	OFFSET $SG2809
 	call	?DebugPuts@@YAXPAD@Z			; DebugPuts
-	add	esp, 52					; 00000034H
-	npad	2
+
+; 57   : 
+; 58   : 
+; 59   : 	memory_region *mem_mep = (memory_region*)0x1000;
+; 60   : 	DebugGotoXY(0, 13);
+
+	push	13					; 0000000dH
+	push	0
+	call	?DebugGotoXY@@YAXEE@Z			; DebugGotoXY
+	add	esp, 68					; 00000044H
+	mov	esi, 4104				; 00001008H
+
+; 61   : 	for (int i = 0; i < 15; i++){
+
+	xor	edi, edi
+$LL6@main:
+
+; 62   : 		if (i>0 && mem_mep[i].startLow == 0)
+
+	test	edi, edi
+	jle	SHORT $LN3@main
+	cmp	DWORD PTR [esi-8], 0
+	je	SHORT $LN11@main
+$LN3@main:
+
+; 63   : 			break;
+; 64   : 		DebugPrintf("Base : 0x%x%x and limit 0x%x%x type: %d \n",
+; 65   : 			mem_mep[i].startHigh, mem_mep[i].startLow, mem_mep[i].sizeHigh, mem_mep[i].sizeLow,
+; 66   : 			mem_mep[i].type);
+
+	push	DWORD PTR [esi+8]
+	push	DWORD PTR [esi]
+	push	DWORD PTR [esi+4]
+	push	DWORD PTR [esi-8]
+	push	DWORD PTR [esi-4]
+	push	OFFSET $SG2817
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+	add	esi, 24					; 00000018H
+	add	esp, 24					; 00000018H
+	inc	edi
+	cmp	esi, 4464				; 00001170H
+	jl	SHORT $LL6@main
+$LN11@main:
+
+; 67   : 	}
+; 68   : 	
+; 69   : 	DebugPrintf("Kernel Block : %d \n", kernel_img_size);
+
+	push	DWORD PTR _kernel_img_size$[esp+12]
+	push	OFFSET $SG2818
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+	add	esp, 8
 $LL2@main:
 
-; 36   : 	//INT(16);
-; 37   : 	int a = 0;
-; 38   : 	int b = 1;
-; 39   : 	int c = 0;
-; 40   : 	c = b / a;
-; 41   : 	for (;;){
-; 42   : 		DebugGotoXY(0, 12);
+; 70   : 
+; 71   : 	for (;;){
+; 72   : 		DebugGotoXY(0, 12);
 
 	push	12					; 0000000cH
 	push	0
 	call	?DebugGotoXY@@YAXEE@Z			; DebugGotoXY
 
-; 43   : 		DebugPrintf("Count = %d       ", get_tick());
+; 73   : 		DebugPrintf("Count = %d", get_tick());
 
 	call	?get_tick@@YAIXZ			; get_tick
 	push	eax
-	push	OFFSET $SG2769
+	push	OFFSET $SG2822
 	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
 	add	esp, 16					; 00000010H
 
-; 44   : 	}
+; 74   : 	}
 
 	jmp	SHORT $LL2@main
 _main	ENDP

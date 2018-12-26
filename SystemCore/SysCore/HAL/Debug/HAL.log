@@ -1,8 +1,11 @@
-﻿Build started 02/10/1397 12:39:27 ق.ظ.
-     1>Project "C:\Users\Ali\Desktop\OperatingSystem\SystemCore\SysCore\HAL\HAL.vcxproj" on node 2 (Build target(s)).
+﻿Build started 04/10/1397 09:27:42 ب.ظ.
+     1>Project "C:\Users\Ali\Desktop\OperatingSystem\SystemCore\SysCore\HAL\HAL.vcxproj" on node 2 (Rebuild target(s)).
      1>ClCompile:
-         G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\Include /Zi /nologo /W4 /WX- /O2 /Oy /D ARCH_X86 /D _DEBUG /X /Gm- /MD /Zp1 /GS- /fp:precise /Zc:wchar_t /Zc:forScope /GR- /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt gdt.cpp pit.cpp
+         G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\Include /Zi /nologo /W4 /WX- /O2 /Oy /D ARCH_X86 /D _DEBUG /X /Gm- /MD /Zp1 /GS- /fp:precise /Zc:wchar_t /Zc:forScope /GR- /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt cpu.cpp gdt.cpp idt.cpp pic.cpp pit.cpp
+         cpu.cpp
          gdt.cpp
+         idt.cpp
+         pic.cpp
          pit.cpp
      1>pit.cpp(68): warning C4310: cast truncates constant value
          Generating Code...
@@ -16,8 +19,8 @@
          Debug\pic.obj
          Debug\pit.obj
          HAL.vcxproj -> C:\Users\Ali\Desktop\OperatingSystem\SystemCore\SysCore\Debug\HAL.lib
-     1>Done Building Project "C:\Users\Ali\Desktop\OperatingSystem\SystemCore\SysCore\HAL\HAL.vcxproj" (Build target(s)).
+     1>Done Building Project "C:\Users\Ali\Desktop\OperatingSystem\SystemCore\SysCore\HAL\HAL.vcxproj" (Rebuild target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:06.26
+Time Elapsed 00:00:01.75

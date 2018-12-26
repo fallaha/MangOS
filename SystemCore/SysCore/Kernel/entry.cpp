@@ -1,8 +1,10 @@
+#include <stdint.h>
+#include <bootinfo.h> 
 
-extern int _cdecl main();
+extern int _cdecl main(multiboot_info* info);
 
 // boot Loader start from here
-int kernel_entry(){
+int _cdecl kernel_entry(multiboot_info* info){
 #ifdef ARCH_X86
 	// Set register
 	_asm {
@@ -15,7 +17,7 @@ int kernel_entry(){
 	}
 #endif
 	
-	main();
+	main(info);
 
 #ifdef ARCH_X86
 	_asm {
