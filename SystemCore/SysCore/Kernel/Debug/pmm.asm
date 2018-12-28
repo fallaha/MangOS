@@ -19,7 +19,7 @@ PUBLIC	?pmm_initialize@@YAXII@Z			; pmm_initialize
 PUBLIC	?pmm_set_region@@YAXII@Z			; pmm_set_region
 PUBLIC	?pmm_clr_region@@YAXII@Z			; pmm_clr_region
 PUBLIC	?pmm_alloc_block@@YAPAXXZ			; pmm_alloc_block
-PUBLIC	?pmm_free_block@@YAXPAI@Z			; pmm_free_block
+PUBLIC	?pmm_free_block@@YAXPAX@Z			; pmm_free_block
 PUBLIC	?pmm_alloc_block_s@@YAPAXI@Z			; pmm_alloc_block_s
 PUBLIC	?pmm_free_block_s@@YAXPAII@Z			; pmm_free_block_s
 PUBLIC	?pmm_get_memory_size@@YAIXZ			; pmm_get_memory_size
@@ -306,11 +306,11 @@ _TEXT	ENDS
 _TEXT	SEGMENT
 ?pmm_get_used_block_count@@YAIXZ PROC			; pmm_get_used_block_count
 
-; 161  : 	return _pmm_used_blocks;
+; 162  : 	return _pmm_used_blocks;
 
 	mov	eax, DWORD PTR __pmm_used_blocks
 
-; 162  : }
+; 163  : }
 
 	ret	0
 ?pmm_get_used_block_count@@YAIXZ ENDP			; pmm_get_used_block_count
@@ -320,12 +320,12 @@ _TEXT	ENDS
 _TEXT	SEGMENT
 ?pmm_get_free_block_count@@YAIXZ PROC			; pmm_get_free_block_count
 
-; 158  : 	return _pmm_max_blocks-_pmm_used_blocks;
+; 159  : 	return _pmm_max_blocks-_pmm_used_blocks;
 
 	mov	eax, DWORD PTR __pmm_max_blocks
 	sub	eax, DWORD PTR __pmm_used_blocks
 
-; 159  : }
+; 160  : }
 
 	ret	0
 ?pmm_get_free_block_count@@YAIXZ ENDP			; pmm_get_free_block_count
@@ -335,11 +335,11 @@ _TEXT	ENDS
 _TEXT	SEGMENT
 ?pmm_get_max_blocks@@YAIXZ PROC				; pmm_get_max_blocks
 
-; 155  : 	return _pmm_max_blocks;
+; 156  : 	return _pmm_max_blocks;
 
 	mov	eax, DWORD PTR __pmm_max_blocks
 
-; 156  : }
+; 157  : }
 
 	ret	0
 ?pmm_get_max_blocks@@YAIXZ ENDP				; pmm_get_max_blocks
@@ -349,11 +349,11 @@ _TEXT	ENDS
 _TEXT	SEGMENT
 ?pmm_get_memory_size@@YAIXZ PROC			; pmm_get_memory_size
 
-; 152  : 	return _pmm_memory_size;
+; 153  : 	return _pmm_memory_size;
 
 	mov	eax, DWORD PTR __pmm_memory_size
 
-; 153  : }
+; 154  : }
 
 	ret	0
 ?pmm_get_memory_size@@YAIXZ ENDP			; pmm_get_memory_size
@@ -365,24 +365,24 @@ _pa$ = 8						; size = 4
 _count$ = 12						; size = 4
 ?pmm_free_block_s@@YAXPAII@Z PROC			; pmm_free_block_s
 
-; 140  : 
-; 141  : 	physical_addr addr = (physical_addr)pa;
-; 142  : 	int frame = addr / PMM_BLOCK_SIZE;
+; 141  : 
+; 142  : 	physical_addr addr = (physical_addr)pa;
+; 143  : 	int frame = addr / PMM_BLOCK_SIZE;
 
 	mov	eax, DWORD PTR _pa$[esp-4]
 	push	edi
 
-; 143  : 
-; 144  : 	for (uint32_t i = 0; i < count; i++)
+; 144  : 
+; 145  : 	for (uint32_t i = 0; i < count; i++)
 
 	mov	edi, DWORD PTR _count$[esp]
 	shr	eax, 12					; 0000000cH
 	test	edi, edi
 	je	SHORT $LN12@pmm_free_b
 
-; 140  : 
-; 141  : 	physical_addr addr = (physical_addr)pa;
-; 142  : 	int frame = addr / PMM_BLOCK_SIZE;
+; 141  : 
+; 142  : 	physical_addr addr = (physical_addr)pa;
+; 143  : 	int frame = addr / PMM_BLOCK_SIZE;
 
 	push	ebx
 	push	ebp
@@ -392,7 +392,7 @@ _count$ = 12						; size = 4
 	npad	5
 $LL3@pmm_free_b:
 
-; 145  : 		pmm_map_clr_block(frame + i);
+; 146  : 		pmm_map_clr_block(frame + i);
 
 	mov	ecx, eax
 	mov	edx, 1
@@ -411,14 +411,14 @@ $LL3@pmm_free_b:
 	pop	ebx
 $LN12@pmm_free_b:
 
-; 146  : 
-; 147  : 	_pmm_used_blocks -= count;
+; 147  : 
+; 148  : 	_pmm_used_blocks -= count;
 
 	sub	DWORD PTR __pmm_used_blocks, edi
 	pop	edi
 
-; 148  : 
-; 149  : }
+; 149  : 
+; 150  : }
 
 	ret	0
 ?pmm_free_block_s@@YAXPAII@Z ENDP			; pmm_free_block_s
@@ -429,8 +429,8 @@ _TEXT	SEGMENT
 _count$ = 8						; size = 4
 ?pmm_alloc_block_s@@YAPAXI@Z PROC			; pmm_alloc_block_s
 
-; 121  : 
-; 122  : 	if (pmm_get_free_block_count() <= 0)
+; 122  : 
+; 123  : 	if (pmm_get_free_block_count() <= 0)
 
 	mov	eax, DWORD PTR __pmm_max_blocks
 	push	ebx
@@ -439,16 +439,16 @@ _count$ = 8						; size = 4
 	jne	SHORT $LN5@pmm_alloc_
 	pop	ebx
 
-; 136  : 
-; 137  : }
+; 137  : 
+; 138  : }
 
 	ret	0
 $LN5@pmm_alloc_:
 	push	ebp
 
-; 123  : 		return 0;
-; 124  : 
-; 125  : 	int first_frame = pmm_first_free_s(count);
+; 124  : 		return 0;
+; 125  : 
+; 126  : 	int first_frame = pmm_first_free_s(count);
 
 	mov	ebp, DWORD PTR _count$[esp+4]
 	push	edi
@@ -457,27 +457,27 @@ $LN5@pmm_alloc_:
 	mov	edi, eax
 	add	esp, 4
 
-; 126  : 
-; 127  : 	if (first_frame == -1)
+; 127  : 
+; 128  : 	if (first_frame == -1)
 
 	cmp	edi, -1
 	jne	SHORT $LN4@pmm_alloc_
 
-; 128  : 		return 0;
+; 129  : 		return 0;
 
 	pop	edi
 	pop	ebp
 	xor	eax, eax
 	pop	ebx
 
-; 136  : 
-; 137  : }
+; 137  : 
+; 138  : }
 
 	ret	0
 $LN4@pmm_alloc_:
 
-; 129  : 
-; 130  : 	for (uint32_t i = 0; i < count; i++)
+; 130  : 
+; 131  : 	for (uint32_t i = 0; i < count; i++)
 
 	test	ebp, ebp
 	je	SHORT $LN1@pmm_alloc_
@@ -488,7 +488,7 @@ $LN4@pmm_alloc_:
 	npad	3
 $LL3@pmm_alloc_:
 
-; 131  : 		pmm_map_set_block(first_frame + i);
+; 132  : 		pmm_map_set_block(first_frame + i);
 
 	mov	eax, esi
 	mov	ecx, esi
@@ -506,16 +506,16 @@ $LL3@pmm_alloc_:
 	pop	esi
 $LN1@pmm_alloc_:
 
-; 132  : 
-; 133  : 	physical_addr addr = first_frame * PMM_BLOCK_SIZE;
+; 133  : 
+; 134  : 	physical_addr addr = first_frame * PMM_BLOCK_SIZE;
 
 	shl	edi, 12					; 0000000cH
 
-; 134  : 	_pmm_used_blocks += count;
+; 135  : 	_pmm_used_blocks += count;
 
 	add	ebx, ebp
 
-; 135  : 	return (void*)addr;
+; 136  : 	return (void*)addr;
 
 	mov	eax, edi
 	mov	DWORD PTR __pmm_used_blocks, ebx
@@ -523,8 +523,8 @@ $LN1@pmm_alloc_:
 	pop	ebp
 	pop	ebx
 
-; 136  : 
-; 137  : }
+; 137  : 
+; 138  : }
 
 	ret	0
 ?pmm_alloc_block_s@@YAPAXI@Z ENDP			; pmm_alloc_block_s
@@ -533,18 +533,18 @@ _TEXT	ENDS
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\pmm.cpp
 _TEXT	SEGMENT
 _pa$ = 8						; size = 4
-?pmm_free_block@@YAXPAI@Z PROC				; pmm_free_block
+?pmm_free_block@@YAXPAX@Z PROC				; pmm_free_block
 
-; 113  : 	physical_addr addr = (physical_addr)pa;
-; 114  : 	int frame = addr / PMM_BLOCK_SIZE;
+; 114  : 	physical_addr addr = (physical_addr)pa;
+; 115  : 	int frame = addr / PMM_BLOCK_SIZE;
 
 	mov	ecx, DWORD PTR _pa$[esp-4]
 
-; 115  : 	pmm_map_clr_block(frame);
+; 116  : 	pmm_map_clr_block(frame);
 
 	mov	eax, DWORD PTR __pmm_memory_map
 
-; 116  : 	_pmm_used_blocks--;
+; 117  : 	_pmm_used_blocks--;
 
 	dec	DWORD PTR __pmm_used_blocks
 	shr	ecx, 12					; 0000000cH
@@ -557,11 +557,11 @@ _pa$ = 8						; size = 4
 	not	eax
 	and	DWORD PTR [edx], eax
 
-; 117  : 
-; 118  : }
+; 118  : 
+; 119  : }
 
 	ret	0
-?pmm_free_block@@YAXPAI@Z ENDP				; pmm_free_block
+?pmm_free_block@@YAXPAX@Z ENDP				; pmm_free_block
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\pmm.cpp

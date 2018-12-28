@@ -3,6 +3,7 @@
 #include "exception.h"
 #include <bootinfo.h>
 #include "pmm.h"
+#include "vmm.h"
 
 //! format of a memory region
 struct memory_region {
@@ -96,12 +97,20 @@ int _cdecl main(multiboot_info* info) {
 	pmm_free_block(p);
 	pmm_free_block_s(p2, 2);
 
+	//for (;;){
+	//	DebugGotoXY(0, 23);
+	//	DebugPrintf("Count = %d", get_tick());
+	//}
 
-	for (;;){
-		DebugGotoXY(0, 23);
-		DebugPrintf("Count = %d", get_tick());
+	vmm_initialize();
+	vmm_map_page((void*)0xB8000, (void*)0x2000000);
+	_asm {
+		mov ebx, 0x2000000
+		mov [ebx], 'a'
 	}
-
+	for (;;);
+	_asm cli
+	_asm hlt
 	return 0;
 }
 

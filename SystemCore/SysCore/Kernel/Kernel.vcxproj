@@ -108,6 +108,7 @@
     </ClCompile>
     <ClCompile Include="panic.cpp" />
     <ClCompile Include="pmm.cpp" />
+    <ClCompile Include="vmm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugDisplay.h" />
@@ -115,6 +116,7 @@
     <ClInclude Include="panic.h" />
     <ClInclude Include="pmm.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="vmm.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Kernel.rc" />

@@ -95,7 +95,7 @@ void pmm_clr_region(uint32_t base, uint32_t limit){
 	/*why?*/
 	pmm_map_set_block(0);
 }
-
+/*Return Physical Address of Frame*/
 void* pmm_alloc_block(){
 	if (pmm_get_free_block_count() <= 0)
 		return 0;
@@ -109,7 +109,8 @@ void* pmm_alloc_block(){
 
 }
 
-void pmm_free_block(physical_addr *pa){
+/*Get Physical Address and change to frame Number */
+void pmm_free_block(void *pa){
 	physical_addr addr = (physical_addr)pa;
 	int frame = addr / PMM_BLOCK_SIZE;
 	pmm_map_clr_block(frame);
