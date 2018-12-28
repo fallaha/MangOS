@@ -304,6 +304,7 @@ main:
 
 bits 32
 %include "stdio32.inc"
+%include "paging.inc"
 wlcome db 0xA,"             Welcome to Modern operating system! :)",0x0A,0
 stage3:
     mov ax,0x10
@@ -322,6 +323,7 @@ stage3:
     mov ecx,eax 
     rep movsd
 
+    call paging_init
 
     mov ebx,dword[0x100000+0x3c]
     mov esi,ebx

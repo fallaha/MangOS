@@ -74,7 +74,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <EntryPointSymbol>kernel_entry</EntryPointSymbol>
-      <BaseAddress>0x100000</BaseAddress>
+      <BaseAddress>0xC0000000</BaseAddress>
       <FixedBaseAddress>false</FixedBaseAddress>
       <AdditionalOptions>/ALIGN:512 %(AdditionalOptions)</AdditionalOptions>
       <IgnoreAllDefaultLibraries>true</IgnoreAllDefaultLibraries>
