@@ -49,7 +49,7 @@
       <Optimization>Full</Optimization>
       <SDLCheck>
       </SDLCheck>
-      <AdditionalIncludeDirectories>..\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Include;..\keyboard;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat />
       <OmitFramePointers>true</OmitFramePointers>
       <PreprocessorDefinitions>ARCH_X86;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -68,7 +68,7 @@
       </GenerateDebugInformation>
       <OutputFile>A:\KRNL32.EXE</OutputFile>
       <AdditionalLibraryDirectories>..\Lib\;..\Debug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies />
+      <AdditionalDependencies>Keyboard.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Native</SubSystem>
       <Driver>Driver</Driver>
       <OptimizeReferences>true</OptimizeReferences>

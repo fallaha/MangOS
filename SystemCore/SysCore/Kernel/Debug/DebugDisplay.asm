@@ -65,17 +65,17 @@ _base$ = 12						; size = 4
 _buf$ = 16						; size = 4
 ?itoa_s@@YAXHIPAD@Z PROC				; itoa_s
 
-; 90   : 	if (base > 16) return;
+; 92   : 	if (base > 16) return;
 
 	mov	edx, DWORD PTR _base$[esp-4]
 	cmp	edx, 16					; 00000010H
 	ja	SHORT $LN3@itoa_s
 
-; 91   : 	if (i < 0) {
+; 93   : 	if (i < 0) {
 
 	mov	eax, DWORD PTR _i$[esp-4]
 
-; 92   : 		*buf++ = '-';
+; 94   : 		*buf++ = '-';
 
 	mov	ecx, DWORD PTR _buf$[esp-4]
 	test	eax, eax
@@ -83,13 +83,13 @@ _buf$ = 16						; size = 4
 	mov	BYTE PTR [ecx], 45			; 0000002dH
 	inc	ecx
 
-; 93   : 		i *= -1;
+; 95   : 		i *= -1;
 
 	neg	eax
 $LN1@itoa_s:
 
-; 94   : 	}
-; 95   : 	itoa(i, base, buf);
+; 96   : 	}
+; 97   : 	itoa(i, base, buf);
 
 	mov	DWORD PTR _buf$[esp-4], ecx
 	mov	DWORD PTR _base$[esp-4], edx
@@ -97,7 +97,7 @@ $LN1@itoa_s:
 	jmp	?itoa@@YAXIIPAD@Z			; itoa
 $LN3@itoa_s:
 
-; 96   : }
+; 98   : }
 
 	ret	0
 ?itoa_s@@YAXHIPAD@Z ENDP				; itoa_s
@@ -110,15 +110,15 @@ _base$ = 12						; size = 4
 _buf$ = 16						; size = 4
 ?itoa@@YAXIIPAD@Z PROC					; itoa
 
-; 66   : void itoa(unsigned i, unsigned base, char* buf) {
+; 68   : void itoa(unsigned i, unsigned base, char* buf) {
 
 	push	esi
 
-; 67   : 	int pos = 0;
-; 68   : 	int opos = 0;
-; 69   : 	int top = 0;
-; 70   : 
-; 71   : 	if (i == 0 || base > 16) {
+; 69   : 	int pos = 0;
+; 70   : 	int opos = 0;
+; 71   : 	int top = 0;
+; 72   : 
+; 73   : 	if (i == 0 || base > 16) {
 
 	mov	esi, DWORD PTR _i$[esp]
 	xor	ecx, ecx
@@ -130,12 +130,12 @@ _buf$ = 16						; size = 4
 	ja	SHORT $LN6@itoa
 $LL5@itoa:
 
-; 73   : 		buf[1] = '\0';
-; 74   : 		return;
-; 75   : 	}
-; 76   : 
-; 77   : 	while (i != 0) {
-; 78   : 		tbuf[pos] = bchars[i % base];
+; 75   : 		buf[1] = '\0';
+; 76   : 		return;
+; 77   : 	}
+; 78   : 
+; 79   : 	while (i != 0) {
+; 80   : 		tbuf[pos] = bchars[i % base];
 
 	mov	eax, esi
 	xor	edx, edx
@@ -144,13 +144,13 @@ $LL5@itoa:
 	mov	al, BYTE PTR ?bchars@@3PADA[edx]
 	mov	BYTE PTR ?tbuf@@3PADA[ecx], al
 
-; 79   : 		pos++;
+; 81   : 		pos++;
 
 	inc	ecx
 	test	esi, esi
 	jne	SHORT $LL5@itoa
 
-; 83   : 	for (opos = 0; opos<top; pos--, opos++) {
+; 85   : 	for (opos = 0; opos<top; pos--, opos++) {
 
 	mov	esi, DWORD PTR _buf$[esp+4]
 	mov	edi, ecx
@@ -158,14 +158,14 @@ $LL5@itoa:
 	test	edi, edi
 	jle	SHORT $LN1@itoa
 
-; 80   : 		i /= base;
-; 81   : 	}
-; 82   : 	top = pos--;
+; 82   : 		i /= base;
+; 83   : 	}
+; 84   : 	top = pos--;
 
 	lea	edx, DWORD PTR ?tbuf@@3PADA[ecx-1]
 $LL3@itoa:
 
-; 84   : 		buf[opos] = tbuf[pos];
+; 86   : 		buf[opos] = tbuf[pos];
 
 	mov	cl, BYTE PTR [edx]
 	lea	edx, DWORD PTR [edx-1]
@@ -176,25 +176,25 @@ $LL3@itoa:
 $LN1@itoa:
 	pop	edi
 
-; 85   : 	}
-; 86   : 	buf[opos] = 0;
+; 87   : 	}
+; 88   : 	buf[opos] = 0;
 
 	mov	BYTE PTR [eax+esi], 0
 	pop	esi
 
-; 87   : }
+; 89   : }
 
 	ret	0
 $LN6@itoa:
 
-; 72   : 		buf[0] = '0';
+; 74   : 		buf[0] = '0';
 
 	mov	eax, DWORD PTR _buf$[esp+4]
 	pop	edi
 	pop	esi
 	mov	WORD PTR [eax], 48			; 00000030H
 
-; 87   : }
+; 89   : }
 
 	ret	0
 ?itoa@@YAXIIPAD@Z ENDP					; itoa
@@ -206,24 +206,24 @@ tv443 = -4						; size = 4
 _str$ = 8						; size = 4
 ?DebugPrintf@@YAHPBDZZ PROC				; DebugPrintf
 
-; 100  : int DebugPrintf(const char* str, ...) {
+; 102  : int DebugPrintf(const char* str, ...) {
 
 	push	ecx
 	push	ebp
 
-; 101  : 
-; 102  : 	if (!str)
+; 103  : 
+; 104  : 	if (!str)
 
 	mov	ebp, DWORD PTR _str$[esp+4]
 	test	ebp, ebp
 	jne	SHORT $LN15@DebugPrint
 
-; 103  : 		return 0;
+; 105  : 		return 0;
 
 	xor	eax, eax
 	pop	ebp
 
-; 170  : }
+; 172  : }
 
 	pop	ecx
 	ret	0
@@ -232,8 +232,8 @@ $LN15@DebugPrint:
 	push	esi
 	push	edi
 
-; 107  : 	size_t i;
-; 108  : 	for (i = 0; i<strlen(str); i++) {
+; 109  : 	size_t i;
+; 110  : 	for (i = 0; i<strlen(str); i++) {
 
 	push	ebp
 	xor	esi, esi
@@ -242,42 +242,42 @@ $LN15@DebugPrint:
 	test	eax, eax
 	je	$LN12@DebugPrint
 
-; 104  : 
-; 105  : 	va_list		args;
-; 106  : 	va_start(args, str);
+; 106  : 
+; 107  : 	va_list		args;
+; 108  : 	va_start(args, str);
 
 	lea	ecx, DWORD PTR _str$[esp+16]
 	mov	DWORD PTR tv443[esp+20], ecx
 	npad	3
 $LL14@DebugPrint:
 
-; 109  : 
-; 110  : 		switch (str[i]) {
+; 111  : 
+; 112  : 		switch (str[i]) {
 
 	mov	al, BYTE PTR [esi+ebp]
 	cmp	al, 37					; 00000025H
 	je	SHORT $LN9@DebugPrint
 
-; 157  : 			}
-; 158  : 
-; 159  : 			break;
+; 159  : 			}
 ; 160  : 
-; 161  : 		default:
-; 162  : 			DebugPutc(str[i]);
+; 161  : 			break;
+; 162  : 
+; 163  : 		default:
+; 164  : 			DebugPutc(str[i]);
 
 	push	eax
 	call	?DebugPutc@@YAXE@Z			; DebugPutc
 	add	esp, 4
 
-; 163  : 			break;
+; 165  : 			break;
 
 	jmp	$LN13@DebugPrint
 $LN9@DebugPrint:
 
-; 111  : 
-; 112  : 		case '%':
 ; 113  : 
-; 114  : 			switch (str[i + 1]) {
+; 114  : 		case '%':
+; 115  : 
+; 116  : 			switch (str[i + 1]) {
 
 	movsx	eax, BYTE PTR [esi+ebp+1]
 	add	eax, -88				; ffffffa8H
@@ -287,11 +287,11 @@ $LN9@DebugPrint:
 	jmp	DWORD PTR $LN71@DebugPrint[eax*4]
 $LN6@DebugPrint:
 
-; 115  : 
-; 116  : 				/*** characters ***/
-; 117  : 			case 'c': {
-; 118  : 				char c = va_arg(args, char);
-; 119  : 				DebugPutc(c);
+; 117  : 
+; 118  : 				/*** characters ***/
+; 119  : 			case 'c': {
+; 120  : 				char c = va_arg(args, char);
+; 121  : 				DebugPutc(c);
 
 	movzx	eax, BYTE PTR [ecx+4]
 	add	ecx, 4
@@ -299,18 +299,18 @@ $LN6@DebugPrint:
 	mov	DWORD PTR tv443[esp+24], ecx
 	call	?DebugPutc@@YAXE@Z			; DebugPutc
 
-; 120  : 				i++;		// go to next character
-; 121  : 				break;
+; 122  : 				i++;		// go to next character
+; 123  : 				break;
 
 	jmp	$LN68@DebugPrint
 $LN5@DebugPrint:
 
-; 122  : 			}
-; 123  : 
-; 124  : 					  /*** address of ***/
-; 125  : 			case 's': {
-; 126  : 				int c = (int&)va_arg(args, char);
-; 127  : 				strcpy(Debugstr, (const char*)c);
+; 124  : 			}
+; 125  : 
+; 126  : 					  /*** address of ***/
+; 127  : 			case 's': {
+; 128  : 				int c = (int&)va_arg(args, char);
+; 129  : 				strcpy(Debugstr, (const char*)c);
 
 	push	DWORD PTR [ecx+4]
 	add	ecx, 4
@@ -318,29 +318,29 @@ $LN5@DebugPrint:
 	mov	DWORD PTR tv443[esp+28], ecx
 	call	?strcpy@@YAPADPADPBD@Z			; strcpy
 
-; 128  : 				DebugPuts(Debugstr);
+; 130  : 				DebugPuts(Debugstr);
 
 	push	OFFSET ?Debugstr@@3PADA			; Debugstr
 	call	?DebugPuts@@YAXPAD@Z			; DebugPuts
 	add	esp, 12					; 0000000cH
 
-; 129  : 				i++;		// go to next character
-; 130  : 				break;
+; 131  : 				i++;		// go to next character
+; 132  : 				break;
 
 	jmp	$LN69@DebugPrint
 $LN4@DebugPrint:
 
-; 131  : 			}
-; 132  : 
-; 133  : 					  /*** integers ***/
-; 134  : 			case 'd':
-; 135  : 			case 'i': {
-; 136  : 				int c = va_arg(args, int);
+; 133  : 			}
+; 134  : 
+; 135  : 					  /*** integers ***/
+; 136  : 			case 'd':
+; 137  : 			case 'i': {
+; 138  : 				int c = va_arg(args, int);
 
 	add	ecx, 4
 
-; 137  : 
-; 138  : 				itoa_s(c, 10, Debugstr);
+; 139  : 
+; 140  : 				itoa_s(c, 10, Debugstr);
 
 	mov	ebx, OFFSET ?Debugstr@@3PADA		; Debugstr
 	mov	DWORD PTR tv443[esp+20], ecx
@@ -385,20 +385,20 @@ $LN22@DebugPrint:
 $LN27@DebugPrint:
 	mov	WORD PTR [ebx], 48			; 00000030H
 
-; 139  : 				DebugPuts(Debugstr);
-; 140  : 				i++;		// go to next character
-; 141  : 				break;
+; 141  : 				DebugPuts(Debugstr);
+; 142  : 				i++;		// go to next character
+; 143  : 				break;
 
 	jmp	SHORT $LN42@DebugPrint
 $LN3@DebugPrint:
 
-; 142  : 			}
-; 143  : 
-; 144  : 					  /*** display in hex ***/
-; 145  : 			case 'X':
-; 146  : 			case 'x': {
-; 147  : 				int c = va_arg(args, int);
-; 148  : 				itoa_s(c, 16, Debugstr);
+; 144  : 			}
+; 145  : 
+; 146  : 					  /*** display in hex ***/
+; 147  : 			case 'X':
+; 148  : 			case 'x': {
+; 149  : 				int c = va_arg(args, int);
+; 150  : 				itoa_s(c, 16, Debugstr);
 
 	mov	eax, DWORD PTR [ecx+4]
 	add	ecx, 4
@@ -442,7 +442,7 @@ $LN40@DebugPrint:
 	mov	WORD PTR [edi], 48			; 00000030H
 $LN42@DebugPrint:
 
-; 149  : 				DebugPuts(Debugstr);
+; 151  : 				DebugPuts(Debugstr);
 
 	push	OFFSET ?Debugstr@@3PADA			; Debugstr
 	call	?DebugPuts@@YAXPAD@Z			; DebugPuts
@@ -450,13 +450,13 @@ $LN68@DebugPrint:
 	add	esp, 4
 $LN69@DebugPrint:
 
-; 150  : 				i++;		// go to next character
+; 152  : 				i++;		// go to next character
 
 	inc	esi
 $LN13@DebugPrint:
 
-; 107  : 	size_t i;
-; 108  : 	for (i = 0; i<strlen(str); i++) {
+; 109  : 	size_t i;
+; 110  : 	for (i = 0; i<strlen(str); i++) {
 
 	push	ebp
 	inc	esi
@@ -468,19 +468,19 @@ $LN13@DebugPrint:
 $LN12@DebugPrint:
 	pop	edi
 
-; 164  : 		}
-; 165  : 
-; 166  : 	}
+; 166  : 		}
 ; 167  : 
-; 168  : 	va_end(args);
-; 169  : 	return i;
+; 168  : 	}
+; 169  : 
+; 170  : 	va_end(args);
+; 171  : 	return i;
 
 	mov	eax, esi
 	pop	esi
 	pop	ebx
 	pop	ebp
 
-; 170  : }
+; 172  : }
 
 	pop	ecx
 	ret	0
@@ -489,17 +489,17 @@ $LN2@DebugPrint:
 	pop	esi
 	pop	ebx
 
-; 151  : 				break;
-; 152  : 			}
-; 153  : 
-; 154  : 			default:
-; 155  : 				va_end(args);
-; 156  : 				return 1;
+; 153  : 				break;
+; 154  : 			}
+; 155  : 
+; 156  : 			default:
+; 157  : 				va_end(args);
+; 158  : 				return 1;
 
 	mov	eax, 1
 	pop	ebp
 
-; 170  : }
+; 172  : }
 
 	pop	ecx
 	ret	0
@@ -552,11 +552,11 @@ _TEXT	SEGMENT
 _s$ = 8							; size = 4
 ?DebugPuts@@YAXPAD@Z PROC				; DebugPuts
 
-; 56   : void DebugPuts(char * s){
+; 58   : void DebugPuts(char * s){
 
 	push	esi
 
-; 57   : 	while (*s)
+; 59   : 	while (*s)
 
 	mov	esi, DWORD PTR _s$[esp]
 	mov	dl, BYTE PTR [esi]
@@ -565,32 +565,31 @@ _s$ = 8							; size = 4
 	mov	al, BYTE PTR ?_curX@@3EA		; _curX
 	push	ebx
 	mov	bl, BYTE PTR ?_curY@@3EA		; _curY
-	npad	5
-$LL2@DebugPuts:
+$LN26@DebugPuts:
 
-; 58   : 		DebugPutc(*s++);
+; 60   : 		DebugPutc(*s++);
 
 	mov	ecx, DWORD PTR ?_color@@3GA		; _color
 	shl	ecx, 8
 	movzx	ecx, cx
 	cmp	dl, 10					; 0000000aH
-	je	SHORT $LN21@DebugPuts
+	je	SHORT $LN22@DebugPuts
 	cmp	dl, 8
 	jne	SHORT $LN12@DebugPuts
 	test	al, al
 	je	SHORT $LN6@DebugPuts
 	dec	al
-	jmp	SHORT $LN22@DebugPuts
+	jmp	SHORT $LN23@DebugPuts
 $LN12@DebugPuts:
 	cmp	dl, 13					; 0000000dH
 	jne	SHORT $LN10@DebugPuts
 	xor	al, al
-	jmp	SHORT $LN23@DebugPuts
+	jmp	SHORT $LN24@DebugPuts
 $LN10@DebugPuts:
 	cmp	dl, 9
 	jne	SHORT $LN8@DebugPuts
 	add	al, 8
-	jmp	SHORT $LN22@DebugPuts
+	jmp	SHORT $LN23@DebugPuts
 $LN8@DebugPuts:
 	cmp	dl, 32					; 00000020H
 	jb	SHORT $LN6@DebugPuts
@@ -606,27 +605,27 @@ $LN8@DebugPuts:
 	mov	al, BYTE PTR ?_curX@@3EA		; _curX
 	mov	bl, BYTE PTR ?_curY@@3EA		; _curY
 	inc	al
-$LN22@DebugPuts:
+$LN23@DebugPuts:
 	mov	BYTE PTR ?_curX@@3EA, al		; _curX
 $LN6@DebugPuts:
 	cmp	al, 80					; 00000050H
 	jb	SHORT $LN5@DebugPuts
-$LN21@DebugPuts:
+$LN22@DebugPuts:
 	xor	al, al
 	inc	bl
 	mov	BYTE PTR ?_curY@@3EA, bl		; _curY
-$LN23@DebugPuts:
+$LN24@DebugPuts:
 	mov	BYTE PTR ?_curX@@3EA, al		; _curX
 $LN5@DebugPuts:
 	mov	dl, BYTE PTR [esi+1]
 	inc	esi
 	test	dl, dl
-	jne	SHORT $LL2@DebugPuts
+	jne	SHORT $LN26@DebugPuts
 	pop	ebx
 $LN1@DebugPuts:
 	pop	esi
 
-; 59   : }
+; 61   : }
 
 	ret	0
 ?DebugPuts@@YAXPAD@Z ENDP				; DebugPuts
@@ -637,12 +636,12 @@ _TEXT	SEGMENT
 _color$ = 8						; size = 2
 ?DebugSetColor@@YAXG@Z PROC				; DebugSetColor
 
-; 38   : 	_color = color;
+; 40   : 	_color = color;
 
 	mov	eax, DWORD PTR _color$[esp-4]
 	mov	WORD PTR ?_color@@3GA, ax		; _color
 
-; 39   : }
+; 41   : }
 
 	ret	0
 ?DebugSetColor@@YAXG@Z ENDP				; DebugSetColor
@@ -653,15 +652,15 @@ _TEXT	SEGMENT
 _bgcolor$ = 8						; size = 1
 ?DebugClrScreen@@YAXE@Z PROC				; DebugClrScreen
 
-; 41   : void DebugClrScreen(unsigned char bgcolor){
+; 43   : void DebugClrScreen(unsigned char bgcolor){
 
 	mov	eax, DWORD PTR _bgcolor$[esp-4]
 
-; 42   : 	DebugGotoXY(0, 0);
-; 43   : 	uint16_t *loc;
-; 44   : 	loc = video_memory;
-; 45   : 	for (int i = 0; i < 25 * 80; i++)
-; 46   : 		loc[i] = ' ' | (bgcolor << 8);
+; 44   : 	DebugGotoXY(0, 0);
+; 45   : 	uint16_t *loc;
+; 46   : 	loc = video_memory;
+; 47   : 	for (int i = 0; i < 25 * 80; i++)
+; 48   : 		loc[i] = ' ' | (bgcolor << 8);
 
 	mov	ecx, 1000				; 000003e8H
 	movzx	eax, al
@@ -678,7 +677,7 @@ _bgcolor$ = 8						; size = 1
 	rep stosd
 	pop	edi
 
-; 47   : }
+; 49   : }
 
 	ret	0
 ?DebugClrScreen@@YAXE@Z ENDP				; DebugClrScreen
@@ -690,18 +689,18 @@ _x$ = 8							; size = 1
 _y$ = 12						; size = 1
 ?DebugGotoXY@@YAXEE@Z PROC				; DebugGotoXY
 
-; 51   : 	_curX = x;
+; 53   : 	_curX = x;
 
 	mov	eax, DWORD PTR _x$[esp-4]
 	mov	BYTE PTR ?_curX@@3EA, al		; _curX
 
-; 52   : 	_curY = y;
+; 54   : 	_curY = y;
 
 	mov	eax, DWORD PTR _y$[esp-4]
 	mov	BYTE PTR ?_curY@@3EA, al		; _curY
 
-; 53   : 
-; 54   : }
+; 55   : 
+; 56   : }
 
 	ret	0
 ?DebugGotoXY@@YAXEE@Z ENDP				; DebugGotoXY
@@ -712,48 +711,54 @@ _TEXT	SEGMENT
 _ch$ = 8						; size = 1
 ?DebugPutc@@YAXE@Z PROC					; DebugPutc
 
-; 13   : 	uint16_t attribute = _color << 8;
+; 13   : 	if (!ch)
+
+	mov	cl, BYTE PTR _ch$[esp-4]
+	test	cl, cl
+	je	$LN1@DebugPutc
+
+; 14   : 		return;
+; 15   : 	uint16_t attribute = _color << 8;
 
 	mov	eax, DWORD PTR ?_color@@3GA		; _color
 	shl	eax, 8
-	movzx	ecx, ax
+	movzx	eax, ax
 
-; 14   : 	if (ch == 0x0A){ /*next Line*/
+; 16   : 	if (ch == 0x0A){ /*next Line*/
 
-	mov	al, BYTE PTR _ch$[esp-4]
-	cmp	al, 10					; 0000000aH
-	je	SHORT $LN14@DebugPutc
+	cmp	cl, 10					; 0000000aH
+	je	SHORT $LN15@DebugPutc
 
-; 15   : 		_curX = 0;
-; 16   : 		_curY++;
-; 17   : 	}
-; 18   : 	else if (ch == 0x08 && _curX) /*BackSpace*/
+; 17   : 		_curX = 0;
+; 18   : 		_curY++;
+; 19   : 	}
+; 20   : 	else if (ch == '\b' && _curX) /*BackSpace*/
 
-	cmp	al, 8
+	cmp	cl, 8
 	jne	SHORT $LN8@DebugPutc
 	mov	al, BYTE PTR ?_curX@@3EA		; _curX
 	test	al, al
 	je	SHORT $LN2@DebugPutc
 
-; 19   : 		_curX--;
+; 21   : 		_curX--;
 
 	dec	al
 	mov	BYTE PTR ?_curX@@3EA, al		; _curX
 	jmp	SHORT $LN2@DebugPutc
 $LN8@DebugPutc:
 
-; 20   : 	else if (ch == '\r') /*return*/
+; 22   : 	else if (ch == '\r') /*return*/
 
-	cmp	al, 13					; 0000000dH
-	je	SHORT $LN15@DebugPutc
+	cmp	cl, 13					; 0000000dH
+	je	SHORT $LN16@DebugPutc
 
-; 21   : 		_curX = 0;
-; 22   : 	else if (ch == 0x09)
+; 23   : 		_curX = 0;
+; 24   : 	else if (ch == 0x09)
 
-	cmp	al, 9
+	cmp	cl, 9
 	jne	SHORT $LN4@DebugPutc
 
-; 23   : 		_curX += 8;
+; 25   : 		_curX += 8;
 
 	mov	al, BYTE PTR ?_curX@@3EA		; _curX
 	add	al, 8
@@ -761,17 +766,17 @@ $LN8@DebugPutc:
 	jmp	SHORT $LN2@DebugPutc
 $LN4@DebugPutc:
 
-; 24   : 	else if (ch >= ' '){ /*ASSCI : 32 */
+; 26   : 	else if (ch >= ' '){ /*ASSCI : 32 */
 
-	cmp	al, 32					; 00000020H
-	jb	SHORT $LN13@DebugPutc
+	cmp	cl, 32					; 00000020H
+	jb	SHORT $LN14@DebugPutc
 
-; 25   : 		uint16_t * location = (uint16_t *)(video_memory + (_curX + _curY * 80));
-; 26   : 		*location = ch | attribute;
+; 27   : 		uint16_t * location = (uint16_t *)(video_memory + (_curX + _curY * 80));
+; 28   : 		*location = ch | attribute;
 
-	movzx	edx, al
+	movzx	edx, cl
+	or	dx, ax
 	movzx	eax, BYTE PTR ?_curY@@3EA		; _curY
-	or	dx, cx
 	lea	ecx, DWORD PTR [eax+eax*4]
 	movzx	eax, BYTE PTR ?_curX@@3EA		; _curX
 	shl	ecx, 4
@@ -779,37 +784,37 @@ $LN4@DebugPutc:
 	mov	eax, DWORD PTR ?video_memory@@3PAGA	; video_memory
 	mov	WORD PTR [eax+ecx*2], dx
 
-; 27   : 		_curX++;
+; 29   : 		_curX++;
 
 	mov	al, BYTE PTR ?_curX@@3EA		; _curX
 	inc	al
 	mov	BYTE PTR ?_curX@@3EA, al		; _curX
 	jmp	SHORT $LN2@DebugPutc
-$LN13@DebugPutc:
+$LN14@DebugPutc:
 	mov	al, BYTE PTR ?_curX@@3EA		; _curX
 $LN2@DebugPutc:
 
-; 28   : 	}
-; 29   : 
-; 30   : 	if (_curX >= 80){
+; 30   : 	}
+; 31   : 
+; 32   : 	if (_curX >= 80){
 
 	cmp	al, 80					; 00000050H
 	jb	SHORT $LN1@DebugPutc
-$LN14@DebugPutc:
-
-; 32   : 		_curY++;
-
-	inc	BYTE PTR ?_curY@@3EA			; _curY
 $LN15@DebugPutc:
 
-; 31   : 		_curX = 0;
+; 34   : 		_curY++;
+
+	inc	BYTE PTR ?_curY@@3EA			; _curY
+$LN16@DebugPutc:
+
+; 33   : 		_curX = 0;
 
 	mov	BYTE PTR ?_curX@@3EA, 0			; _curX
 $LN1@DebugPutc:
 
-; 33   : 	}
-; 34   : 
-; 35   : }
+; 35   : 	}
+; 36   : 
+; 37   : }
 
 	ret	0
 ?DebugPutc@@YAXE@Z ENDP					; DebugPutc

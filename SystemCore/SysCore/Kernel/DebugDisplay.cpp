@@ -10,12 +10,14 @@ uint16_t _color = 0x1f;	/*Current Color*/
 
 /*	Display a character */
 void DebugPutc(unsigned char ch){
+	if (!ch)
+		return;
 	uint16_t attribute = _color << 8;
 	if (ch == 0x0A){ /*next Line*/
 		_curX = 0;
 		_curY++;
 	}
-	else if (ch == 0x08 && _curX) /*BackSpace*/
+	else if (ch == '\b' && _curX) /*BackSpace*/
 		_curX--;
 	else if (ch == '\r') /*return*/
 		_curX = 0;

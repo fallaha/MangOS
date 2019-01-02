@@ -18,14 +18,15 @@ $SG2655	DB	'We apologize, MOS has encountered a problem and has been'
 	DB	'lease report the following information and restart your compu'
 	DB	'ter.', 0aH, 09H, 09H, 09H, 09H, 09H, '  The system has been h'
 	DB	'alted.', 0aH, 0aH, 00H
-$SG2656	DB	'*** STOP: %s', 00H
+$SG2656	DB	'%s', 00H
+	ORG $+1
+$SG2657	DB	'*** STOP: %s', 00H
 CONST	ENDS
 PUBLIC	?kernel_panic@@YAXPBDZZ				; kernel_panic
 EXTRN	?interrupt_disable@@YAXXZ:PROC			; interrupt_disable
 EXTRN	?DebugGotoXY@@YAXEE@Z:PROC			; DebugGotoXY
 EXTRN	?DebugClrScreen@@YAXE@Z:PROC			; DebugClrScreen
 EXTRN	?DebugSetColor@@YAXG@Z:PROC			; DebugSetColor
-EXTRN	?DebugPuts@@YAXPAD@Z:PROC			; DebugPuts
 EXTRN	?DebugPrintf@@YAHPBDZZ:PROC			; DebugPrintf
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\panic.cpp
@@ -71,18 +72,20 @@ _fmt$ = 8						; size = 4
 	push	31					; 0000001fH
 	call	?DebugSetColor@@YAXG@Z			; DebugSetColor
 
-; 35   : 	DebugPuts(disclamer);
+; 35   : 	//DebugPuts(disclamer);
+; 36   : 	DebugPrintf("%s", disclamer);
 
 	push	OFFSET $SG2655
-	call	?DebugPuts@@YAXPAD@Z			; DebugPuts
-
-; 36   : 
-; 37   : 	DebugPrintf("*** STOP: %s", fmt);
-
-	push	DWORD PTR _fmt$[esp+16]
 	push	OFFSET $SG2656
 	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
-	add	esp, 28					; 0000001cH
+
+; 37   : 	DebugPrintf("*** STOP: %s", fmt);
+
+	push	DWORD PTR _fmt$[esp+20]
+	push	OFFSET $SG2657
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+	add	esp, 32					; 00000020H
+	npad	4
 $LL2@kernel_pan:
 
 ; 38   : 

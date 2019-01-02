@@ -9,37 +9,11 @@
 INCLUDELIB MSVCRT
 INCLUDELIB OLDNAMES
 
-CONST	SEGMENT
-$SG2880	DB	'    Mango  Operating System is Loading ....             '
-	DB	'                        ', 00H
-	ORG $+3
-$SG2881	DB	'we are optimizing th operating system WindowsX!', 0aH, 00H
-	ORG $+3
-$SG2883	DB	'ram Amount : %d', 00H
-$SG2884	DB	'CTRL+ALT+DEL to restart                                 '
-	DB	'                        ', 00H
-	ORG $+3
-$SG2892	DB	'Base Frame : %d  and limit Block %d type: %d ', 0aH, 00H
-	ORG $+1
-$SG2894	DB	'Kernel Block : %d ', 0aH, 00H
-$SG2895	DB	0aH, 'pmm regions initialized: %i allocation blocks; used'
-	DB	' or reserved blocks: %i', 0aH, 'free blocks: %i', 0aH, 00H
-	ORG $+3
-$SG2898	DB	0aH, 'p allocated at frame : %d', 00H
-	ORG $+1
-$SG2901	DB	0aH, 'allocated 2 blocks for p2 at frame : %d', 00H
-	ORG $+3
-$SG2904	DB	0aH, 'p allocated at frame : %d', 00H
-	ORG $+1
-$SG2906	DB	0aH, 'Unallocated p to free block 1. p is reallocated to '
-	DB	'frame : %d', 00H
-CONST	ENDS
+PUBLIC	?kernel_initialize@@YAHPAUmultiboot_info@@@Z	; kernel_initialize
 PUBLIC	_main
+EXTRN	?DebugPutc@@YAXE@Z:PROC				; DebugPutc
 EXTRN	?DebugGotoXY@@YAXEE@Z:PROC			; DebugGotoXY
 EXTRN	?DebugClrScreen@@YAXE@Z:PROC			; DebugClrScreen
-EXTRN	?DebugSetColor@@YAXG@Z:PROC			; DebugSetColor
-EXTRN	?DebugPuts@@YAXPAD@Z:PROC			; DebugPuts
-EXTRN	?DebugPrintf@@YAHPBDZZ:PROC			; DebugPrintf
 EXTRN	?hal_initialize@@YAXXZ:PROC			; hal_initialize
 EXTRN	?setvect@@YAXIA6AXXZ@Z:PROC			; setvect
 EXTRN	?interrupt_enable@@YAXXZ:PROC			; interrupt_enable
@@ -64,430 +38,298 @@ EXTRN	?simd_fpu_fault@@YAXIII@Z:PROC			; simd_fpu_fault
 EXTRN	?pmm_initialize@@YAXII@Z:PROC			; pmm_initialize
 EXTRN	?pmm_set_region@@YAXII@Z:PROC			; pmm_set_region
 EXTRN	?pmm_clr_region@@YAXII@Z:PROC			; pmm_clr_region
-EXTRN	?pmm_alloc_block@@YAPAXXZ:PROC			; pmm_alloc_block
-EXTRN	?pmm_free_block@@YAXPAX@Z:PROC			; pmm_free_block
-EXTRN	?pmm_alloc_block_s@@YAPAXI@Z:PROC		; pmm_alloc_block_s
-EXTRN	?pmm_free_block_s@@YAXPAII@Z:PROC		; pmm_free_block_s
-EXTRN	?pmm_get_max_blocks@@YAIXZ:PROC			; pmm_get_max_blocks
-EXTRN	?pmm_get_free_block_count@@YAIXZ:PROC		; pmm_get_free_block_count
-EXTRN	?pmm_get_used_block_count@@YAIXZ:PROC		; pmm_get_used_block_count
-EXTRN	?vmm_map_page@@YAXPAX0@Z:PROC			; vmm_map_page
 EXTRN	?vmm_initialize@@YAXXZ:PROC			; vmm_initialize
+EXTRN	?kbrd_initilize@@YAXXZ:PROC			; kbrd_initilize
+EXTRN	?kbrd_get_last_std_char@@YAEXZ:PROC		; kbrd_get_last_std_char
+EXTRN	?kbrd_destroy_last_char@@YAXXZ:PROC		; kbrd_destroy_last_char
+EXTRN	?kbrd_make@@YAEE@Z:PROC				; kbrd_make
+; Function compile flags: /Ogtpy
+; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\main.cpp
+_TEXT	SEGMENT
+_ch$ = -4						; size = 1
+_info$ = 8						; size = 4
+_main	PROC
+
+; 70   : int _cdecl main (multiboot_info* info) {
+
+	push	ecx
+
+; 71   : 	kernel_initialize(info);
+
+	push	DWORD PTR _info$[esp]
+	call	?kernel_initialize@@YAHPAUmultiboot_info@@@Z ; kernel_initialize
+
+; 72   : 	DebugClrScreen(0x1f);
+
+	push	31					; 0000001fH
+	call	?DebugClrScreen@@YAXE@Z			; DebugClrScreen
+
+; 73   : 	DebugGotoXY(0, 0);
+
+	push	0
+	push	0
+	call	?DebugGotoXY@@YAXEE@Z			; DebugGotoXY
+	add	esp, 16					; 00000010H
+	npad	3
+$LL2@main:
+
+; 74   : 	uint8_t ch;
+; 75   : 	for (;;){
+; 76   : 		while (kbrd_get_last_std_char() == 0);
+
+	call	?kbrd_get_last_std_char@@YAEXZ		; kbrd_get_last_std_char
+	test	al, al
+	je	SHORT $LL2@main
+
+; 77   : 		ch = kbrd_make(kbrd_get_last_std_char());
+
+	call	?kbrd_get_last_std_char@@YAEXZ		; kbrd_get_last_std_char
+	movzx	eax, al
+	push	eax
+	call	?kbrd_make@@YAEE@Z			; kbrd_make
+	mov	BYTE PTR _ch$[esp+8], al
+
+; 78   : 		DebugPutc(ch);
+
+	push	DWORD PTR _ch$[esp+8]
+	call	?DebugPutc@@YAXE@Z			; DebugPutc
+	add	esp, 8
+
+; 79   : 		kbrd_destroy_last_char();
+
+	call	?kbrd_destroy_last_char@@YAXXZ		; kbrd_destroy_last_char
+
+; 80   : 	}
+
+	jmp	SHORT $LL2@main
+_main	ENDP
+_TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\main.cpp
 _TEXT	SEGMENT
 _kernel_img_size$ = -4					; size = 4
 _info$ = 8						; size = 4
-_main	PROC
+?kernel_initialize@@YAHPAUmultiboot_info@@@Z PROC	; kernel_initialize
 
-; 18   : int _cdecl main(multiboot_info* info) {
+; 19   : int _cdecl kernel_initialize (multiboot_info* info) {
 
 	push	ecx
-	push	ebx
 	push	esi
 	push	edi
 
-; 19   : 	uint32_t kernel_img_size;
-; 20   : 	_asm mov word ptr[kernel_img_size], dx /*Get Kernel Image Size form Bootloader*/
+; 20   : 	uint32_t kernel_img_size;
+; 21   : 	_asm mov word ptr[kernel_img_size], dx /*Get Kernel Image Size form Bootloader*/
 
-	mov	WORD PTR _kernel_img_size$[esp+16], dx
+	mov	WORD PTR _kernel_img_size$[esp+12], dx
 
-; 21   : 	hal_initialize();
+; 22   : 	hal_initialize();
 
 	call	?hal_initialize@@YAXXZ			; hal_initialize
 
-; 22   : 
-; 23   : 	//! install our exception handlers
-; 24   : 	setvect(0, (void(__cdecl &)(void))divide_by_zero_fault);
+; 23   : 
+; 24   : 	//! install our exception handlers
+; 25   : 	setvect(0, (void(__cdecl &)(void))divide_by_zero_fault);
 
 	push	OFFSET ?divide_by_zero_fault@@YAXIII@Z	; divide_by_zero_fault
 	push	0
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 25   : 	setvect(1, (void(__cdecl &)(void))single_step_trap);
+; 26   : 	setvect(1, (void(__cdecl &)(void))single_step_trap);
 
 	push	OFFSET ?single_step_trap@@YAXIII@Z	; single_step_trap
 	push	1
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 26   : 	setvect(2, (void(__cdecl &)(void))nmi_trap);
+; 27   : 	setvect(2, (void(__cdecl &)(void))nmi_trap);
 
 	push	OFFSET ?nmi_trap@@YAXIII@Z		; nmi_trap
 	push	2
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 27   : 	setvect(3, (void(__cdecl &)(void))breakpoint_trap);
+; 28   : 	setvect(3, (void(__cdecl &)(void))breakpoint_trap);
 
 	push	OFFSET ?breakpoint_trap@@YAXIII@Z	; breakpoint_trap
 	push	3
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 28   : 	setvect(4, (void(__cdecl &)(void))overflow_trap);
+; 29   : 	setvect(4, (void(__cdecl &)(void))overflow_trap);
 
 	push	OFFSET ?overflow_trap@@YAXIII@Z		; overflow_trap
 	push	4
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 29   : 	setvect(5, (void(__cdecl &)(void))bounds_check_fault);
+; 30   : 	setvect(5, (void(__cdecl &)(void))bounds_check_fault);
 
 	push	OFFSET ?bounds_check_fault@@YAXIII@Z	; bounds_check_fault
 	push	5
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 30   : 	setvect(6, (void(__cdecl &)(void))invalid_opcode_fault);
+; 31   : 	setvect(6, (void(__cdecl &)(void))invalid_opcode_fault);
 
 	push	OFFSET ?invalid_opcode_fault@@YAXIII@Z	; invalid_opcode_fault
 	push	6
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 31   : 	setvect(7, (void(__cdecl &)(void))no_device_fault);
+; 32   : 	setvect(7, (void(__cdecl &)(void))no_device_fault);
 
 	push	OFFSET ?no_device_fault@@YAXIII@Z	; no_device_fault
 	push	7
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 	add	esp, 64					; 00000040H
 
-; 32   : 	setvect(8, (void(__cdecl &)(void))double_fault_abort);
+; 33   : 	setvect(8, (void(__cdecl &)(void))double_fault_abort);
 
 	push	OFFSET ?double_fault_abort@@YAXIIII@Z	; double_fault_abort
 	push	8
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 33   : 	setvect(10, (void(__cdecl &)(void))invalid_tss_fault);
+; 34   : 	setvect(10, (void(__cdecl &)(void))invalid_tss_fault);
 
 	push	OFFSET ?invalid_tss_fault@@YAXIIII@Z	; invalid_tss_fault
 	push	10					; 0000000aH
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 34   : 	setvect(11, (void(__cdecl &)(void))no_segment_fault);
+; 35   : 	setvect(11, (void(__cdecl &)(void))no_segment_fault);
 
 	push	OFFSET ?no_segment_fault@@YAXIIII@Z	; no_segment_fault
 	push	11					; 0000000bH
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 35   : 	setvect(12, (void(__cdecl &)(void))stack_fault);
+; 36   : 	setvect(12, (void(__cdecl &)(void))stack_fault);
 
 	push	OFFSET ?stack_fault@@YAXIIII@Z		; stack_fault
 	push	12					; 0000000cH
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 36   : 	setvect(13, (void(__cdecl &)(void))general_protection_fault);
+; 37   : 	setvect(13, (void(__cdecl &)(void))general_protection_fault);
 
 	push	OFFSET ?general_protection_fault@@YAXIIII@Z ; general_protection_fault
 	push	13					; 0000000dH
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 37   : 	setvect(14, (void(__cdecl &)(void))page_fault);
+; 38   : 	setvect(14, (void(__cdecl &)(void))page_fault);
 
 	push	OFFSET ?page_fault@@YAXIIII@Z		; page_fault
 	push	14					; 0000000eH
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 38   : 	setvect(16, (void(__cdecl &)(void))fpu_fault);
+; 39   : 	setvect(16, (void(__cdecl &)(void))fpu_fault);
 
 	push	OFFSET ?fpu_fault@@YAXIII@Z		; fpu_fault
 	push	16					; 00000010H
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 39   : 	setvect(17, (void(__cdecl &)(void))alignment_check_fault);
+; 40   : 	setvect(17, (void(__cdecl &)(void))alignment_check_fault);
 
 	push	OFFSET ?alignment_check_fault@@YAXIIII@Z ; alignment_check_fault
 	push	17					; 00000011H
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 	add	esp, 64					; 00000040H
 
-; 40   : 	setvect(18, (void(__cdecl &)(void))machine_check_abort);
+; 41   : 	setvect(18, (void(__cdecl &)(void))machine_check_abort);
 
 	push	OFFSET ?machine_check_abort@@YAXIII@Z	; machine_check_abort
 	push	18					; 00000012H
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 41   : 	setvect(19, (void(__cdecl &)(void))simd_fpu_fault);
+; 42   : 	setvect(19, (void(__cdecl &)(void))simd_fpu_fault);
 
 	push	OFFSET ?simd_fpu_fault@@YAXIII@Z	; simd_fpu_fault
 	push	19					; 00000013H
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 42   : 
-; 43   : 	interrupt_enable(); /*Enabling interrupt*/
+; 43   : 	kbrd_initilize();
+
+	call	?kbrd_initilize@@YAXXZ			; kbrd_initilize
+
+; 44   : 	interrupt_enable(); /*Enabling interrupt*/
 
 	call	?interrupt_enable@@YAXXZ		; interrupt_enable
 
-; 44   : 	DebugClrScreen(0x1f);
+; 45   : 
+; 46   : 	unsigned int memory_amount = 1024;
+; 47   : 	memory_amount += info->m_memoryLo;
+; 48   : 	memory_amount += info->m_memoryHi * 64;
+; 49   : 	pmm_initialize(memory_amount,0x100000+kernel_img_size*512);
 
-	push	31					; 0000001fH
-	call	?DebugClrScreen@@YAXE@Z			; DebugClrScreen
-
-; 45   : 	DebugSetColor(0x78);
-
-	push	120					; 00000078H
-	call	?DebugSetColor@@YAXG@Z			; DebugSetColor
-
-; 46   : 	DebugPuts("    Mango  Operating System is Loading ....                                     ");
-
-	push	OFFSET $SG2880
-	call	?DebugPuts@@YAXPAD@Z			; DebugPuts
-
-; 47   : 	DebugSetColor(0x19);
-
-	push	25					; 00000019H
-	call	?DebugSetColor@@YAXG@Z			; DebugSetColor
-
-; 48   : 	DebugPuts("we are optimizing th operating system WindowsX!\n");
-
-	push	OFFSET $SG2881
-	call	?DebugPuts@@YAXPAD@Z			; DebugPuts
-
-; 49   : 
-; 50   : 	unsigned int memory_amount = 1024;
-; 51   : 	memory_amount += info->m_memoryLo;
-; 52   : 	memory_amount += info->m_memoryHi * 64;
-
-	mov	eax, DWORD PTR _info$[esp+48]
-	mov	esi, DWORD PTR [eax+8]
-	add	esi, 16					; 00000010H
-	shl	esi, 6
-	add	esi, DWORD PTR [eax+4]
-
-; 53   : 	DebugPrintf("ram Amount : %d", memory_amount);
-
-	push	esi
-	push	OFFSET $SG2883
-	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
-
-; 54   : 	pmm_initialize(memory_amount,0x100000+kernel_img_size*512);
-
-	mov	eax, DWORD PTR _kernel_img_size$[esp+60]
+	mov	eax, DWORD PTR _kernel_img_size$[esp+28]
 	add	eax, 2048				; 00000800H
 	shl	eax, 9
 	push	eax
-	push	esi
+	mov	eax, DWORD PTR _info$[esp+28]
+	mov	ecx, DWORD PTR [eax+8]
+	add	ecx, 16					; 00000010H
+	shl	ecx, 6
+	add	ecx, DWORD PTR [eax+4]
+	push	ecx
 	call	?pmm_initialize@@YAXII@Z		; pmm_initialize
 
-; 55   : 
-; 56   : 	DebugGotoXY(0, 24);
-
-	push	24					; 00000018H
-	push	0
-	call	?DebugGotoXY@@YAXEE@Z			; DebugGotoXY
-
-; 57   : 	DebugSetColor(0x78);
-
-	push	120					; 00000078H
-	call	?DebugSetColor@@YAXG@Z			; DebugSetColor
-	add	esp, 64					; 00000040H
-
-; 58   : 	DebugPuts("CTRL+ALT+DEL to restart                                                         ");
-
-	push	OFFSET $SG2884
-	call	?DebugPuts@@YAXPAD@Z			; DebugPuts
-
-; 59   : 
-; 60   : 
-; 61   : 	memory_region *mem_mep = (memory_region*)0x1000;
-; 62   : 	DebugGotoXY(0, 3);
+; 50   : 
+; 51   : 
+; 52   : 	memory_region *mem_mep = (memory_region*)0x1000;
+; 53   : 	DebugGotoXY(0, 3);
 
 	push	3
 	push	0
 	call	?DebugGotoXY@@YAXEE@Z			; DebugGotoXY
-	add	esp, 12					; 0000000cH
-	mov	esi, 4104				; 00001008H
+	add	esp, 32					; 00000020H
+	mov	esi, 4096				; 00001000H
 
-; 63   : 	for (int i = 0; i < 15; i++){
+; 54   : 	for (int i = 0; i < 15; i++){
 
 	xor	edi, edi
-$LL7@main:
+	npad	5
+$LL5@kernel_ini:
 
-; 64   : 		if (i>0 && mem_mep[i].startLow == 0)
+; 55   : 		if (i>0 && mem_mep[i].startLow == 0)
 
 	test	edi, edi
-	jle	SHORT $LN4@main
-	cmp	DWORD PTR [esi-8], 0
-	je	SHORT $LN12@main
-$LN4@main:
+	jle	SHORT $LN2@kernel_ini
+	cmp	DWORD PTR [esi], 0
+	je	SHORT $LN9@kernel_ini
+$LN2@kernel_ini:
 
-; 65   : 			break;
-; 66   : 		DebugPrintf("Base Frame : %d  and limit Block %d type: %d \n",
-; 67   : 			mem_mep[i].startLow / 4096, mem_mep[i].sizeLow / 4096,
-; 68   : 			mem_mep[i].type);
+; 56   : 			break;
+; 57   : 		if (mem_mep[i].type == 1)	/*We Can Use it region*/
+
+	cmp	DWORD PTR [esi+16], 1
+	jne	SHORT $LN4@kernel_ini
+
+; 58   : 			 pmm_clr_region(mem_mep[i].startLow, mem_mep[i].sizeLow);
 
 	push	DWORD PTR [esi+8]
-	mov	eax, DWORD PTR [esi]
-	shr	eax, 12					; 0000000cH
-	push	eax
-	mov	eax, DWORD PTR [esi-8]
-	shr	eax, 12					; 0000000cH
-	push	eax
-	push	OFFSET $SG2892
-	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
-	add	esp, 16					; 00000010H
-
-; 69   : 		if (mem_mep[i].type == 1)	/*We Can Use it region*/
-
-	cmp	DWORD PTR [esi+8], 1
-	jne	SHORT $LN6@main
-
-; 70   : 			 pmm_clr_region(mem_mep[i].startLow, mem_mep[i].sizeLow);
-
 	push	DWORD PTR [esi]
-	push	DWORD PTR [esi-8]
 	call	?pmm_clr_region@@YAXII@Z		; pmm_clr_region
 	add	esp, 8
-$LN6@main:
+$LN4@kernel_ini:
 
-; 63   : 	for (int i = 0; i < 15; i++){
+; 54   : 	for (int i = 0; i < 15; i++){
 
 	add	esi, 24					; 00000018H
 	inc	edi
-	cmp	esi, 4464				; 00001170H
-	jl	SHORT $LL7@main
-$LN12@main:
+	cmp	esi, 4456				; 00001168H
+	jl	SHORT $LL5@kernel_ini
+$LN9@kernel_ini:
 
-; 71   : 	}
-; 72   : 	pmm_set_region(0x100000,kernel_img_size*512);
+; 59   : 	}
+; 60   : 	pmm_set_region(0x100000,kernel_img_size*512);
 
-	mov	eax, DWORD PTR _kernel_img_size$[esp+16]
+	mov	eax, DWORD PTR _kernel_img_size$[esp+12]
 	shl	eax, 9
 	push	eax
 	push	1048576					; 00100000H
 	call	?pmm_set_region@@YAXII@Z		; pmm_set_region
+	add	esp, 8
+	pop	edi
+	pop	esi
 
-; 73   : 	
-; 74   : 	DebugPrintf("Kernel Block : %d \n", kernel_img_size);
+; 62   : }
 
-	push	DWORD PTR _kernel_img_size$[esp+24]
-	push	OFFSET $SG2894
-	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
-	add	esp, 16					; 00000010H
+	add	esp, 4
 
-; 75   : 
-; 76   : 
-; 77   : 	DebugPrintf("\npmm regions initialized: %i allocation blocks; used or reserved blocks: %i\nfree blocks: %i\n",
-; 78   : 		pmm_get_max_blocks(), pmm_get_used_block_count(), pmm_get_free_block_count());
+; 61   : 	vmm_initialize();
 
-	call	?pmm_get_free_block_count@@YAIXZ	; pmm_get_free_block_count
-	push	eax
-	call	?pmm_get_used_block_count@@YAIXZ	; pmm_get_used_block_count
-	push	eax
-	call	?pmm_get_max_blocks@@YAIXZ		; pmm_get_max_blocks
-	push	eax
-	push	OFFSET $SG2895
-	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
-
-; 79   : 
-; 80   : 	//! allocating and deallocating memory examples...
-; 81   : 
-; 82   : 	DebugSetColor(0x12);
-
-	push	18					; 00000012H
-	call	?DebugSetColor@@YAXG@Z			; DebugSetColor
-
-; 83   : 
-; 84   : 	uint32_t* p = (uint32_t*)pmm_alloc_block();
-
-	call	?pmm_alloc_block@@YAPAXXZ		; pmm_alloc_block
-	mov	esi, eax
-
-; 85   : 	DebugPrintf("\np allocated at frame : %d", uint32_t(p) / 4096);
-
-	mov	ecx, esi
-	shr	ecx, 12					; 0000000cH
-	push	ecx
-	push	OFFSET $SG2898
-	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
-
-; 86   : 
-; 87   : 	uint32_t* p2 = (uint32_t*)pmm_alloc_block_s(2);
-
-	push	2
-	call	?pmm_alloc_block_s@@YAPAXI@Z		; pmm_alloc_block_s
-	mov	edi, eax
-
-; 88   : 	DebugPrintf("\nallocated 2 blocks for p2 at frame : %d", uint32_t(p2) / 4096);
-
-	mov	ecx, edi
-	shr	ecx, 12					; 0000000cH
-	push	ecx
-	push	OFFSET $SG2901
-	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
-
-; 89   : 
-; 90   : 	uint32_t* p3 = (uint32_t*)pmm_alloc_block();
-
-	call	?pmm_alloc_block@@YAPAXXZ		; pmm_alloc_block
-
-; 91   : 	DebugPrintf("\np allocated at frame : %d", uint32_t(p3) / 4096);
-
-	shr	eax, 12					; 0000000cH
-	push	eax
-	push	OFFSET $SG2904
-	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
-
-; 92   : 
-; 93   : 	pmm_free_block(p);
-
-	push	esi
-	call	?pmm_free_block@@YAXPAX@Z		; pmm_free_block
-
-; 94   : 	p = (uint32_t*)pmm_alloc_block();
-
-	call	?pmm_alloc_block@@YAPAXXZ		; pmm_alloc_block
-	mov	esi, eax
-
-; 95   : 	DebugPrintf("\nUnallocated p to free block 1. p is reallocated to frame : %d", uint32_t(p) / 4096);
-
-	mov	ecx, esi
-	shr	ecx, 12					; 0000000cH
-	push	ecx
-	push	OFFSET $SG2906
-	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
-
-; 96   : 
-; 97   : 	pmm_free_block(p);
-
-	push	esi
-	call	?pmm_free_block@@YAXPAX@Z		; pmm_free_block
-	add	esp, 64					; 00000040H
-
-; 98   : 	pmm_free_block_s(p2, 2);
-
-	push	2
-	push	edi
-	call	?pmm_free_block_s@@YAXPAII@Z		; pmm_free_block_s
-
-; 99   : 
-; 100  : 	//for (;;){
-; 101  : 	//	DebugGotoXY(0, 23);
-; 102  : 	//	DebugPrintf("Count = %d", get_tick());
-; 103  : 	//}
-; 104  : 
-; 105  : 	vmm_initialize();
-
-	call	?vmm_initialize@@YAXXZ			; vmm_initialize
-
-; 106  : 	vmm_map_page((void*)0xB8000, (void*)0x2000000);
-
-	push	33554432				; 02000000H
-	push	753664					; 000b8000H
-	call	?vmm_map_page@@YAXPAX0@Z		; vmm_map_page
-	add	esp, 16					; 00000010H
-
-; 108  : 		mov ebx, 0x2000000
-
-	mov	ebx, 33554432				; 02000000H
-
-; 109  : 		mov [ebx], 'a'
-
-	mov	BYTE PTR [ebx], 97			; 00000061H
-
-; 107  : 	_asm {
-
-$LL2@main:
-
-; 110  : 	}
-; 111  : 	for (;;);
-
-	jmp	SHORT $LL2@main
-_main	ENDP
+	jmp	?vmm_initialize@@YAXXZ			; vmm_initialize
+?kernel_initialize@@YAHPAUmultiboot_info@@@Z ENDP	; kernel_initialize
 _TEXT	ENDS
 END

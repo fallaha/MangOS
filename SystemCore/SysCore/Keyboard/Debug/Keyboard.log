@@ -1,0 +1,14 @@
+﻿Build started 12/10/1397 02:49:30 ب.ظ.
+     1>Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Keyboard\Keyboard.vcxproj" on node 2 (Rebuild target(s)).
+     1>ClCompile:
+         G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\Include\ /Zi /nologo /W4 /WX- /O2 /Oy /D ARCH_X86 /X /Gm- /EHsc /MD /Zp1 /GS- /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt kbrd.cpp
+         kbrd.cpp
+     1>kbrd.cpp(193): warning C4244: 'initializing' : conversion from 'uint16_t' to 'uint8_t', possible loss of data
+       Lib:
+         G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Debug\Keyboard.lib" /NOLOGO Debug\kbrd.obj
+         Keyboard.vcxproj -> C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Debug\Keyboard.lib
+     1>Done Building Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Keyboard\Keyboard.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.58

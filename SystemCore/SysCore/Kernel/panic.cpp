@@ -32,8 +32,8 @@ void _cdecl kernel_panic(const char* fmt, ...) {
 	DebugClrScreen(0x1f);
 	DebugGotoXY(0, 0);
 	DebugSetColor(0x1f);
-	DebugPuts(disclamer);
-
+	//DebugPuts(disclamer);
+	DebugPrintf("%s", disclamer);
 	DebugPrintf("*** STOP: %s", fmt);
 
 	for (;;);

@@ -41,21 +41,21 @@ _TEXT	SEGMENT
 _addr$ = 8						; size = 4
 ?vmm_flush_tlb_entry@@YAXI@Z PROC			; vmm_flush_tlb_entry
 
-; 34   : 	_asm{
-; 35   : 		cli 
+; 35   : 	_asm{
+; 36   : 		cli 
 
 	cli
 
-; 36   : 		invlpg addr 
+; 37   : 		invlpg addr 
 
 	invlpg	DWORD PTR _addr$[esp-4]
 
-; 37   : 		sti
+; 38   : 		sti
 
 	sti
 
-; 38   : 	}
-; 39   : }
+; 39   : 	}
+; 40   : }
 
 	ret	0
 ?vmm_flush_tlb_entry@@YAXI@Z ENDP			; vmm_flush_tlb_entry
@@ -68,37 +68,37 @@ _dir$ = 8						; size = 4
 _pd$ = 8						; size = 4
 ?vmm_pd_switch@@YA_NPAUpdir@@@Z PROC			; vmm_pd_switch, COMDAT
 
-; 25   : 	if (!pd)
+; 26   : 	if (!pd)
 
 	mov	eax, DWORD PTR _pd$[esp-4]
 	test	eax, eax
 	jne	SHORT $LN1@vmm_pd_swi
 
-; 26   : 		return false;
+; 27   : 		return false;
 
 	xor	al, al
 
-; 31   : }
+; 32   : }
 
 	ret	0
 $LN1@vmm_pd_swi:
 
-; 27   : 
-; 28   : 	_vmm_cur_dir = pd;
+; 28   : 
+; 29   : 	_vmm_cur_dir = pd;
 
 	mov	DWORD PTR __vmm_cur_dir, eax
 
-; 29   : 	vmm_load_pdbr((pdir*)&_vmm_cur_dir->entry);
+; 30   : 	vmm_load_pdbr((pdir*)&_vmm_cur_dir->entry);
 
 	mov	DWORD PTR _dir$[esp-4], eax
 	mov	eax, DWORD PTR _dir$[esp-4]
 	mov	cr3, eax
 
-; 30   : 	return true;
+; 31   : 	return true;
 
 	mov	al, 1
 
-; 31   : }
+; 32   : }
 
 	ret	0
 ?vmm_pd_switch@@YA_NPAUpdir@@@Z ENDP			; vmm_pd_switch
@@ -109,46 +109,46 @@ _TEXT	SEGMENT
 _b$ = 8							; size = 1
 ?vmm_paging_enable@@YAX_N@Z PROC			; vmm_paging_enable
 
-; 120  : void vmm_paging_enable(bool b){
+; 121  : void vmm_paging_enable(bool b){
 
 	push	ebp
 	mov	ebp, esp
 
-; 121  : 	_asm {
-; 122  : 		mov eax, cr0
+; 122  : 	_asm {
+; 123  : 		mov eax, cr0
 
 	mov	eax, cr0
 
-; 123  : 		cmp byte ptr[b],1
+; 124  : 		cmp byte ptr[b],1
 
 	cmp	BYTE PTR _b$[ebp], 1
 
-; 124  : 		jnz fal
+; 125  : 		jnz fal
 
 	jne	SHORT $fal$4
 
-; 125  : 		or eax, 0x80000000; Bit 31 (PG) : Enables Memory Paging.
+; 126  : 		or eax, 0x80000000; Bit 31 (PG) : Enables Memory Paging.
 
 	or	eax, -2147483648			; 80000000H
 
-; 126  : 		jmp set
+; 127  : 		jmp set
 
 	jmp	SHORT $set$5
 $fal$4:
 
-; 127  : 	fal:
-; 128  : 		and eax, 0x7FFFFFFF; clear Bit 31 (PG) : Enables Memory Paging.
+; 128  : 	fal:
+; 129  : 		and eax, 0x7FFFFFFF; clear Bit 31 (PG) : Enables Memory Paging.
 
 	and	eax, 2147483647				; 7fffffffH
 $set$5:
 
-; 129  : 	set:
-; 130  : 		mov cr0, eax
+; 130  : 	set:
+; 131  : 		mov cr0, eax
 
 	mov	cr0, eax
 
-; 131  : 	}
-; 132  : }
+; 132  : 	}
+; 133  : }
 
 	pop	ebp
 	ret	0
@@ -161,13 +161,13 @@ _TEXT	SEGMENT
 _e$ = 8							; size = 4
 ?vmm_pt_entry_is_writable@@YA_NI@Z PROC			; vmm_pt_entry_is_writable, COMDAT
 
-; 159  : 	return e & VMM_PT_ENTRY_WRITABLE;
+; 161  : 	return e & VMM_PT_ENTRY_WRITABLE;
 
 	mov	eax, DWORD PTR _e$[esp-4]
 	shr	eax, 1
 	and	al, 1
 
-; 160  : }
+; 162  : }
 
 	ret	0
 ?vmm_pt_entry_is_writable@@YA_NI@Z ENDP			; vmm_pt_entry_is_writable
@@ -179,12 +179,12 @@ _TEXT	SEGMENT
 _e$ = 8							; size = 4
 ?vmm_pt_entry_is_present@@YA_NI@Z PROC			; vmm_pt_entry_is_present, COMDAT
 
-; 155  : 	return e & VMM_PT_ENTRY_PRESENT;
+; 157  : 	return e & VMM_PT_ENTRY_PRESENT;
 
 	mov	eax, DWORD PTR _e$[esp-4]
 	and	eax, 1
 
-; 156  : }
+; 158  : }
 
 	ret	0
 ?vmm_pt_entry_is_present@@YA_NI@Z ENDP			; vmm_pt_entry_is_present
@@ -197,7 +197,7 @@ _e$ = 8							; size = 4
 _addr$ = 12						; size = 4
 ?vmm_pt_entry_set_frame@@YAXPAII@Z PROC			; vmm_pt_entry_set_frame, COMDAT
 
-; 151  : 	*e = (*e & ~VMM_PT_ENTRY_FRAME) | addr;
+; 153  : 	*e = (*e & ~VMM_PT_ENTRY_FRAME) | addr;
 
 	mov	ecx, DWORD PTR _e$[esp-4]
 	mov	eax, DWORD PTR [ecx]
@@ -205,7 +205,7 @@ _addr$ = 12						; size = 4
 	or	eax, DWORD PTR _addr$[esp-4]
 	mov	DWORD PTR [ecx], eax
 
-; 152  : }
+; 154  : }
 
 	ret	0
 ?vmm_pt_entry_set_frame@@YAXPAII@Z ENDP			; vmm_pt_entry_set_frame
@@ -218,14 +218,14 @@ _e$ = 8							; size = 4
 _attrib$ = 12						; size = 4
 ?vmm_pt_entry_del_attrib@@YAXPAII@Z PROC		; vmm_pt_entry_del_attrib, COMDAT
 
-; 147  : 	*e &= ~attrib;
+; 149  : 	*e &= ~attrib;
 
 	mov	eax, DWORD PTR _e$[esp-4]
 	mov	ecx, DWORD PTR _attrib$[esp-4]
 	not	ecx
 	and	DWORD PTR [eax], ecx
 
-; 148  : }
+; 150  : }
 
 	ret	0
 ?vmm_pt_entry_del_attrib@@YAXPAII@Z ENDP		; vmm_pt_entry_del_attrib
@@ -238,13 +238,13 @@ _e$ = 8							; size = 4
 _attrib$ = 12						; size = 4
 ?vmm_pt_entry_add_attrib@@YAXPAII@Z PROC		; vmm_pt_entry_add_attrib, COMDAT
 
-; 143  : 	*e |= attrib;
+; 145  : 	*e |= attrib;
 
 	mov	ecx, DWORD PTR _e$[esp-4]
 	mov	eax, DWORD PTR _attrib$[esp-4]
 	or	DWORD PTR [ecx], eax
 
-; 144  : }
+; 146  : }
 
 	ret	0
 ?vmm_pt_entry_add_attrib@@YAXPAII@Z ENDP		; vmm_pt_entry_add_attrib
@@ -256,13 +256,13 @@ _TEXT	SEGMENT
 _e$ = 8							; size = 4
 ?vmm_pd_entry_is_4mb@@YA_NI@Z PROC			; vmm_pd_entry_is_4mb, COMDAT
 
-; 187  : 	return e & VMM_PD_ENTRY_4MB;
+; 189  : 	return e & VMM_PD_ENTRY_4MB;
 
 	mov	eax, DWORD PTR _e$[esp-4]
 	shr	eax, 7
 	and	al, 1
 
-; 188  : }
+; 190  : }
 
 	ret	0
 ?vmm_pd_entry_is_4mb@@YA_NI@Z ENDP			; vmm_pd_entry_is_4mb
@@ -274,13 +274,13 @@ _TEXT	SEGMENT
 _e$ = 8							; size = 4
 ?vmm_pd_entry_is_user@@YA_NI@Z PROC			; vmm_pd_entry_is_user, COMDAT
 
-; 183  : 	return e & VMM_PD_ENTRY_USER;
+; 185  : 	return e & VMM_PD_ENTRY_USER;
 
 	mov	eax, DWORD PTR _e$[esp-4]
 	shr	eax, 2
 	and	al, 1
 
-; 184  : }
+; 186  : }
 
 	ret	0
 ?vmm_pd_entry_is_user@@YA_NI@Z ENDP			; vmm_pd_entry_is_user
@@ -292,12 +292,12 @@ _TEXT	SEGMENT
 _e$ = 8							; size = 4
 ?vmm_pd_entry_is_present@@YA_NI@Z PROC			; vmm_pd_entry_is_present, COMDAT
 
-; 175  : 	return e & VMM_PD_ENTRY_PRESENT;
+; 177  : 	return e & VMM_PD_ENTRY_PRESENT;
 
 	mov	eax, DWORD PTR _e$[esp-4]
 	and	eax, 1
 
-; 176  : }
+; 178  : }
 
 	ret	0
 ?vmm_pd_entry_is_present@@YA_NI@Z ENDP			; vmm_pd_entry_is_present
@@ -310,7 +310,7 @@ _e$ = 8							; size = 4
 _addr$ = 12						; size = 4
 ?vmm_pd_entry_set_frame@@YAXPAII@Z PROC			; vmm_pd_entry_set_frame, COMDAT
 
-; 171  : 	*e = (*e & ~VMM_PD_ENTRY_FRAME) | addr;
+; 173  : 	*e = (*e & ~VMM_PD_ENTRY_FRAME) | addr;
 
 	mov	ecx, DWORD PTR _e$[esp-4]
 	mov	eax, DWORD PTR [ecx]
@@ -318,7 +318,7 @@ _addr$ = 12						; size = 4
 	or	eax, DWORD PTR _addr$[esp-4]
 	mov	DWORD PTR [ecx], eax
 
-; 172  : }
+; 174  : }
 
 	ret	0
 ?vmm_pd_entry_set_frame@@YAXPAII@Z ENDP			; vmm_pd_entry_set_frame
@@ -331,14 +331,14 @@ _e$ = 8							; size = 4
 _attrib$ = 12						; size = 4
 ?vmm_pd_entry_del_attrib@@YAXPAII@Z PROC		; vmm_pd_entry_del_attrib, COMDAT
 
-; 167  : 	*e &= ~attrib;
+; 169  : 	*e &= ~attrib;
 
 	mov	eax, DWORD PTR _e$[esp-4]
 	mov	ecx, DWORD PTR _attrib$[esp-4]
 	not	ecx
 	and	DWORD PTR [eax], ecx
 
-; 168  : }
+; 170  : }
 
 	ret	0
 ?vmm_pd_entry_del_attrib@@YAXPAII@Z ENDP		; vmm_pd_entry_del_attrib
@@ -351,13 +351,13 @@ _e$ = 8							; size = 4
 _attrib$ = 12						; size = 4
 ?vmm_pd_entry_add_attrib@@YAXPAII@Z PROC		; vmm_pd_entry_add_attrib, COMDAT
 
-; 163  : 	*e |= attrib;
+; 165  : 	*e |= attrib;
 
 	mov	ecx, DWORD PTR _e$[esp-4]
 	mov	eax, DWORD PTR _attrib$[esp-4]
 	or	DWORD PTR [ecx], eax
 
-; 164  : }
+; 166  : }
 
 	ret	0
 ?vmm_pd_entry_add_attrib@@YAXPAII@Z ENDP		; vmm_pd_entry_add_attrib
@@ -369,38 +369,38 @@ _dir$ = -8						; size = 4
 _b$ = -4						; size = 1
 ?vmm_initialize@@YAXXZ PROC				; vmm_initialize
 
-; 88   : void vmm_initialize(){
+; 89   : void vmm_initialize(){
 
 	push	ebp
 	mov	ebp, esp
 	sub	esp, 8
 	push	edi
 
-; 89   : 	ptable * pt_first4mb = (ptable * )pmm_alloc_block();
+; 90   : 	ptable * pt_first4mb = (ptable * )pmm_alloc_block();
 
 	call	?pmm_alloc_block@@YAPAXXZ		; pmm_alloc_block
 	mov	edi, eax
 
-; 90   : 	if (!pt_first4mb)
+; 91   : 	if (!pt_first4mb)
 
 	test	edi, edi
 	je	$LN17@vmm_initia
 
-; 91   : 		return;
-; 92   : 	ptable * pt_1mb_to_3gb = (ptable *)pmm_alloc_block();
+; 92   : 		return;
+; 93   : 	ptable * pt_1mb_to_3gb = (ptable *)pmm_alloc_block();
 
 	push	ebx
 	call	?pmm_alloc_block@@YAPAXXZ		; pmm_alloc_block
 	mov	ebx, eax
 
-; 93   : 	if (!pt_1mb_to_3gb)
+; 94   : 	if (!pt_1mb_to_3gb)
 
 	test	ebx, ebx
 	je	$LN31@vmm_initia
 
-; 94   : 		return;
-; 95   : 	/* Map 1st 4Mb (phys) to 1st 4Mb (virt) - identity map */
-; 96   : 	for (uint32_t i = 0, frame = 0; i < 1024; i++, frame += 4096)
+; 95   : 		return;
+; 96   : 	/* Map 1st 4Mb (phys) to 1st 4Mb (virt) - identity map */
+; 97   : 	for (uint32_t i = 0, frame = 0; i < 1024; i++, frame += 4096)
 
 	push	esi
 	xor	esi, esi
@@ -408,7 +408,7 @@ _b$ = -4						; size = 1
 	npad	5
 $LL23@vmm_initia:
 
-; 97   : 		pt_first4mb->entry[i] = frame | VMM_PT_ENTRY_PRESENT;
+; 98   : 		pt_first4mb->entry[i] = frame | VMM_PT_ENTRY_PRESENT;
 
 	mov	ecx, esi
 	add	esi, 4096				; 00001000H
@@ -418,15 +418,15 @@ $LL23@vmm_initia:
 	cmp	edx, 1024				; 00000400H
 	jb	SHORT $LL23@vmm_initia
 
-; 98   : 	
-; 99   : 	for (uint32_t i = 0, frame = 0x100000; i < 1024; i++, frame += 4096)
+; 99   : 	
+; 100  : 	for (uint32_t i = 0, frame = 0x100000; i < 1024; i++, frame += 4096)
 
 	mov	edx, 1048576				; 00100000H
 	xor	ecx, ecx
 	npad	2
 $LL25@vmm_initia:
 
-; 100  : 		pt_1mb_to_3gb->entry[i] = frame | VMM_PT_ENTRY_PRESENT;
+; 101  : 		pt_1mb_to_3gb->entry[i] = frame | VMM_PT_ENTRY_PRESENT;
 
 	mov	eax, edx
 	add	edx, 4096				; 00001000H
@@ -436,35 +436,35 @@ $LL25@vmm_initia:
 	cmp	ecx, 1024				; 00000400H
 	jb	SHORT $LL25@vmm_initia
 
-; 101  : 
-; 102  : 	/*set Page table to page directory*/
-; 103  : 	pdir *dir = (pdir*) pmm_alloc_block();
+; 102  : 
+; 103  : 	/*set Page table to page directory*/
+; 104  : 	pdir *dir = (pdir*) pmm_alloc_block();
 
 	call	?pmm_alloc_block@@YAPAXXZ		; pmm_alloc_block
 	mov	esi, eax
 
-; 104  : 	if (!dir)
+; 105  : 	if (!dir)
 
 	test	esi, esi
 	je	SHORT $LN32@vmm_initia
 
-; 105  : 		return;
-; 106  : 
-; 107  : 	memset(dir, 0, sizeof(pdir));
+; 106  : 		return;
+; 107  : 
+; 108  : 	memset(dir, 0, sizeof(pdir));
 
 	push	4096					; 00001000H
 	push	0
 	push	esi
 	call	?memset@@YAPAXPAXDI@Z			; memset
 
-; 108  : 	dir->entry[0] = (pd_entry)pt_first4mb | VMM_PT_ENTRY_PRESENT | VMM_PT_ENTRY_WRITABLE;
+; 109  : 	dir->entry[0] = (pd_entry)pt_first4mb | VMM_PT_ENTRY_PRESENT | VMM_PT_ENTRY_WRITABLE;
 
 	or	edi, 3
 
-; 109  : 	dir->entry[VMM_GET_PD_ENTRY(0xC0000000)] = (pt_entry)pt_1mb_to_3gb | VMM_PT_ENTRY_PRESENT | VMM_PT_ENTRY_WRITABLE;
-; 110  : 
-; 111  : 	/*Set Page Directory Base Address*/
-; 112  : 	vmm_pd_switch (dir);
+; 110  : 	dir->entry[VMM_GET_PD_ENTRY(0xC0000000)] = (pt_entry)pt_1mb_to_3gb | VMM_PT_ENTRY_PRESENT | VMM_PT_ENTRY_WRITABLE;
+; 111  : 
+; 112  : 	/*Set Page Directory Base Address*/
+; 113  : 	vmm_pd_switch (dir);
 
 	mov	DWORD PTR __vmm_cur_dir, esi
 	add	esp, 12					; 0000000cH
@@ -475,9 +475,9 @@ $LL25@vmm_initia:
 	mov	eax, DWORD PTR _dir$[ebp]
 	mov	cr3, eax
 
-; 113  : 
-; 114  : 	/* paging Enable */
-; 115  : 	vmm_paging_enable(true);
+; 114  : 
+; 115  : 	/* paging Enable */
+; 116  : 	vmm_paging_enable(true);
 
 	mov	BYTE PTR _b$[ebp], 1
 	mov	eax, cr0
@@ -496,8 +496,8 @@ $LN31@vmm_initia:
 $LN17@vmm_initia:
 	pop	edi
 
-; 116  : 
-; 117  : }
+; 117  : 
+; 118  : }
 
 	mov	esp, ebp
 	pop	ebp
@@ -511,8 +511,8 @@ _phys$ = 8						; size = 4
 _virt$ = 12						; size = 4
 ?vmm_map_page@@YAXPAX0@Z PROC				; vmm_map_page
 
-; 62   : 	pdir *dir = _vmm_cur_dir;
-; 63   : 	pd_entry *pde = (pd_entry *)&dir->entry[VMM_GET_PD_ENTRY((pd_entry)virt)];
+; 63   : 	pdir *dir = _vmm_cur_dir;
+; 64   : 	pd_entry *pde = (pd_entry *)&dir->entry[VMM_GET_PD_ENTRY((pd_entry)virt)];
 
 	mov	eax, DWORD PTR __vmm_cur_dir
 	push	ebx
@@ -521,42 +521,42 @@ _virt$ = 12						; size = 4
 	mov	ecx, esi
 	shr	ecx, 22					; 00000016H
 
-; 64   : 	if (!(*pde&VMM_PT_ENTRY_PRESENT)){
+; 65   : 	if (!(*pde&VMM_PT_ENTRY_PRESENT)){
 
 	test	BYTE PTR [eax+ecx*4], 1
 	push	edi
 	lea	edi, DWORD PTR [eax+ecx*4]
 	jne	SHORT $LN9@vmm_map_pa
 
-; 65   : 		//! page table not present, allocate it
-; 66   : 		ptable* table = (ptable*)pmm_alloc_block();
+; 66   : 		//! page table not present, allocate it
+; 67   : 		ptable* table = (ptable*)pmm_alloc_block();
 
 	call	?pmm_alloc_block@@YAPAXXZ		; pmm_alloc_block
 	mov	ebx, eax
 
-; 67   : 		if (!table)
+; 68   : 		if (!table)
 
 	test	ebx, ebx
 	je	SHORT $LN13@vmm_map_pa
 
-; 68   : 			return;
-; 69   : 
-; 70   : 		//! clear page table
-; 71   : 		memset(table, 0, sizeof(ptable));
+; 69   : 			return;
+; 70   : 
+; 71   : 		//! clear page table
+; 72   : 		memset(table, 0, sizeof(ptable));
 
 	push	4096					; 00001000H
 	push	0
 	push	ebx
 	call	?memset@@YAPAXPAXDI@Z			; memset
 
-; 72   : 
-; 73   : 		//! create a new entry
-; 74   : 		pd_entry* entry = &dir->entry[VMM_GET_PD_ENTRY((uint32_t)virt)];
-; 75   : 
-; 76   : 		//! map in the table (Can also just do *entry |= 3) to enable these bits
-; 77   : 		vmm_pd_entry_add_attrib(entry, VMM_PT_ENTRY_PRESENT);
-; 78   : 		vmm_pd_entry_add_attrib(entry, VMM_PT_ENTRY_WRITABLE);
-; 79   : 		vmm_pd_entry_set_frame(entry, (physical_addr)table);
+; 73   : 
+; 74   : 		//! create a new entry
+; 75   : 		pd_entry* entry = &dir->entry[VMM_GET_PD_ENTRY((uint32_t)virt)];
+; 76   : 
+; 77   : 		//! map in the table (Can also just do *entry |= 3) to enable these bits
+; 78   : 		vmm_pd_entry_add_attrib(entry, VMM_PT_ENTRY_PRESENT);
+; 79   : 		vmm_pd_entry_add_attrib(entry, VMM_PT_ENTRY_WRITABLE);
+; 80   : 		vmm_pd_entry_set_frame(entry, (physical_addr)table);
 
 	mov	eax, DWORD PTR [edi]
 	add	esp, 12					; 0000000cH
@@ -566,32 +566,32 @@ _virt$ = 12						; size = 4
 	mov	DWORD PTR [edi], eax
 $LN9@vmm_map_pa:
 
-; 80   : 		
-; 81   : 	}
-; 82   : 	ptable *table = (ptable *)(*pde& ~0xfff);
+; 81   : 		
+; 82   : 	}
+; 83   : 	ptable *table = (ptable *)(*pde& ~0xfff);
 
 	mov	eax, DWORD PTR [edi]
 	and	eax, -4096				; fffff000H
 
-; 83   : 	pt_entry *page = &table->entry[VMM_GET_PT_ENTRY((pt_entry)virt)];
+; 84   : 	pt_entry *page = &table->entry[VMM_GET_PT_ENTRY((pt_entry)virt)];
 
 	shr	esi, 12					; 0000000cH
 	and	esi, 1023				; 000003ffH
 	lea	ecx, DWORD PTR [eax+esi*4]
 
-; 84   : 	vmm_pt_entry_set_frame(page, (physical_addr)phys);
+; 85   : 	vmm_pt_entry_set_frame(page, (physical_addr)phys);
 
 	mov	eax, DWORD PTR [ecx]
 	and	eax, -2147479553			; 80000fffH
 
-; 85   : 	vmm_pt_entry_add_attrib(page, VMM_PT_ENTRY_PRESENT);
+; 86   : 	vmm_pt_entry_add_attrib(page, VMM_PT_ENTRY_PRESENT);
 
 	or	eax, DWORD PTR _phys$[esp+8]
 	or	eax, 1
 	mov	DWORD PTR [ecx], eax
 $LN13@vmm_map_pa:
 
-; 86   : }
+; 87   : }
 
 	pop	edi
 	pop	esi
@@ -605,27 +605,27 @@ _TEXT	SEGMENT
 _pe$ = 8						; size = 4
 ?vmm_free_frame@@YA_NPAI@Z PROC				; vmm_free_frame
 
-; 55   : bool vmm_free_frame (pt_entry * pe){
+; 56   : bool vmm_free_frame (pt_entry * pe){
 
 	push	esi
 
-; 56   : 	pmm_free_block(pe); /*Maybe this wrong because we send Address of entry ?*/
+; 57   : 	pmm_free_block(pe); /*Maybe this wrong because we send Address of entry ?*/
 
 	mov	esi, DWORD PTR _pe$[esp]
 	push	esi
 	call	?pmm_free_block@@YAXPAX@Z		; pmm_free_block
 
-; 57   : 	vmm_pt_entry_del_attrib(pe, VMM_PT_ENTRY_PRESENT);
+; 58   : 	vmm_pt_entry_del_attrib(pe, VMM_PT_ENTRY_PRESENT);
 
 	and	DWORD PTR [esi], -2			; fffffffeH
 	add	esp, 4
 
-; 58   : 	return true;
+; 59   : 	return true;
 
 	mov	al, 1
 	pop	esi
 
-; 59   : }
+; 60   : }
 
 	ret	0
 ?vmm_free_frame@@YA_NPAI@Z ENDP				; vmm_free_frame
@@ -636,42 +636,42 @@ _TEXT	SEGMENT
 _pe$ = 8						; size = 4
 ?vmm_alloc_frame@@YA_NPAI@Z PROC			; vmm_alloc_frame
 
-; 47   : 	void *p = pmm_alloc_block();
+; 48   : 	void *p = pmm_alloc_block();
 
 	call	?pmm_alloc_block@@YAPAXXZ		; pmm_alloc_block
 	mov	edx, eax
 
-; 48   : 	if (!p)
+; 49   : 	if (!p)
 
 	test	edx, edx
 	jne	SHORT $LN1@vmm_alloc_
 
-; 49   : 		return false;
+; 50   : 		return false;
 
 	xor	al, al
 
-; 53   : }
+; 54   : }
 
 	ret	0
 $LN1@vmm_alloc_:
 
-; 50   : 	vmm_pt_entry_set_frame(pe, (physical_addr)p);
+; 51   : 	vmm_pt_entry_set_frame(pe, (physical_addr)p);
 
 	mov	ecx, DWORD PTR _pe$[esp-4]
 	mov	eax, DWORD PTR [ecx]
 	and	eax, -2147479553			; 80000fffH
 
-; 51   : 	vmm_pt_entry_add_attrib(pe, VMM_PT_ENTRY_PRESENT);
+; 52   : 	vmm_pt_entry_add_attrib(pe, VMM_PT_ENTRY_PRESENT);
 
 	or	eax, edx
 	or	eax, 1
 	mov	DWORD PTR [ecx], eax
 
-; 52   : 	return true;
+; 53   : 	return true;
 
 	mov	al, 1
 
-; 53   : }
+; 54   : }
 
 	ret	0
 ?vmm_alloc_frame@@YA_NPAI@Z ENDP			; vmm_alloc_frame
@@ -681,11 +681,11 @@ _TEXT	ENDS
 _TEXT	SEGMENT
 ?vmm_get_cur_dir@@YAPAUpdir@@XZ PROC			; vmm_get_cur_dir
 
-; 43   : 	return _vmm_cur_dir;
+; 44   : 	return _vmm_cur_dir;
 
 	mov	eax, DWORD PTR __vmm_cur_dir
 
-; 44   : }
+; 45   : }
 
 	ret	0
 ?vmm_get_cur_dir@@YAPAUpdir@@XZ ENDP			; vmm_get_cur_dir
@@ -696,17 +696,17 @@ _TEXT	SEGMENT
 _dir$ = 8						; size = 4
 ?vmm_load_pdbr@@YAXPAUpdir@@@Z PROC			; vmm_load_pdbr
 
-; 136  : 	_asm {
-; 137  : 		mov eax, dword ptr[dir]
+; 137  : 	_asm {
+; 138  : 		mov eax, dword ptr[dir]
 
 	mov	eax, DWORD PTR _dir$[esp-4]
 
-; 138  : 		mov cr3, eax
+; 139  : 		mov cr3, eax
 
 	mov	cr3, eax
 
-; 139  : 	}
-; 140  : }
+; 140  : 	}
+; 141  : }
 
 	ret	0
 ?vmm_load_pdbr@@YAXPAUpdir@@@Z ENDP			; vmm_load_pdbr
