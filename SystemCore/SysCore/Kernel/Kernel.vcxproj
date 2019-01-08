@@ -46,10 +46,10 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level4</WarningLevel>
-      <Optimization>Full</Optimization>
+      <Optimization>MaxSpeed</Optimization>
       <SDLCheck>
       </SDLCheck>
-      <AdditionalIncludeDirectories>..\Include;..\keyboard;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\FlopyDisk;..\Include;..\keyboard;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat />
       <OmitFramePointers>true</OmitFramePointers>
       <PreprocessorDefinitions>ARCH_X86;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -62,13 +62,14 @@
       <MinimalRebuild>false</MinimalRebuild>
       <ExceptionHandling />
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>
       </GenerateDebugInformation>
       <OutputFile>A:\KRNL32.EXE</OutputFile>
       <AdditionalLibraryDirectories>..\Lib\;..\Debug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Keyboard.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>keyboard.lib;flopydisk.lib</AdditionalDependencies>
       <SubSystem>Native</SubSystem>
       <Driver>Driver</Driver>
       <OptimizeReferences>true</OptimizeReferences>

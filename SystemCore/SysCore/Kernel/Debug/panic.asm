@@ -6,11 +6,11 @@
 	include listing.inc
 	.model	flat
 
-INCLUDELIB MSVCRTD
+INCLUDELIB MSVCRT
 INCLUDELIB OLDNAMES
 
 CONST	SEGMENT
-$SG2655	DB	'We apologize, MOS has encountered a problem and has been'
+$SG2686	DB	'We apologize, MOS has encountered a problem and has been'
 	DB	' shut down', 0aH, 09H, 09H, 09H, 09H, 09H, '  to prevent dama'
 	DB	'ge to your computer. Any unsaved work might be lost.', 0aH, 09H
 	DB	09H, 09H, 09H, 09H, '  We are sorry for the inconvenience this'
@@ -18,9 +18,9 @@ $SG2655	DB	'We apologize, MOS has encountered a problem and has been'
 	DB	'lease report the following information and restart your compu'
 	DB	'ter.', 0aH, 09H, 09H, 09H, 09H, 09H, '  The system has been h'
 	DB	'alted.', 0aH, 0aH, 00H
-$SG2656	DB	'%s', 00H
+$SG2687	DB	'%s', 00H
 	ORG $+1
-$SG2657	DB	'*** STOP: %s', 00H
+$SG2688	DB	'*** STOP: %s', 00H
 CONST	ENDS
 PUBLIC	?kernel_panic@@YAXPBDZZ				; kernel_panic
 EXTRN	?interrupt_disable@@YAXXZ:PROC			; interrupt_disable
@@ -30,9 +30,10 @@ EXTRN	?DebugSetColor@@YAXG@Z:PROC			; DebugSetColor
 EXTRN	?DebugPrintf@@YAHPBDZZ:PROC			; DebugPrintf
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\panic.cpp
+;	COMDAT ?kernel_panic@@YAXPBDZZ
 _TEXT	SEGMENT
 _fmt$ = 8						; size = 4
-?kernel_panic@@YAXPBDZZ PROC				; kernel_panic
+?kernel_panic@@YAXPBDZZ PROC				; kernel_panic, COMDAT
 
 ; 13   : 
 ; 14   : 	interrupt_disable();
@@ -75,14 +76,14 @@ _fmt$ = 8						; size = 4
 ; 35   : 	//DebugPuts(disclamer);
 ; 36   : 	DebugPrintf("%s", disclamer);
 
-	push	OFFSET $SG2655
-	push	OFFSET $SG2656
+	push	OFFSET $SG2686
+	push	OFFSET $SG2687
 	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
 
 ; 37   : 	DebugPrintf("*** STOP: %s", fmt);
 
 	push	DWORD PTR _fmt$[esp+20]
-	push	OFFSET $SG2657
+	push	OFFSET $SG2688
 	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
 	add	esp, 32					; 00000020H
 	npad	4

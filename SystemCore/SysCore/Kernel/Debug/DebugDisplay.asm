@@ -6,7 +6,7 @@
 	include listing.inc
 	.model	flat
 
-INCLUDELIB MSVCRTD
+INCLUDELIB MSVCRT
 INCLUDELIB OLDNAMES
 
 PUBLIC	?_curX@@3EA					; _curX
@@ -15,7 +15,6 @@ PUBLIC	?video_memory@@3PAGA				; video_memory
 PUBLIC	?_color@@3GA					; _color
 PUBLIC	?tbuf@@3PADA					; tbuf
 PUBLIC	?bchars@@3PADA					; bchars
-PUBLIC	?Debugstr@@3PADA				; Debugstr
 _BSS	SEGMENT
 ?_curX@@3EA DB	01H DUP (?)				; _curX
 	ALIGN	4
@@ -24,7 +23,7 @@ _BSS	SEGMENT
 	ALIGN	4
 
 ?tbuf@@3PADA DB	020H DUP (?)				; tbuf
-?Debugstr@@3PADA DB 020H DUP (?)			; Debugstr
+_Debugstr DB	020H DUP (?)
 _BSS	ENDS
 _DATA	SEGMENT
 ?video_memory@@3PAGA DD 0b8000H				; video_memory
@@ -59,11 +58,12 @@ EXTRN	?strcpy@@YAPADPADPBD@Z:PROC			; strcpy
 EXTRN	?strlen@@YAIPBD@Z:PROC				; strlen
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\debugdisplay.cpp
+;	COMDAT ?itoa_s@@YAXHIPAD@Z
 _TEXT	SEGMENT
 _i$ = 8							; size = 4
 _base$ = 12						; size = 4
 _buf$ = 16						; size = 4
-?itoa_s@@YAXHIPAD@Z PROC				; itoa_s
+?itoa_s@@YAXHIPAD@Z PROC				; itoa_s, COMDAT
 
 ; 92   : 	if (base > 16) return;
 
@@ -104,11 +104,12 @@ $LN3@itoa_s:
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\debugdisplay.cpp
+;	COMDAT ?itoa@@YAXIIPAD@Z
 _TEXT	SEGMENT
 _i$ = 8							; size = 4
 _base$ = 12						; size = 4
 _buf$ = 16						; size = 4
-?itoa@@YAXIIPAD@Z PROC					; itoa
+?itoa@@YAXIIPAD@Z PROC					; itoa, COMDAT
 
 ; 68   : void itoa(unsigned i, unsigned base, char* buf) {
 
@@ -201,10 +202,11 @@ $LN6@itoa:
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\debugdisplay.cpp
+;	COMDAT ?DebugPrintf@@YAHPBDZZ
 _TEXT	SEGMENT
 tv443 = -4						; size = 4
 _str$ = 8						; size = 4
-?DebugPrintf@@YAHPBDZZ PROC				; DebugPrintf
+?DebugPrintf@@YAHPBDZZ PROC				; DebugPrintf, COMDAT
 
 ; 102  : int DebugPrintf(const char* str, ...) {
 
@@ -314,13 +316,13 @@ $LN5@DebugPrint:
 
 	push	DWORD PTR [ecx+4]
 	add	ecx, 4
-	push	OFFSET ?Debugstr@@3PADA			; Debugstr
+	push	OFFSET _Debugstr
 	mov	DWORD PTR tv443[esp+28], ecx
 	call	?strcpy@@YAPADPADPBD@Z			; strcpy
 
 ; 130  : 				DebugPuts(Debugstr);
 
-	push	OFFSET ?Debugstr@@3PADA			; Debugstr
+	push	OFFSET _Debugstr
 	call	?DebugPuts@@YAXPAD@Z			; DebugPuts
 	add	esp, 12					; 0000000cH
 
@@ -342,13 +344,13 @@ $LN4@DebugPrint:
 ; 139  : 
 ; 140  : 				itoa_s(c, 10, Debugstr);
 
-	mov	ebx, OFFSET ?Debugstr@@3PADA		; Debugstr
+	mov	ebx, OFFSET _Debugstr
 	mov	DWORD PTR tv443[esp+20], ecx
 	mov	ecx, DWORD PTR [ecx]
 	test	ecx, ecx
 	jns	SHORT $LN18@DebugPrint
-	mov	BYTE PTR ?Debugstr@@3PADA, 45		; 0000002dH
-	mov	ebx, OFFSET ?Debugstr@@3PADA+1
+	mov	BYTE PTR _Debugstr, 45			; 0000002dH
+	mov	ebx, OFFSET _Debugstr+1
 	neg	ecx
 $LN18@DebugPrint:
 	xor	edi, edi
@@ -403,11 +405,11 @@ $LN3@DebugPrint:
 	mov	eax, DWORD PTR [ecx+4]
 	add	ecx, 4
 	mov	DWORD PTR tv443[esp+20], ecx
-	mov	edi, OFFSET ?Debugstr@@3PADA		; Debugstr
+	mov	edi, OFFSET _Debugstr
 	test	eax, eax
 	jns	SHORT $LN31@DebugPrint
-	mov	BYTE PTR ?Debugstr@@3PADA, 45		; 0000002dH
-	mov	edi, OFFSET ?Debugstr@@3PADA+1
+	mov	BYTE PTR _Debugstr, 45			; 0000002dH
+	mov	edi, OFFSET _Debugstr+1
 	neg	eax
 $LN31@DebugPrint:
 	xor	edx, edx
@@ -444,7 +446,7 @@ $LN42@DebugPrint:
 
 ; 151  : 				DebugPuts(Debugstr);
 
-	push	OFFSET ?Debugstr@@3PADA			; Debugstr
+	push	OFFSET _Debugstr
 	call	?DebugPuts@@YAXPAD@Z			; DebugPuts
 $LN68@DebugPrint:
 	add	esp, 4
@@ -548,9 +550,10 @@ $LN64@DebugPrint:
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\debugdisplay.cpp
+;	COMDAT ?DebugPuts@@YAXPAD@Z
 _TEXT	SEGMENT
 _s$ = 8							; size = 4
-?DebugPuts@@YAXPAD@Z PROC				; DebugPuts
+?DebugPuts@@YAXPAD@Z PROC				; DebugPuts, COMDAT
 
 ; 58   : void DebugPuts(char * s){
 
@@ -632,9 +635,10 @@ $LN1@DebugPuts:
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\debugdisplay.cpp
+;	COMDAT ?DebugSetColor@@YAXG@Z
 _TEXT	SEGMENT
 _color$ = 8						; size = 2
-?DebugSetColor@@YAXG@Z PROC				; DebugSetColor
+?DebugSetColor@@YAXG@Z PROC				; DebugSetColor, COMDAT
 
 ; 40   : 	_color = color;
 
@@ -648,9 +652,10 @@ _color$ = 8						; size = 2
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\debugdisplay.cpp
+;	COMDAT ?DebugClrScreen@@YAXE@Z
 _TEXT	SEGMENT
 _bgcolor$ = 8						; size = 1
-?DebugClrScreen@@YAXE@Z PROC				; DebugClrScreen
+?DebugClrScreen@@YAXE@Z PROC				; DebugClrScreen, COMDAT
 
 ; 43   : void DebugClrScreen(unsigned char bgcolor){
 
@@ -684,10 +689,11 @@ _bgcolor$ = 8						; size = 1
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\debugdisplay.cpp
+;	COMDAT ?DebugGotoXY@@YAXEE@Z
 _TEXT	SEGMENT
 _x$ = 8							; size = 1
 _y$ = 12						; size = 1
-?DebugGotoXY@@YAXEE@Z PROC				; DebugGotoXY
+?DebugGotoXY@@YAXEE@Z PROC				; DebugGotoXY, COMDAT
 
 ; 53   : 	_curX = x;
 
@@ -707,9 +713,10 @@ _y$ = 12						; size = 1
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\debugdisplay.cpp
+;	COMDAT ?DebugPutc@@YAXE@Z
 _TEXT	SEGMENT
 _ch$ = 8						; size = 1
-?DebugPutc@@YAXE@Z PROC					; DebugPutc
+?DebugPutc@@YAXE@Z PROC					; DebugPutc, COMDAT
 
 ; 13   : 	if (!ch)
 

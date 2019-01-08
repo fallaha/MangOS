@@ -97,7 +97,7 @@ void itoa_s(int i, unsigned base, char* buf) {
 	itoa(i, base, buf);
 }
 
-char Debugstr[32] = { 0 };
+static char Debugstr[32] = { 0 };
 //! Displays a formatted string
 int DebugPrintf(const char* str, ...) {
 

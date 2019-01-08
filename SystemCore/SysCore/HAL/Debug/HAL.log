@@ -1,9 +1,12 @@
-﻿Build started 12/10/1397 01:15:30 ب.ظ.
-     1>Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\HAL\HAL.vcxproj" on node 2 (Rebuild target(s)).
+﻿Build started 17/10/1397 02:05:28 ب.ظ.
+     1>Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\HAL\HAL.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\Include /Zi /nologo /W4 /WX- /O2 /Oy /D ARCH_X86 /D _DEBUG /X /Gm- /MD /Zp1 /GS- /fp:precise /Zc:wchar_t /Zc:forScope /GR- /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt cpu.cpp gdt.cpp idt.cpp pic.cpp pit.cpp
+         G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\Include /Zi /nologo /W4 /WX- /O2 /Oy /D ARCH_X86 /D _DEBUG /X /Gm- /MD /Zp1 /GS- /fp:precise /Zc:wchar_t /Zc:forScope /GR- /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt cpu.cpp dma.cpp idt.cpp pic.cpp pit.cpp
          cpu.cpp
-         gdt.cpp
+         dma.cpp
+     1>dma.cpp(67): warning C4100: 'dma' : unreferenced formal parameter
+     1>dma.cpp(74): warning C4100: 'dma' : unreferenced formal parameter
+     1>dma.cpp(142): warning C4244: 'argument' : conversion from 'int' to 'uint8_t', possible loss of data
          idt.cpp
          pic.cpp
          pit.cpp
@@ -13,14 +16,15 @@
          Hal.cpp
        Lib:
          G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Debug\HAL.lib" /NOLOGO Debug\cpu.obj
+         Debug\dma.obj
          Debug\gdt.obj
          Debug\Hal.obj
          Debug\idt.obj
          Debug\pic.obj
          Debug\pit.obj
          HAL.vcxproj -> C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Debug\HAL.lib
-     1>Done Building Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\HAL\HAL.vcxproj" (Rebuild target(s)).
+     1>Done Building Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\HAL\HAL.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.57
+Time Elapsed 00:00:01.06

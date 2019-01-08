@@ -6,7 +6,7 @@
 	include listing.inc
 	.model	flat
 
-INCLUDELIB MSVCRTD
+INCLUDELIB MSVCRT
 INCLUDELIB OLDNAMES
 
 _BSS	SEGMENT
@@ -33,9 +33,10 @@ PUBLIC	?pmm_first_free_s@@YAHI@Z			; pmm_first_free_s
 EXTRN	?memset@@YAPAXPAXDI@Z:PROC			; memset
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\pmm.cpp
+;	COMDAT ?pmm_first_free_s@@YAHI@Z
 _TEXT	SEGMENT
 _size$ = 8						; size = 4
-?pmm_first_free_s@@YAHI@Z PROC				; pmm_first_free_s
+?pmm_first_free_s@@YAHI@Z PROC				; pmm_first_free_s, COMDAT
 
 ; 48   : int pmm_first_free_s(size_t size){
 
@@ -175,8 +176,9 @@ $LN20@pmm_first_:
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\pmm.cpp
+;	COMDAT ?pmm_first_free@@YAHXZ
 _TEXT	SEGMENT
-?pmm_first_free@@YAHXZ PROC				; pmm_first_free
+?pmm_first_free@@YAHXZ PROC				; pmm_first_free, COMDAT
 
 ; 38   : int pmm_first_free (){
 
@@ -303,8 +305,9 @@ _frame$ = 8						; size = 4
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\pmm.cpp
+;	COMDAT ?pmm_get_used_block_count@@YAIXZ
 _TEXT	SEGMENT
-?pmm_get_used_block_count@@YAIXZ PROC			; pmm_get_used_block_count
+?pmm_get_used_block_count@@YAIXZ PROC			; pmm_get_used_block_count, COMDAT
 
 ; 162  : 	return _pmm_used_blocks;
 
@@ -317,8 +320,9 @@ _TEXT	SEGMENT
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\pmm.cpp
+;	COMDAT ?pmm_get_free_block_count@@YAIXZ
 _TEXT	SEGMENT
-?pmm_get_free_block_count@@YAIXZ PROC			; pmm_get_free_block_count
+?pmm_get_free_block_count@@YAIXZ PROC			; pmm_get_free_block_count, COMDAT
 
 ; 159  : 	return _pmm_max_blocks-_pmm_used_blocks;
 
@@ -332,8 +336,9 @@ _TEXT	SEGMENT
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\pmm.cpp
+;	COMDAT ?pmm_get_max_blocks@@YAIXZ
 _TEXT	SEGMENT
-?pmm_get_max_blocks@@YAIXZ PROC				; pmm_get_max_blocks
+?pmm_get_max_blocks@@YAIXZ PROC				; pmm_get_max_blocks, COMDAT
 
 ; 156  : 	return _pmm_max_blocks;
 
@@ -346,8 +351,9 @@ _TEXT	SEGMENT
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\pmm.cpp
+;	COMDAT ?pmm_get_memory_size@@YAIXZ
 _TEXT	SEGMENT
-?pmm_get_memory_size@@YAIXZ PROC			; pmm_get_memory_size
+?pmm_get_memory_size@@YAIXZ PROC			; pmm_get_memory_size, COMDAT
 
 ; 153  : 	return _pmm_memory_size;
 
@@ -360,10 +366,11 @@ _TEXT	SEGMENT
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\pmm.cpp
+;	COMDAT ?pmm_free_block_s@@YAXPAII@Z
 _TEXT	SEGMENT
 _pa$ = 8						; size = 4
 _count$ = 12						; size = 4
-?pmm_free_block_s@@YAXPAII@Z PROC			; pmm_free_block_s
+?pmm_free_block_s@@YAXPAII@Z PROC			; pmm_free_block_s, COMDAT
 
 ; 141  : 
 ; 142  : 	physical_addr addr = (physical_addr)pa;
@@ -425,9 +432,10 @@ $LN12@pmm_free_b:
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\pmm.cpp
+;	COMDAT ?pmm_alloc_block_s@@YAPAXI@Z
 _TEXT	SEGMENT
 _count$ = 8						; size = 4
-?pmm_alloc_block_s@@YAPAXI@Z PROC			; pmm_alloc_block_s
+?pmm_alloc_block_s@@YAPAXI@Z PROC			; pmm_alloc_block_s, COMDAT
 
 ; 122  : 
 ; 123  : 	if (pmm_get_free_block_count() <= 0)
@@ -531,9 +539,10 @@ $LN1@pmm_alloc_:
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\pmm.cpp
+;	COMDAT ?pmm_free_block@@YAXPAX@Z
 _TEXT	SEGMENT
 _pa$ = 8						; size = 4
-?pmm_free_block@@YAXPAX@Z PROC				; pmm_free_block
+?pmm_free_block@@YAXPAX@Z PROC				; pmm_free_block, COMDAT
 
 ; 114  : 	physical_addr addr = (physical_addr)pa;
 ; 115  : 	int frame = addr / PMM_BLOCK_SIZE;
@@ -565,8 +574,9 @@ _pa$ = 8						; size = 4
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\pmm.cpp
+;	COMDAT ?pmm_alloc_block@@YAPAXXZ
 _TEXT	SEGMENT
-?pmm_alloc_block@@YAPAXXZ PROC				; pmm_alloc_block
+?pmm_alloc_block@@YAPAXXZ PROC				; pmm_alloc_block, COMDAT
 
 ; 100  : 	if (pmm_get_free_block_count() <= 0)
 
@@ -640,10 +650,11 @@ $LN1@pmm_alloc_:
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\pmm.cpp
+;	COMDAT ?pmm_clr_region@@YAXII@Z
 _TEXT	SEGMENT
 _base$ = 8						; size = 4
 _limit$ = 12						; size = 4
-?pmm_clr_region@@YAXII@Z PROC				; pmm_clr_region
+?pmm_clr_region@@YAXII@Z PROC				; pmm_clr_region, COMDAT
 
 ; 89   : void pmm_clr_region(uint32_t base, uint32_t limit){
 
@@ -723,10 +734,11 @@ $LN14@pmm_clr_re:
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\pmm.cpp
+;	COMDAT ?pmm_set_region@@YAXII@Z
 _TEXT	SEGMENT
 _base$ = 8						; size = 4
 _limit$ = 12						; size = 4
-?pmm_set_region@@YAXII@Z PROC				; pmm_set_region
+?pmm_set_region@@YAXII@Z PROC				; pmm_set_region, COMDAT
 
 ; 81   : 	uint32_t size = limit / PMM_BLOCK_SIZE;
 
@@ -791,10 +803,11 @@ $LN14@pmm_set_re:
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\pmm.cpp
+;	COMDAT ?pmm_initialize@@YAXII@Z
 _TEXT	SEGMENT
 _mem_size$ = 8						; size = 4
 _bitmap$ = 12						; size = 4
-?pmm_initialize@@YAXII@Z PROC				; pmm_initialize
+?pmm_initialize@@YAXII@Z PROC				; pmm_initialize, COMDAT
 
 ; 71   : 	_pmm_memory_size = mem_size;
 

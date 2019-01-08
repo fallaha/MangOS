@@ -5,6 +5,7 @@
 #include "pmm.h"
 #include "vmm.h"
 #include <kbrd.h>
+#include <flopy.h>
 
 //! format of a memory region
 struct memory_region {
@@ -41,6 +42,8 @@ int _cdecl kernel_initialize (multiboot_info* info) {
 	setvect(18, (void(__cdecl &)(void))machine_check_abort);
 	setvect(19, (void(__cdecl &)(void))simd_fpu_fault);
 	kbrd_initilize();
+
+
 	interrupt_enable(); /*Enabling interrupt*/
 
 	unsigned int memory_amount = 1024;
@@ -59,24 +62,73 @@ int _cdecl kernel_initialize (multiboot_info* info) {
 	}
 	pmm_set_region(0x100000,kernel_img_size*512);
 	vmm_initialize();
+
+	//! set drive 0 as current drive
+	flpydsk_set_working_drive(0);
+
+	//! install floppy disk to IR 38, uses IRQ 6
+	flpydsk_install(38);
+	//! set DMA buffer to 64k
+	flpydsk_set_dma(0x8000);
+
 }
 
 
+//! sleeps a little bit. This uses the HALs get_tick_count() which in turn uses the PIT
+void sleep(int ms) {
+
+	static int ticks = ms + get_tick();
+	while (ticks > get_tick())
+		;
+}
 
 
+uint8_t getch(){
+	uint8_t ch;
+	while (kbrd_get_last_std_char() == 0);
+	ch = kbrd_make(kbrd_get_last_std_char());
+	kbrd_destroy_last_char();
+	return ch;
+}
 
+void gets (char *s,int max){
+	int i = 0; 
+	do{
+		s[i] = getch();
+		DebugPutc(s[i++]);
+	} while (s[i-1] != '\r');
+	s[i-1] = 0;
+}
 
+int stoi(char *s){
+	int n = 0;
+	int i = 0;
+	int sign = 1;
+
+	if (s[i] == '-'){
+		sign = -1;
+		i++;
+	}
+
+	while (s[i] != 0){
+		n *= 10;
+		n += s[i++];
+	}
+	n *= sign;
+	return n;
+}
 
 int _cdecl main (multiboot_info* info) {
 	kernel_initialize(info);
 	DebugClrScreen(0x1f);
 	DebugGotoXY(0, 0);
-	uint8_t ch;
-	for (;;){
-		while (kbrd_get_last_std_char() == 0);
-		ch = kbrd_make(kbrd_get_last_std_char());
-		DebugPutc(ch);
-		kbrd_destroy_last_char();
-	}
+
+	uint8_t* sector = 0;
+	sector = flpydsk_read_sector(33);
+	for (int j = 0; j < 128; j++)
+		DebugPrintf("%x ", sector[j]);
+
+	for (;;);
+
 
 }

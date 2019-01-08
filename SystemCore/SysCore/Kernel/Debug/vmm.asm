@@ -6,7 +6,7 @@
 	include listing.inc
 	.model	flat
 
-INCLUDELIB MSVCRTD
+INCLUDELIB MSVCRT
 INCLUDELIB OLDNAMES
 
 PUBLIC	?vmm_load_pdbr@@YAXPAUpdir@@@Z			; vmm_load_pdbr
@@ -37,9 +37,10 @@ __vmm_cur_dir DD 01H DUP (?)
 _BSS	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\vmm.cpp
+;	COMDAT ?vmm_flush_tlb_entry@@YAXI@Z
 _TEXT	SEGMENT
 _addr$ = 8						; size = 4
-?vmm_flush_tlb_entry@@YAXI@Z PROC			; vmm_flush_tlb_entry
+?vmm_flush_tlb_entry@@YAXI@Z PROC			; vmm_flush_tlb_entry, COMDAT
 
 ; 35   : 	_asm{
 ; 36   : 		cli 
@@ -105,9 +106,10 @@ $LN1@vmm_pd_swi:
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\vmm.cpp
+;	COMDAT ?vmm_paging_enable@@YAX_N@Z
 _TEXT	SEGMENT
 _b$ = 8							; size = 1
-?vmm_paging_enable@@YAX_N@Z PROC			; vmm_paging_enable
+?vmm_paging_enable@@YAX_N@Z PROC			; vmm_paging_enable, COMDAT
 
 ; 121  : void vmm_paging_enable(bool b){
 
@@ -364,10 +366,11 @@ _attrib$ = 12						; size = 4
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\vmm.cpp
+;	COMDAT ?vmm_initialize@@YAXXZ
 _TEXT	SEGMENT
 _dir$ = -8						; size = 4
 _b$ = -4						; size = 1
-?vmm_initialize@@YAXXZ PROC				; vmm_initialize
+?vmm_initialize@@YAXXZ PROC				; vmm_initialize, COMDAT
 
 ; 89   : void vmm_initialize(){
 
@@ -506,10 +509,11 @@ $LN17@vmm_initia:
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\vmm.cpp
+;	COMDAT ?vmm_map_page@@YAXPAX0@Z
 _TEXT	SEGMENT
 _phys$ = 8						; size = 4
 _virt$ = 12						; size = 4
-?vmm_map_page@@YAXPAX0@Z PROC				; vmm_map_page
+?vmm_map_page@@YAXPAX0@Z PROC				; vmm_map_page, COMDAT
 
 ; 63   : 	pdir *dir = _vmm_cur_dir;
 ; 64   : 	pd_entry *pde = (pd_entry *)&dir->entry[VMM_GET_PD_ENTRY((pd_entry)virt)];
@@ -601,9 +605,10 @@ $LN13@vmm_map_pa:
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\vmm.cpp
+;	COMDAT ?vmm_free_frame@@YA_NPAI@Z
 _TEXT	SEGMENT
 _pe$ = 8						; size = 4
-?vmm_free_frame@@YA_NPAI@Z PROC				; vmm_free_frame
+?vmm_free_frame@@YA_NPAI@Z PROC				; vmm_free_frame, COMDAT
 
 ; 56   : bool vmm_free_frame (pt_entry * pe){
 
@@ -632,9 +637,10 @@ _pe$ = 8						; size = 4
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\vmm.cpp
+;	COMDAT ?vmm_alloc_frame@@YA_NPAI@Z
 _TEXT	SEGMENT
 _pe$ = 8						; size = 4
-?vmm_alloc_frame@@YA_NPAI@Z PROC			; vmm_alloc_frame
+?vmm_alloc_frame@@YA_NPAI@Z PROC			; vmm_alloc_frame, COMDAT
 
 ; 48   : 	void *p = pmm_alloc_block();
 
@@ -678,8 +684,9 @@ $LN1@vmm_alloc_:
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\vmm.cpp
+;	COMDAT ?vmm_get_cur_dir@@YAPAUpdir@@XZ
 _TEXT	SEGMENT
-?vmm_get_cur_dir@@YAPAUpdir@@XZ PROC			; vmm_get_cur_dir
+?vmm_get_cur_dir@@YAPAUpdir@@XZ PROC			; vmm_get_cur_dir, COMDAT
 
 ; 44   : 	return _vmm_cur_dir;
 
@@ -692,9 +699,10 @@ _TEXT	SEGMENT
 _TEXT	ENDS
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\vmm.cpp
+;	COMDAT ?vmm_load_pdbr@@YAXPAUpdir@@@Z
 _TEXT	SEGMENT
 _dir$ = 8						; size = 4
-?vmm_load_pdbr@@YAXPAUpdir@@@Z PROC			; vmm_load_pdbr
+?vmm_load_pdbr@@YAXPAUpdir@@@Z PROC			; vmm_load_pdbr, COMDAT
 
 ; 137  : 	_asm {
 ; 138  : 		mov eax, dword ptr[dir]

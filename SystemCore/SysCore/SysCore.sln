@@ -18,6 +18,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lib", "Lib\Lib.vcxproj", "{
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Keyboard", "Keyboard\Keyboard.vcxproj", "{6B8787CF-7B64-4BB5-9104-677E8B7FEED8}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FlopyDisk", "FlopyDisk\FlopyDisk.vcxproj", "{2540C62E-604A-430B-A8D4-397C3A230175}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -40,6 +42,10 @@ Global
 		{6B8787CF-7B64-4BB5-9104-677E8B7FEED8}.Debug|Win32.Build.0 = Debug|Win32
 		{6B8787CF-7B64-4BB5-9104-677E8B7FEED8}.Release|Win32.ActiveCfg = Release|Win32
 		{6B8787CF-7B64-4BB5-9104-677E8B7FEED8}.Release|Win32.Build.0 = Release|Win32
+		{2540C62E-604A-430B-A8D4-397C3A230175}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2540C62E-604A-430B-A8D4-397C3A230175}.Debug|Win32.Build.0 = Debug|Win32
+		{2540C62E-604A-430B-A8D4-397C3A230175}.Release|Win32.ActiveCfg = Release|Win32
+		{2540C62E-604A-430B-A8D4-397C3A230175}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

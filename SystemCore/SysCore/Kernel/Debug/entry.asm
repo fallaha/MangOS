@@ -6,16 +6,17 @@
 	include listing.inc
 	.model	flat
 
-INCLUDELIB MSVCRTD
+INCLUDELIB MSVCRT
 INCLUDELIB OLDNAMES
 
 PUBLIC	?kernel_entry@@YAHPAUmultiboot_info@@@Z		; kernel_entry
 EXTRN	_main:PROC
 ; Function compile flags: /Ogtpy
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\entry.cpp
+;	COMDAT ?kernel_entry@@YAHPAUmultiboot_info@@@Z
 _TEXT	SEGMENT
 _info$ = 8						; size = 4
-?kernel_entry@@YAHPAUmultiboot_info@@@Z PROC		; kernel_entry
+?kernel_entry@@YAHPAUmultiboot_info@@@Z PROC		; kernel_entry, COMDAT
 
 ; 8    : #ifdef ARCH_X86
 ; 9    : 	// Set register

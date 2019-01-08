@@ -79,6 +79,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="cpu.cpp" />
+    <ClCompile Include="dma.cpp" />
     <ClCompile Include="gdt.cpp" />
     <ClCompile Include="Hal.cpp">
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">..\Include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -89,6 +90,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cpu.h" />
+    <ClInclude Include="dma.h" />
     <ClInclude Include="gdt.h" />
     <ClInclude Include="idt.h" />
     <ClInclude Include="pic.h" />
