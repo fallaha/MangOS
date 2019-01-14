@@ -109,6 +109,7 @@
     </ClCompile>
     <ClCompile Include="panic.cpp" />
     <ClCompile Include="pmm.cpp" />
+    <ClCompile Include="vfs.cpp" />
     <ClCompile Include="vmm.cpp" />
   </ItemGroup>
   <ItemGroup>
