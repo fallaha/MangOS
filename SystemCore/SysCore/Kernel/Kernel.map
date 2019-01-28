@@ -1,21 +1,21 @@
  KRNL32
 
- Timestamp is 5c34279e (Mon Jan 07 20:31:26 2019)
+ Timestamp is 5c4ec345 (Mon Jan 28 00:54:29 2019)
 
  Preferred load address is c0000000
 
  Start         Length     Name                   Class
- 0001:00000000 00001ccfH .text$mn                CODE
- 0002:00000000 00000290H .rdata                  DATA
+ 0001:00000000 000024ffH .text$mn                CODE
+ 0002:00000000 000002e8H .rdata                  DATA
  0003:00000000 000000c4H .data                   DATA
- 0003:000000c8 00000896H .bss                    DATA
+ 0003:000000c8 00000d4eH .bss                    DATA
  0004:00000000 00000058H .rsrc$01                DATA
  0004:00000060 000002f8H .rsrc$02                DATA
 
   Address         Publics by Value              Rva+Base       Lib:Object
 
- 0000:00000000       ___guard_flags             00000000     <absolute>
  0000:00000000       ___safe_se_handler_count   00000000     <absolute>
+ 0000:00000000       ___guard_flags             00000000     <absolute>
  0000:00000000       ___guard_fids_count        00000000     <absolute>
  0000:00000000       ___guard_fids_table        00000000     <absolute>
  0000:00000000       ___safe_se_handler_table   00000000     <absolute>
@@ -47,75 +47,93 @@
  0001:00000610       ?kernel_initialize@@YAHPAUmultiboot_info@@@Z c0000a10 f   main.obj
  0001:000007b0       ?sleep@@YAXH@Z             c0000bb0 f   main.obj
  0001:000007e0       _main                      c0000be0 f   main.obj
- 0001:00000840       ?kernel_panic@@YAXPBDZZ    c0000c40 f   panic.obj
- 0001:00000890       ?pmm_alloc_block@@YAPAXXZ  c0000c90 f   pmm.obj
- 0001:000008e0       ?pmm_clr_region@@YAXII@Z   c0000ce0 f   pmm.obj
- 0001:00000940       ?pmm_first_free@@YAHXZ     c0000d40 f   pmm.obj
- 0001:00000990       ?pmm_initialize@@YAXII@Z   c0000d90 f   pmm.obj
- 0001:000009d0       ?pmm_set_region@@YAXII@Z   c0000dd0 f   pmm.obj
- 0001:00000a20       ?vmm_initialize@@YAXXZ     c0000e20 f   vmm.obj
- 0001:00000af0       ?kbrd_initilize@@YAXXZ     c0000ef0 f   keyboard:kbrd.obj
- 0001:00000b00       ?kbrd_irq_handler@@YAXXZ   c0000f00 f   keyboard:kbrd.obj
- 0001:00000c20       ?flpydsk_set_dma@@YAXH@Z   c0001020 f   flopydisk:flopy.obj
- 0001:00000c30       ?flpydsk_install@@YAXH@Z   c0001030 f   flopydisk:flopy.obj
- 0001:00000c60       ?flpydsk_set_working_drive@@YAXE@Z c0001060 f   flopydisk:flopy.obj
- 0001:00000c80       ?flpydsk_get_working_drive@@YAEXZ c0001080 f   flopydisk:flopy.obj
- 0001:00000c90       ?flpydsk_read_sector@@YAPAEH@Z c0001090 f   flopydisk:flopy.obj
- 0001:00000d90       ?flpydsk_lba_to_chs@@YAXHPAH00@Z c0001190 f   flopydisk:flopy.obj
- 0001:00000e00       ?dma_initialize_floppy@@YA_NPAEI@Z c0001200 f   flopydisk:flopy.obj
- 0001:00000e90       ?flpydsk_read_status@@YAEXZ c0001290 f   flopydisk:flopy.obj
- 0001:00000ea0       ?flpydsk_write_dor@@YAXE@Z c00012a0 f   flopydisk:flopy.obj
- 0001:00000ec0       ?flpydsk_send_command@@YAXE@Z c00012c0 f   flopydisk:flopy.obj
- 0001:00000f00       ?flpydsk_read_data@@YAEXZ  c0001300 f   flopydisk:flopy.obj
- 0001:00000f30       ?flpydsk_write_ccr@@YAXE@Z c0001330 f   flopydisk:flopy.obj
- 0001:00000f50       ?i86_flpy_irq@@YAXXZ       c0001350 f   flopydisk:flopy.obj
- 0001:00000f70       ?flpydsk_check_int@@YAXPAI0@Z c0001370 f   flopydisk:flopy.obj
- 0001:00001020       ?flpydsk_control_motor@@YAX_N@Z c0001420 f   flopydisk:flopy.obj
- 0001:00001090       ?flpydsk_drive_data@@YAXEEE_N@Z c0001490 f   flopydisk:flopy.obj
- 0001:00001150       ?flpydsk_calibrate@@YAHE@Z c0001550 f   flopydisk:flopy.obj
- 0001:000012a0       ?flpydsk_disable_controller@@YAXXZ c00016a0 f   flopydisk:flopy.obj
- 0001:000012b0       ?flpydsk_enable_controller@@YAXXZ c00016b0 f   flopydisk:flopy.obj
- 0001:000012c0       ?flpydsk_reset@@YAXXZ      c00016c0 f   flopydisk:flopy.obj
- 0001:00001340       ?flpydsk_read_sector_imp@@YAXEEE@Z c0001740 f   flopydisk:flopy.obj
- 0001:000015a0       ?flpydsk_seek@@YAHEE@Z     c00019a0 f   flopydisk:flopy.obj
- 0001:000016c0       ?get_tick@@YAIXZ           c0001ac0 f   HAL:Hal.obj
- 0001:000016d0       ?hal_initialize@@YAXXZ     c0001ad0 f   HAL:Hal.obj
- 0001:00001700       ?inportb@@YAEG@Z           c0001b00 f   HAL:Hal.obj
- 0001:00001710       ?intdone@@YAXE@Z           c0001b10 f   HAL:Hal.obj
- 0001:00001720       ?interrupt_disable@@YAXXZ  c0001b20 f   HAL:Hal.obj
- 0001:00001730       ?interrupt_enable@@YAXXZ   c0001b30 f   HAL:Hal.obj
- 0001:00001740       ?outportb@@YAXGE@Z         c0001b40 f   HAL:Hal.obj
- 0001:00001750       ?setvect@@YAXIA6AXXZ@Z     c0001b50 f   HAL:Hal.obj
- 0001:00001770       ?dma_mask_channel@@YAXE@Z  c0001b70 f   HAL:dma.obj
- 0001:000017b0       ?dma_reset@@YAXH@Z         c0001bb0 f   HAL:dma.obj
- 0001:000017c0       ?dma_reset_flipflop@@YAXH@Z c0001bc0 f   HAL:dma.obj
- 0001:000017f0       ?dma_set_address@@YAXEEE@Z c0001bf0 f   HAL:dma.obj
- 0001:00001880       ?dma_set_count@@YAXEEE@Z   c0001c80 f   HAL:dma.obj
- 0001:00001910       ?dma_set_mode@@YAXEE@Z     c0001d10 f   HAL:dma.obj
- 0001:00001990       ?dma_set_read@@YAXE@Z      c0001d90 f   HAL:dma.obj
- 0001:000019a0       ?dma_unmask_all@@YAXH@Z    c0001da0 f   HAL:dma.obj
- 0001:000019c0       ?cpu_initialize@@YAXXZ     c0001dc0 f   HAL:cpu.obj
- 0001:000019d0       ?IA32_pic_eoi@@YAXE@Z      c0001dd0 f   HAL:pic.obj
- 0001:00001a00       ?IA32_pic_initialize@@YAXEE@Z c0001e00 f   HAL:pic.obj
- 0001:00001a70       ?IA32_pit_get_tick_count@@YAIXZ c0001e70 f   HAL:pit.obj
- 0001:00001a80       ?IA32_pit_initialize@@YAXXZ c0001e80 f   HAL:pit.obj
- 0001:00001a90       ?IA32_pit_irq@@YAXXZ       c0001e90 f   HAL:pit.obj
- 0001:00001ab0       ?IA32_pit_set_counter@@YAXEGE@Z c0001eb0 f   HAL:pit.obj
- 0001:00001b40       ?idt_default_handler@@YAXXZ c0001f40 f   HAL:idt.obj
- 0001:00001b70       ?idt_initialize@@YAXG@Z    c0001f70 f   HAL:idt.obj
- 0001:00001be0       ?idt_install_ir@@YAXIEGP6AXXZ@Z c0001fe0 f   HAL:idt.obj
- 0001:00001c20       ?gdt_initialize@@YAXXZ     c0002020 f   HAL:gdt.obj
- 0001:00001c80       ?memset@@YAPAXPAXDI@Z      c0002080 f   Lib:string.obj
- 0001:00001ca0       ?strcpy@@YAPADPADPBD@Z     c00020a0 f   Lib:string.obj
- 0001:00001cc0       ?strlen@@YAIPBD@Z          c00020c0 f   Lib:string.obj
- 0002:00000274       ??_C@_0BM@PLBHKJHJ@Exception?5not?5Define?5now?5?3?$CI?$AA@ c0002474     HAL:idt.obj
- 0003:00000000       ?video_memory@@3PAGA       c0002600     DebugDisplay.obj
- 0003:00000004       ?_color@@3GA               c0002604     DebugDisplay.obj
- 0003:00000008       ?bchars@@3PADA             c0002608     DebugDisplay.obj
- 0003:000000c0       ?DMA_BUFFER@@3HA           c00026c0     flopydisk:flopy.obj
- 0003:000000c8       ?_curX@@3EA                c00026c8     DebugDisplay.obj
- 0003:000000c9       ?_curY@@3EA                c00026c9     DebugDisplay.obj
- 0003:000000cc       ?tbuf@@3PADA               c00026cc     DebugDisplay.obj
+ 0001:00000960       ?kernel_panic@@YAXPBDZZ    c0000d60 f   panic.obj
+ 0001:000009b0       ?pmm_alloc_block@@YAPAXXZ  c0000db0 f   pmm.obj
+ 0001:00000a00       ?pmm_clr_region@@YAXII@Z   c0000e00 f   pmm.obj
+ 0001:00000a60       ?pmm_first_free@@YAHXZ     c0000e60 f   pmm.obj
+ 0001:00000ab0       ?pmm_initialize@@YAXII@Z   c0000eb0 f   pmm.obj
+ 0001:00000af0       ?pmm_set_region@@YAXII@Z   c0000ef0 f   pmm.obj
+ 0001:00000b40       ?fat12_default_device_init@@YAXXZ c0000f40 f   vfs.obj
+ 0001:00000ba0       ?vfs_initialize@@YAXXZ     c0000fa0 f   vfs.obj
+ 0001:00000bb0       ?vfs_open_file@@YAXPAUDIRECTORY@@PBD@Z c0000fb0 f   vfs.obj
+ 0001:00000be0       ?vfs_read_file@@YAXPAUDIRECTORY@@PADH@Z c0000fe0 f   vfs.obj
+ 0001:00000c60       ?vfs_rewind@@YAXPAUDIRECTORY@@@Z c0001060 f   vfs.obj
+ 0001:00000c80       ?vmm_initialize@@YAXXZ     c0001080 f   vmm.obj
+ 0001:00000d50       ?kbrd_initilize@@YAXXZ     c0001150 f   keyboard:kbrd.obj
+ 0001:00000d60       ?kbrd_irq_handler@@YAXXZ   c0001160 f   keyboard:kbrd.obj
+ 0001:00000e80       ?flpydsk_set_dma@@YAXH@Z   c0001280 f   flopydisk:flopy.obj
+ 0001:00000e90       ?flpydsk_install@@YAXH@Z   c0001290 f   flopydisk:flopy.obj
+ 0001:00000ec0       ?flpydsk_set_working_drive@@YAXE@Z c00012c0 f   flopydisk:flopy.obj
+ 0001:00000ee0       ?flpydsk_get_working_drive@@YAEXZ c00012e0 f   flopydisk:flopy.obj
+ 0001:00000ef0       ?flpydsk_read_sector@@YAPAEH@Z c00012f0 f   flopydisk:flopy.obj
+ 0001:00000ff0       ?flpydsk_lba_to_chs@@YAXHPAH00@Z c00013f0 f   flopydisk:flopy.obj
+ 0001:00001060       ?dma_initialize_floppy@@YA_NPAEI@Z c0001460 f   flopydisk:flopy.obj
+ 0001:000010f0       ?flpydsk_read_status@@YAEXZ c00014f0 f   flopydisk:flopy.obj
+ 0001:00001100       ?flpydsk_write_dor@@YAXE@Z c0001500 f   flopydisk:flopy.obj
+ 0001:00001120       ?flpydsk_send_command@@YAXE@Z c0001520 f   flopydisk:flopy.obj
+ 0001:00001160       ?flpydsk_read_data@@YAEXZ  c0001560 f   flopydisk:flopy.obj
+ 0001:00001190       ?flpydsk_write_ccr@@YAXE@Z c0001590 f   flopydisk:flopy.obj
+ 0001:000011b0       ?i86_flpy_irq@@YAXXZ       c00015b0 f   flopydisk:flopy.obj
+ 0001:000011d0       ?flpydsk_check_int@@YAXPAI0@Z c00015d0 f   flopydisk:flopy.obj
+ 0001:00001280       ?flpydsk_control_motor@@YAX_N@Z c0001680 f   flopydisk:flopy.obj
+ 0001:000012f0       ?flpydsk_drive_data@@YAXEEE_N@Z c00016f0 f   flopydisk:flopy.obj
+ 0001:000013b0       ?flpydsk_calibrate@@YAHE@Z c00017b0 f   flopydisk:flopy.obj
+ 0001:00001500       ?flpydsk_disable_controller@@YAXXZ c0001900 f   flopydisk:flopy.obj
+ 0001:00001510       ?flpydsk_enable_controller@@YAXXZ c0001910 f   flopydisk:flopy.obj
+ 0001:00001520       ?flpydsk_reset@@YAXXZ      c0001920 f   flopydisk:flopy.obj
+ 0001:000015a0       ?flpydsk_read_sector_imp@@YAXEEE@Z c00019a0 f   flopydisk:flopy.obj
+ 0001:00001800       ?flpydsk_seek@@YAHEE@Z     c0001c00 f   flopydisk:flopy.obj
+ 0001:00001920       ?fat12_UnMount@@YAXXZ      c0001d20 f   FileSystem:fat12.obj
+ 0001:00001930       ?fat12_close_file@@YAXPAUDIRECTORY@@@Z c0001d30 f   FileSystem:fat12.obj
+ 0001:00001950       ?fat12_get_directory@@YAXPAUDIRECTORY@@0PAD@Z c0001d50 f   FileSystem:fat12.obj
+ 0001:00001a20       ?fat12_get_directory_from_root@@YAXPAUDIRECTORY@@PAD@Z c0001e20 f   FileSystem:fat12.obj
+ 0001:00001af0       ?fat12_open_file@@YAXPAUDIRECTORY@@PBD@Z c0001ef0 f   FileSystem:fat12.obj
+ 0001:00001c40       ?fat12_read_one_sector_file@@YAXPAUDIRECTORY@@PAE@Z c0002040 f   FileSystem:fat12.obj
+ 0001:00001d30       ?fat12_to_dos_filename@@YAXPBDPADI@Z c0002130 f   FileSystem:fat12.obj
+ 0001:00001e50       ?get_tick@@YAIXZ           c0002250 f   HAL:Hal.obj
+ 0001:00001e60       ?hal_initialize@@YAXXZ     c0002260 f   HAL:Hal.obj
+ 0001:00001e90       ?inportb@@YAEG@Z           c0002290 f   HAL:Hal.obj
+ 0001:00001ea0       ?intdone@@YAXE@Z           c00022a0 f   HAL:Hal.obj
+ 0001:00001eb0       ?interrupt_disable@@YAXXZ  c00022b0 f   HAL:Hal.obj
+ 0001:00001ec0       ?interrupt_enable@@YAXXZ   c00022c0 f   HAL:Hal.obj
+ 0001:00001ed0       ?outportb@@YAXGE@Z         c00022d0 f   HAL:Hal.obj
+ 0001:00001ee0       ?setvect@@YAXIA6AXXZ@Z     c00022e0 f   HAL:Hal.obj
+ 0001:00001f00       ?dma_mask_channel@@YAXE@Z  c0002300 f   HAL:dma.obj
+ 0001:00001f40       ?dma_reset@@YAXH@Z         c0002340 f   HAL:dma.obj
+ 0001:00001f50       ?dma_reset_flipflop@@YAXH@Z c0002350 f   HAL:dma.obj
+ 0001:00001f80       ?dma_set_address@@YAXEEE@Z c0002380 f   HAL:dma.obj
+ 0001:00002010       ?dma_set_count@@YAXEEE@Z   c0002410 f   HAL:dma.obj
+ 0001:000020a0       ?dma_set_mode@@YAXEE@Z     c00024a0 f   HAL:dma.obj
+ 0001:00002120       ?dma_set_read@@YAXE@Z      c0002520 f   HAL:dma.obj
+ 0001:00002130       ?dma_unmask_all@@YAXH@Z    c0002530 f   HAL:dma.obj
+ 0001:00002150       ?cpu_initialize@@YAXXZ     c0002550 f   HAL:cpu.obj
+ 0001:00002160       ?IA32_pic_eoi@@YAXE@Z      c0002560 f   HAL:pic.obj
+ 0001:00002190       ?IA32_pic_initialize@@YAXEE@Z c0002590 f   HAL:pic.obj
+ 0001:00002200       ?IA32_pit_get_tick_count@@YAIXZ c0002600 f   HAL:pit.obj
+ 0001:00002210       ?IA32_pit_initialize@@YAXXZ c0002610 f   HAL:pit.obj
+ 0001:00002220       ?IA32_pit_irq@@YAXXZ       c0002620 f   HAL:pit.obj
+ 0001:00002240       ?IA32_pit_set_counter@@YAXEGE@Z c0002640 f   HAL:pit.obj
+ 0001:000022d0       ?idt_default_handler@@YAXXZ c00026d0 f   HAL:idt.obj
+ 0001:00002300       ?idt_initialize@@YAXG@Z    c0002700 f   HAL:idt.obj
+ 0001:00002360       ?idt_install_ir@@YAXIEGP6AXXZ@Z c0002760 f   HAL:idt.obj
+ 0001:000023a0       ?gdt_initialize@@YAXXZ     c00027a0 f   HAL:gdt.obj
+ 0001:00002400       ?memcpy@@YAPAXPAXPBXI@Z    c0002800 f   Lib:string.obj
+ 0001:00002430       ?memset@@YAPAXPAXDI@Z      c0002830 f   Lib:string.obj
+ 0001:00002450       ?strchr@@YAPADPBDH@Z       c0002850 f   Lib:string.obj
+ 0001:00002480       ?strcmp@@YAHPBD0@Z         c0002880 f   Lib:string.obj
+ 0001:000024d0       ?strcpy@@YAPADPADPBD@Z     c00028d0 f   Lib:string.obj
+ 0001:000024f0       ?strlen@@YAIPBD@Z          c00028f0 f   Lib:string.obj
+ 0002:000002cc       ??_C@_0BM@PLBHKJHJ@Exception?5not?5Define?5now?5?3?$CI?$AA@ c0002ccc     HAL:idt.obj
+ 0003:00000000       ?video_memory@@3PAGA       c0002e00     DebugDisplay.obj
+ 0003:00000004       ?_color@@3GA               c0002e04     DebugDisplay.obj
+ 0003:00000008       ?bchars@@3PADA             c0002e08     DebugDisplay.obj
+ 0003:000000c0       ?DMA_BUFFER@@3HA           c0002ec0     flopydisk:flopy.obj
+ 0003:000000c8       ?_curX@@3EA                c0002ec8     DebugDisplay.obj
+ 0003:000000c9       ?_curY@@3EA                c0002ec9     DebugDisplay.obj
+ 0003:000000cc       ?tbuf@@3PADA               c0002ecc     DebugDisplay.obj
+ 0003:00000128       ?FILE_SYSTEMS@@3PAPAUFILE_SYSTEM@@A c0002f28     vfs.obj
+ 0003:000001a0       ?FAT12_FS_DF@@3UFILE_SYSTEM@@A c0002fa0     FileSystem:fat12.obj
+ 0003:000001e8       ?FAT@@3PAEA                c0002fe8     FileSystem:fat12.obj
 
  entry point at        0000:00000000
 
@@ -123,52 +141,71 @@
 
  0001:00000218       $LN71                      c0000618     DebugDisplay.obj
  0001:0000022c       $LN64                      c000062c     DebugDisplay.obj
- 0001:00000be0       $LN27                      c0000fe0     keyboard:kbrd.obj
- 0001:00000bfc       $LN28                      c0000ffc     keyboard:kbrd.obj
- 0001:00000c10       $LN25                      c0001010     keyboard:kbrd.obj
- 0001:00000d7c       $LN41                      c000117c     flopydisk:flopy.obj
- 0001:00001078       $LN19                      c0001478     flopydisk:flopy.obj
- 0001:00001290       $LN102                     c0001690     flopydisk:flopy.obj
- 0001:00001858       $LN15                      c0001c58     HAL:dma.obj
- 0001:000018ec       $LN15                      c0001cec     HAL:dma.obj
- 0002:00000000       $SG2725                    c0002200     exception.obj
- 0002:0000000c       $SG2734                    c000220c     exception.obj
- 0002:00000018       $SG2743                    c0002218     exception.obj
- 0002:00000024       $SG2752                    c0002224     exception.obj
- 0002:00000034       $SG2761                    c0002234     exception.obj
- 0002:00000044       $SG2770                    c0002244     exception.obj
- 0002:00000058       $SG2779                    c0002258     exception.obj
- 0002:00000068       $SG2788                    c0002268     exception.obj
- 0002:0000007c       $SG2798                    c000227c     exception.obj
- 0002:0000008c       $SG2808                    c000228c     exception.obj
- 0002:00000098       $SG2818                    c0002298     exception.obj
- 0002:000000a8       $SG2828                    c00022a8     exception.obj
- 0002:000000b4       $SG2838                    c00022b4     exception.obj
- 0002:000000d0       $SG2848                    c00022d0     exception.obj
- 0002:000000dc       $SG2857                    c00022dc     exception.obj
- 0002:000000e8       $SG2867                    c00022e8     exception.obj
- 0002:000000f8       $SG2876                    c00022f8     exception.obj
- 0002:00000108       $SG2885                    c0002308     exception.obj
- 0002:00000118       $SG2984                    c0002318     main.obj
- 0002:00000120       $SG2686                    c0002320     panic.obj
- 0002:00000260       $SG2687                    c0002460     panic.obj
- 0002:00000264       $SG2688                    c0002464     panic.obj
- 0003:00000018       _kbrd_scan_code_list       c0002618     keyboard:kbrd.obj
- 0003:000000ec       _Debugstr                  c00026ec     DebugDisplay.obj
- 0003:0000010c       ?ticks@?1??sleep@@YAXH@Z@4HA c000270c     main.obj
- 0003:00000110       ?$S1@?1??sleep@@YAXH@Z@4IA c0002710     main.obj
- 0003:00000114       __pmm_memory_size          c0002714     pmm.obj
- 0003:00000118       __pmm_used_blocks          c0002718     pmm.obj
- 0003:0000011c       __pmm_max_blocks           c000271c     pmm.obj
- 0003:00000120       __pmm_memory_map           c0002720     pmm.obj
- 0003:00000124       __vmm_cur_dir              c0002724     vmm.obj
- 0003:00000128       __kbrd_code_char           c0002728     keyboard:kbrd.obj
- 0003:0000012c       _ikey                      c000272c     keyboard:kbrd.obj
- 0003:00000132       __CurrentDrive             c0002732     flopydisk:flopy.obj
- 0003:00000133       __FloppyDiskIRQ            c0002733     flopydisk:flopy.obj
- 0003:00000134       __pit_ticks                c0002734     HAL:pit.obj
- 0003:00000138       __idtr                     c0002738     HAL:idt.obj
- 0003:00000140       __idt                      c0002740     HAL:idt.obj
- 0003:00000940       __gdt                      c0002f40     HAL:gdt.obj
- 0003:00000958       __gdtr                     c0002f58     HAL:gdt.obj
- 0004:00000060       $R000000                   c0003060     Kernel.res
+ 0001:00000e40       $LN27                      c0001240     keyboard:kbrd.obj
+ 0001:00000e5c       $LN28                      c000125c     keyboard:kbrd.obj
+ 0001:00000e70       $LN25                      c0001270     keyboard:kbrd.obj
+ 0001:00000fdc       $LN41                      c00013dc     flopydisk:flopy.obj
+ 0001:000012d8       $LN19                      c00016d8     flopydisk:flopy.obj
+ 0001:000014f0       $LN102                     c00018f0     flopydisk:flopy.obj
+ 0001:00001fe8       $LN15                      c00023e8     HAL:dma.obj
+ 0001:0000207c       $LN15                      c000247c     HAL:dma.obj
+ 0002:00000000       $SG2725                    c0002a00     exception.obj
+ 0002:0000000c       $SG2734                    c0002a0c     exception.obj
+ 0002:00000018       $SG2743                    c0002a18     exception.obj
+ 0002:00000024       $SG2752                    c0002a24     exception.obj
+ 0002:00000034       $SG2761                    c0002a34     exception.obj
+ 0002:00000044       $SG2770                    c0002a44     exception.obj
+ 0002:00000058       $SG2779                    c0002a58     exception.obj
+ 0002:00000068       $SG2788                    c0002a68     exception.obj
+ 0002:0000007c       $SG2798                    c0002a7c     exception.obj
+ 0002:0000008c       $SG2808                    c0002a8c     exception.obj
+ 0002:00000098       $SG2818                    c0002a98     exception.obj
+ 0002:000000a8       $SG2828                    c0002aa8     exception.obj
+ 0002:000000b4       $SG2838                    c0002ab4     exception.obj
+ 0002:000000d0       $SG2848                    c0002ad0     exception.obj
+ 0002:000000dc       $SG2857                    c0002adc     exception.obj
+ 0002:000000e8       $SG2867                    c0002ae8     exception.obj
+ 0002:000000f8       $SG2876                    c0002af8     exception.obj
+ 0002:00000108       $SG2885                    c0002b08     exception.obj
+ 0002:00000118       $SG3085                    c0002b18     main.obj
+ 0002:00000124       $SG3086                    c0002b24     main.obj
+ 0002:00000128       $SG3087                    c0002b28     main.obj
+ 0002:0000012c       $SG3088                    c0002b2c     main.obj
+ 0002:00000130       $SG3089                    c0002b30     main.obj
+ 0002:00000134       $SG3090                    c0002b34     main.obj
+ 0002:00000138       $SG3091                    c0002b38     main.obj
+ 0002:0000013c       $SG3092                    c0002b3c     main.obj
+ 0002:00000140       $SG3093                    c0002b40     main.obj
+ 0002:00000144       $SG3095                    c0002b44     main.obj
+ 0002:00000148       $SG3096                    c0002b48     main.obj
+ 0002:0000014c       $SG3097                    c0002b4c     main.obj
+ 0002:00000150       $SG3098                    c0002b50     main.obj
+ 0002:00000154       $SG3099                    c0002b54     main.obj
+ 0002:00000158       $SG3100                    c0002b58     main.obj
+ 0002:0000015c       $SG3101                    c0002b5c     main.obj
+ 0002:00000160       $SG3102                    c0002b60     main.obj
+ 0002:00000164       $SG3103                    c0002b64     main.obj
+ 0002:00000168       $SG3105                    c0002b68     main.obj
+ 0002:00000170       $SG2692                    c0002b70     panic.obj
+ 0002:000002b0       $SG2693                    c0002cb0     panic.obj
+ 0002:000002b4       $SG2694                    c0002cb4     panic.obj
+ 0002:000002c4       $SG2820                    c0002cc4     vfs.obj
+ 0003:00000018       _kbrd_scan_code_list       c0002e18     keyboard:kbrd.obj
+ 0003:000000ec       _Debugstr                  c0002eec     DebugDisplay.obj
+ 0003:0000010c       ?ticks@?1??sleep@@YAXH@Z@4HA c0002f0c     main.obj
+ 0003:00000110       ?$S1@?1??sleep@@YAXH@Z@4IA c0002f10     main.obj
+ 0003:00000114       __pmm_memory_size          c0002f14     pmm.obj
+ 0003:00000118       __pmm_used_blocks          c0002f18     pmm.obj
+ 0003:0000011c       __pmm_max_blocks           c0002f1c     pmm.obj
+ 0003:00000120       __pmm_memory_map           c0002f20     pmm.obj
+ 0003:00000190       __vmm_cur_dir              c0002f90     vmm.obj
+ 0003:00000194       __kbrd_code_char           c0002f94     keyboard:kbrd.obj
+ 0003:00000198       _ikey                      c0002f98     keyboard:kbrd.obj
+ 0003:0000019e       __CurrentDrive             c0002f9e     flopydisk:flopy.obj
+ 0003:0000019f       __FloppyDiskIRQ            c0002f9f     flopydisk:flopy.obj
+ 0003:000005e8       __pit_ticks                c00033e8     HAL:pit.obj
+ 0003:000005f0       __idtr                     c00033f0     HAL:idt.obj
+ 0003:000005f8       __idt                      c00033f8     HAL:idt.obj
+ 0003:00000df8       __gdt                      c0003bf8     HAL:gdt.obj
+ 0003:00000e10       __gdtr                     c0003c10     HAL:gdt.obj
+ 0004:00000060       $R000000                   c0003e60     Kernel.res

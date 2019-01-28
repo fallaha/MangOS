@@ -10,7 +10,7 @@ INCLUDELIB MSVCRT
 INCLUDELIB OLDNAMES
 
 CONST	SEGMENT
-$SG2686	DB	'We apologize, MOS has encountered a problem and has been'
+$SG2692	DB	'We apologize, MOS has encountered a problem and has been'
 	DB	' shut down', 0aH, 09H, 09H, 09H, 09H, 09H, '  to prevent dama'
 	DB	'ge to your computer. Any unsaved work might be lost.', 0aH, 09H
 	DB	09H, 09H, 09H, 09H, '  We are sorry for the inconvenience this'
@@ -18,9 +18,9 @@ $SG2686	DB	'We apologize, MOS has encountered a problem and has been'
 	DB	'lease report the following information and restart your compu'
 	DB	'ter.', 0aH, 09H, 09H, 09H, 09H, 09H, '  The system has been h'
 	DB	'alted.', 0aH, 0aH, 00H
-$SG2687	DB	'%s', 00H
+$SG2693	DB	'%s', 00H
 	ORG $+1
-$SG2688	DB	'*** STOP: %s', 00H
+$SG2694	DB	'*** STOP: %s', 00H
 CONST	ENDS
 PUBLIC	?kernel_panic@@YAXPBDZZ				; kernel_panic
 EXTRN	?interrupt_disable@@YAXXZ:PROC			; interrupt_disable
@@ -76,14 +76,14 @@ _fmt$ = 8						; size = 4
 ; 35   : 	//DebugPuts(disclamer);
 ; 36   : 	DebugPrintf("%s", disclamer);
 
-	push	OFFSET $SG2686
-	push	OFFSET $SG2687
+	push	OFFSET $SG2692
+	push	OFFSET $SG2693
 	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
 
 ; 37   : 	DebugPrintf("*** STOP: %s", fmt);
 
 	push	DWORD PTR _fmt$[esp+20]
-	push	OFFSET $SG2688
+	push	OFFSET $SG2694
 	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
 	add	esp, 32					; 00000020H
 	npad	4

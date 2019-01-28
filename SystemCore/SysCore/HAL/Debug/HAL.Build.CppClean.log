@@ -3,6 +3,7 @@ c:\users\ali\desktop\mangos\systemcore\syscore\hal\debug\pit.obj
 c:\users\ali\desktop\mangos\systemcore\syscore\hal\debug\pic.obj
 c:\users\ali\desktop\mangos\systemcore\syscore\hal\debug\idt.obj
 c:\users\ali\desktop\mangos\systemcore\syscore\hal\debug\gdt.obj
+c:\users\ali\desktop\mangos\systemcore\syscore\hal\debug\dma.obj
 c:\users\ali\desktop\mangos\systemcore\syscore\hal\debug\cpu.obj
 c:\users\ali\desktop\mangos\systemcore\syscore\hal\debug\hal.obj
 c:\users\ali\desktop\mangos\systemcore\syscore\debug\hal.lib

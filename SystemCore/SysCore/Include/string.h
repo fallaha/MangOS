@@ -34,7 +34,8 @@ extern size_t strlen ( const char* str );
 extern void* memcpy(void *dest, const void *src, size_t count);
 extern void *memset(void *dest, char val, size_t count);
 extern unsigned short* memsetw(unsigned short *dest, unsigned short val, size_t count);
-
+int strcmp(const char* str1, const char* str2);
+char* strchr(const  char * str, int character);
 //============================================================================
 //    INTERFACE OBJECT CLASS DEFINITIONS
 //============================================================================

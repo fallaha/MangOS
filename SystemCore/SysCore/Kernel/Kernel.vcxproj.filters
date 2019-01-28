@@ -39,6 +39,9 @@
     <ClCompile Include="vmm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="vfs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DebugDisplay.h">

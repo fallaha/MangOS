@@ -1,5 +1,5 @@
-﻿Build started 16/10/1397 09:43:55 ب.ظ.
-     1>Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Lib\Lib.vcxproj" on node 3 (Rebuild target(s)).
+﻿Build started 08/11/1397 12:54:23 ق.ظ.
+     1>Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Lib\Lib.vcxproj" on node 2 (Rebuild target(s)).
      1>ClCompile:
          G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\Include\ /Zi /nologo /W4 /WX- /O2 /Oy /D ARCH_X86 /X /Gm- /MD /Zp1 /GS- /fp:precise /Zc:wchar_t /Zc:forScope /GR- /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt cstd.cpp stdio.cpp string.cpp
          cstd.cpp
@@ -15,4 +15,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.96
+Time Elapsed 00:00:00.98

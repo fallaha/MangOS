@@ -1,30 +1,27 @@
 #ifndef _VFS_H
 #define _VFS_H
+#include <stdint.h>
+
+
 #define VFS_MAX_DIR_NAME_LENGTH 11
 #define VFS_MAX_DEVICE_NAME_LENGTH 8
-#define VFS_MAX_FILE_SYSTEM 'z'-'a'-1 /*26 device Max*/
+#define VFS_MAX_FILE_SYSTEM 26 /*26 device Max*/
 
-typedef struct DIRECTORY
+
+struct DIRECTORY
 {
-	char		name[VFS_MAX_DIR_NAME_LENGTH];
-	uint32_t	flag;
-	uint8_t		device;
+	
+	uint32_t	offset_cluster;
+	uint32_t	length;
 	uint32_t	first_cluster;
 	uint32_t	current_cluster;
-	uint32_t	offset_cluster;
-}DIRECTORY;
-
-struct FILE_SYSTEM
-{
-	char name[VFS_MAX_DEVICE_NAME_LENGTH];
-	struct BIOS_PARAMATER_BLOCK bpb;
-	void(*Mount)      ();
-	void(*UnMount)      ();
-	DIRECTORY(*Open)       (const char* FileName);
-	void(*Write)       (DIRECTORY* file, unsigned char* Buffer, unsigned int Length);
-	void(*Read)       (DIRECTORY* file, unsigned char* Buffer, unsigned int Length);
-	void(*Close)      (DIRECTORY*);
+	uint32_t	eof;
+	uint32_t	flag;
+	uint8_t		device;
+	char		name[VFS_MAX_DIR_NAME_LENGTH];
 };
+
+
 struct BIOS_PARAMATER_BLOCK {
 	uint8_t			OEMName[8];
 	uint16_t		BytesPerSector;
@@ -61,4 +58,25 @@ struct BOOT_SECTOR_STRUCT
 	uint8_t						filler[448];		//needed to make struct 512 bytes
 };
 
+
+struct FILE_SYSTEM
+{
+	char name[VFS_MAX_DEVICE_NAME_LENGTH];
+	struct BIOS_PARAMATER_BLOCK bpb;
+	void(*Mount)      ();
+	void(*UnMount)      ();
+	void(*Open)       (DIRECTORY*file,const char* FileName);
+	void(*Write)      (DIRECTORY* file, unsigned char* Buffer, unsigned int Length);
+	void(*Read)       (DIRECTORY* file, unsigned char* Buffer);
+	void(*Close)      (DIRECTORY*);
+};
+
+
+
+void vfs_initialize();
+void vfs_open_file(DIRECTORY*file, const char* path);
+void vfs_read_file(DIRECTORY* dir, char* buffer, int size);
+void vfs_mount_fs(FILE_SYSTEM*pfs, char device);
+char* vfs_get_device_name(int device);
+void vfs_rewind(DIRECTORY* dir);
 #endif

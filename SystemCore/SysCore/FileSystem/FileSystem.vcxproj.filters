@@ -15,5 +15,6 @@
     <ClInclude Include="fat12.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="filesystem.h" />
   </ItemGroup>
 </Project>

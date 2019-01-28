@@ -6,6 +6,7 @@
 #include "vmm.h"
 #include <kbrd.h>
 #include <flopy.h>
+#include <vfs.h>
 
 //! format of a memory region
 struct memory_region {
@@ -71,6 +72,8 @@ int _cdecl kernel_initialize (multiboot_info* info) {
 	//! set DMA buffer to 64k
 	flpydsk_set_dma(0x8000);
 
+	vfs_initialize();
+
 }
 
 
@@ -123,11 +126,35 @@ int _cdecl main (multiboot_info* info) {
 	DebugClrScreen(0x1f);
 	DebugGotoXY(0, 0);
 
-	uint8_t* sector = 0;
-	sector = flpydsk_read_sector(33);
-	for (int j = 0; j < 128; j++)
-		DebugPrintf("%x ", sector[j]);
+	DIRECTORY file;
 
+	/* Only Support Absolute Addressing (e.g. a:/f1/f2/f3/f4/f5/f6.txt/ */
+	/* note: place '/' in last character! */
+	vfs_open_file(&file,"a:/a.txt/");
+	DebugPrintf("%d\t", file.flag);
+	DebugPrintf("%d\t", file.current_cluster);
+	DebugPrintf("%d\t", file.device);
+	DebugPrintf("%d\t", file.eof);
+	DebugPrintf("%d\t", file.first_cluster);
+	DebugPrintf("%d\t", file.length);
+	DebugPrintf("%d\t", file.offset_cluster);
+	DebugPrintf("%s\n", file.name);
+	char buff[1024];
+	vfs_read_file(&file, buff, 18);
+	DebugPrintf("%s\n", buff);
+
+	DebugPrintf("%d\t", file.flag);
+	DebugPrintf("%d\t", file.current_cluster);
+	DebugPrintf("%d\t", file.device);
+	DebugPrintf("%d\t", file.eof);
+	DebugPrintf("%d\t", file.first_cluster);
+	DebugPrintf("%d\t", file.length);
+	DebugPrintf("%d\t", file.offset_cluster);
+	DebugPrintf("%s\n", file.name);
+	char buff2[1024];
+	vfs_rewind(&file);
+	vfs_read_file(&file, buff2, 30);
+	DebugPrintf("%s\n", buff2);
 	for (;;);
 
 

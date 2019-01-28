@@ -10,7 +10,26 @@ INCLUDELIB MSVCRT
 INCLUDELIB OLDNAMES
 
 CONST	SEGMENT
-$SG2984	DB	'%x ', 00H
+$SG3085	DB	'a:/a.txt/', 00H
+	ORG $+2
+$SG3086	DB	'%d', 09H, 00H
+$SG3087	DB	'%d', 09H, 00H
+$SG3088	DB	'%d', 09H, 00H
+$SG3089	DB	'%d', 09H, 00H
+$SG3090	DB	'%d', 09H, 00H
+$SG3091	DB	'%d', 09H, 00H
+$SG3092	DB	'%d', 09H, 00H
+$SG3093	DB	'%s', 0aH, 00H
+$SG3095	DB	'%s', 0aH, 00H
+$SG3096	DB	'%d', 09H, 00H
+$SG3097	DB	'%d', 09H, 00H
+$SG3098	DB	'%d', 09H, 00H
+$SG3099	DB	'%d', 09H, 00H
+$SG3100	DB	'%d', 09H, 00H
+$SG3101	DB	'%d', 09H, 00H
+$SG3102	DB	'%d', 09H, 00H
+$SG3103	DB	'%s', 0aH, 00H
+$SG3105	DB	'%s', 0aH, 00H
 CONST	ENDS
 PUBLIC	?kernel_initialize@@YAHPAUmultiboot_info@@@Z	; kernel_initialize
 PUBLIC	?sleep@@YAXH@Z					; sleep
@@ -55,7 +74,10 @@ EXTRN	?kbrd_make@@YAEE@Z:PROC				; kbrd_make
 EXTRN	?flpydsk_set_dma@@YAXH@Z:PROC			; flpydsk_set_dma
 EXTRN	?flpydsk_install@@YAXH@Z:PROC			; flpydsk_install
 EXTRN	?flpydsk_set_working_drive@@YAXE@Z:PROC		; flpydsk_set_working_drive
-EXTRN	?flpydsk_read_sector@@YAPAEH@Z:PROC		; flpydsk_read_sector
+EXTRN	?vfs_initialize@@YAXXZ:PROC			; vfs_initialize
+EXTRN	?vfs_open_file@@YAXPAUDIRECTORY@@PBD@Z:PROC	; vfs_open_file
+EXTRN	?vfs_read_file@@YAXPAUDIRECTORY@@PADH@Z:PROC	; vfs_read_file
+EXTRN	?vfs_rewind@@YAXPAUDIRECTORY@@@Z:PROC		; vfs_rewind
 ;	COMDAT ?ticks@?1??sleep@@YAXH@Z@4HA
 _BSS	SEGMENT
 ?ticks@?1??sleep@@YAXH@Z@4HA DD 01H DUP (?)		; `sleep'::`2'::ticks
@@ -68,60 +90,188 @@ _BSS	ENDS
 ; File c:\users\ali\desktop\mangos\systemcore\syscore\kernel\main.cpp
 ;	COMDAT _main
 _TEXT	SEGMENT
+_file$ = -2084						; size = 36
+_buff$ = -2048						; size = 1024
+_buff2$ = -1024						; size = 1024
 _info$ = 8						; size = 4
 _main	PROC						; COMDAT
 
-; 121  : int _cdecl main (multiboot_info* info) {
+; 124  : int _cdecl main (multiboot_info* info) {
 
-	push	esi
-	push	edi
+	sub	esp, 2084				; 00000824H
 
-; 122  : 	kernel_initialize(info);
+; 125  : 	kernel_initialize(info);
 
-	push	DWORD PTR _info$[esp+4]
+	push	DWORD PTR _info$[esp+2080]
 	call	?kernel_initialize@@YAHPAUmultiboot_info@@@Z ; kernel_initialize
 
-; 123  : 	DebugClrScreen(0x1f);
+; 126  : 	DebugClrScreen(0x1f);
 
 	push	31					; 0000001fH
 	call	?DebugClrScreen@@YAXE@Z			; DebugClrScreen
 
-; 124  : 	DebugGotoXY(0, 0);
+; 127  : 	DebugGotoXY(0, 0);
 
 	push	0
 	push	0
 	call	?DebugGotoXY@@YAXEE@Z			; DebugGotoXY
 
-; 125  : 
-; 126  : 	uint8_t* sector = 0;
-; 127  : 	sector = flpydsk_read_sector(33);
+; 128  : 
+; 129  : 	DIRECTORY file;
+; 130  : 
+; 131  : 	vfs_open_file(&file,"a:/a.txt/");
 
-	push	33					; 00000021H
-	call	?flpydsk_read_sector@@YAPAEH@Z		; flpydsk_read_sector
-	add	esp, 20					; 00000014H
-	mov	edi, eax
+	lea	eax, DWORD PTR _file$[esp+2100]
+	push	OFFSET $SG3085
+	push	eax
+	call	?vfs_open_file@@YAXPAUDIRECTORY@@PBD@Z	; vfs_open_file
 
-; 128  : 	for (int j = 0; j < 128; j++)
+; 132  : 	DebugPrintf("%d\t", file.flag);
 
-	xor	esi, esi
-	npad	7
-$LL5@main:
-
-; 129  : 		DebugPrintf("%x ", sector[j]);
-
-	movzx	ecx, BYTE PTR [esi+edi]
-	push	ecx
-	push	OFFSET $SG2984
+	push	DWORD PTR _file$[esp+2128]
+	push	OFFSET $SG3086
 	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
-	inc	esi
-	add	esp, 8
-	cmp	esi, 128				; 00000080H
-	jl	SHORT $LL5@main
-	npad	5
+
+; 133  : 	DebugPrintf("%d\t", file.current_cluster);
+
+	push	DWORD PTR _file$[esp+2128]
+	push	OFFSET $SG3087
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+
+; 134  : 	DebugPrintf("%d\t", file.device);
+
+	movzx	eax, BYTE PTR _file$[esp+2148]
+	push	eax
+	push	OFFSET $SG3088
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+
+; 135  : 	DebugPrintf("%d\t", file.eof);
+
+	push	DWORD PTR _file$[esp+2148]
+	push	OFFSET $SG3089
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+
+; 136  : 	DebugPrintf("%d\t", file.first_cluster);
+
+	push	DWORD PTR _file$[esp+2148]
+	push	OFFSET $SG3090
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+	add	esp, 64					; 00000040H
+
+; 137  : 	DebugPrintf("%d\t", file.length);
+
+	push	DWORD PTR _file$[esp+2088]
+	push	OFFSET $SG3091
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+
+; 138  : 	DebugPrintf("%d\t", file.offset_cluster);
+
+	push	DWORD PTR _file$[esp+2092]
+	push	OFFSET $SG3092
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+
+; 139  : 	DebugPrintf("%s\n", file.name);
+
+	lea	eax, DWORD PTR _file$[esp+2125]
+	push	eax
+	push	OFFSET $SG3093
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+
+; 140  : 	char buff[1024];
+; 141  : 	vfs_read_file(&file, buff, 18);
+
+	push	18					; 00000012H
+	lea	eax, DWORD PTR _buff$[esp+2112]
+	push	eax
+	lea	eax, DWORD PTR _file$[esp+2116]
+	push	eax
+	call	?vfs_read_file@@YAXPAUDIRECTORY@@PADH@Z	; vfs_read_file
+
+; 142  : 	DebugPrintf("%s\n", buff);
+
+	lea	eax, DWORD PTR _buff$[esp+2120]
+	push	eax
+	push	OFFSET $SG3095
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+
+; 143  : 
+; 144  : 	DebugPrintf("%d\t", file.flag);
+
+	push	DWORD PTR _file$[esp+2148]
+	push	OFFSET $SG3096
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+
+; 145  : 	DebugPrintf("%d\t", file.current_cluster);
+
+	push	DWORD PTR _file$[esp+2148]
+	push	OFFSET $SG3097
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+
+; 146  : 	DebugPrintf("%d\t", file.device);
+
+	movzx	eax, BYTE PTR _file$[esp+2168]
+	push	eax
+	push	OFFSET $SG3098
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+	add	esp, 68					; 00000044H
+
+; 147  : 	DebugPrintf("%d\t", file.eof);
+
+	push	DWORD PTR _file$[esp+2100]
+	push	OFFSET $SG3099
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+
+; 148  : 	DebugPrintf("%d\t", file.first_cluster);
+
+	push	DWORD PTR _file$[esp+2100]
+	push	OFFSET $SG3100
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+
+; 149  : 	DebugPrintf("%d\t", file.length);
+
+	push	DWORD PTR _file$[esp+2104]
+	push	OFFSET $SG3101
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+
+; 150  : 	DebugPrintf("%d\t", file.offset_cluster);
+
+	push	DWORD PTR _file$[esp+2108]
+	push	OFFSET $SG3102
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+
+; 151  : 	DebugPrintf("%s\n", file.name);
+
+	lea	eax, DWORD PTR _file$[esp+2141]
+	push	eax
+	push	OFFSET $SG3103
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+
+; 152  : 	char buff2[1024];
+; 153  : 	vfs_rewind(&file);
+
+	lea	eax, DWORD PTR _file$[esp+2124]
+	push	eax
+	call	?vfs_rewind@@YAXPAUDIRECTORY@@@Z	; vfs_rewind
+
+; 154  : 	vfs_read_file(&file, buff2, 30);
+
+	push	30					; 0000001eH
+	lea	eax, DWORD PTR _buff2$[esp+2132]
+	push	eax
+	lea	eax, DWORD PTR _file$[esp+2136]
+	push	eax
+	call	?vfs_read_file@@YAXPAUDIRECTORY@@PADH@Z	; vfs_read_file
+
+; 155  : 	DebugPrintf("%s\n", buff2);
+
+	lea	eax, DWORD PTR _buff2$[esp+2140]
+	push	eax
+	push	OFFSET $SG3105
+	call	?DebugPrintf@@YAHPBDZZ			; DebugPrintf
+	add	esp, 64					; 00000040H
 $LL2@main:
 
-; 130  : 
-; 131  : 	for (;;);
+; 156  : 	for (;;);
 
 	jmp	SHORT $LL2@main
 _main	ENDP
@@ -133,11 +283,11 @@ _TEXT	SEGMENT
 _s$ = 8							; size = 4
 ?stoi@@YAHPAD@Z PROC					; stoi, COMDAT
 
-; 104  : 	int n = 0;
-; 105  : 	int i = 0;
-; 106  : 	int sign = 1;
-; 107  : 
-; 108  : 	if (s[i] == '-'){
+; 107  : 	int n = 0;
+; 108  : 	int i = 0;
+; 109  : 	int sign = 1;
+; 110  : 
+; 111  : 	if (s[i] == '-'){
 
 	mov	edx, DWORD PTR _s$[esp-4]
 	xor	eax, eax
@@ -148,18 +298,18 @@ _s$ = 8							; size = 4
 	lea	esi, DWORD PTR [eax+1]
 	jne	SHORT $LN6@stoi
 
-; 109  : 		sign = -1;
+; 112  : 		sign = -1;
 
 	or	esi, -1
 
-; 110  : 		i++;
+; 113  : 		i++;
 
 	mov	ecx, 1
 $LN6@stoi:
 
-; 111  : 	}
-; 112  : 
-; 113  : 	while (s[i] != 0){
+; 114  : 	}
+; 115  : 
+; 116  : 	while (s[i] != 0){
 
 	mov	bl, BYTE PTR [edx+ecx]
 	add	edx, ecx
@@ -167,11 +317,11 @@ $LN6@stoi:
 	je	SHORT $LN1@stoi
 $LL2@stoi:
 
-; 114  : 		n *= 10;
+; 117  : 		n *= 10;
 
 	lea	ecx, DWORD PTR [eax+eax*4]
 
-; 115  : 		n += s[i++];
+; 118  : 		n += s[i++];
 
 	movsx	eax, bl
 	mov	bl, BYTE PTR [edx+1]
@@ -181,15 +331,15 @@ $LL2@stoi:
 	jne	SHORT $LL2@stoi
 $LN1@stoi:
 
-; 116  : 	}
-; 117  : 	n *= sign;
+; 119  : 	}
+; 120  : 	n *= sign;
 
 	imul	eax, esi
 	pop	esi
 	pop	ebx
 
-; 118  : 	return n;
-; 119  : }
+; 121  : 	return n;
+; 122  : }
 
 	ret	0
 ?stoi@@YAHPAD@Z ENDP					; stoi
@@ -203,22 +353,22 @@ _s$ = 8							; size = 4
 _max$ = 12						; size = 4
 ?gets@@YAXPADH@Z PROC					; gets, COMDAT
 
-; 94   : void gets (char *s,int max){
+; 97   : void gets (char *s,int max){
 
 	push	ebx
 	push	esi
 	push	edi
 
-; 99   : 	} while (s[i-1] != '\r');
+; 102  : 	} while (s[i-1] != '\r');
 
 	mov	edi, DWORD PTR _s$[esp+8]
 	xor	esi, esi
 	npad	7
 $LL7@gets:
 
-; 95   : 	int i = 0; 
-; 96   : 	do{
-; 97   : 		s[i] = getch();
+; 98   : 	int i = 0; 
+; 99   : 	do{
+; 100  : 		s[i] = getch();
 
 	call	?kbrd_get_last_std_char@@YAEXZ		; kbrd_get_last_std_char
 	test	al, al
@@ -231,7 +381,7 @@ $LL7@gets:
 	mov	BYTE PTR _ch$1[esp+12], bl
 	call	?kbrd_destroy_last_char@@YAXXZ		; kbrd_destroy_last_char
 
-; 98   : 		DebugPutc(s[i++]);
+; 101  : 		DebugPutc(s[i++]);
 
 	push	DWORD PTR _ch$1[esp+12]
 	mov	BYTE PTR [edi+esi], bl
@@ -239,19 +389,19 @@ $LL7@gets:
 	inc	esi
 	add	esp, 8
 
-; 99   : 	} while (s[i-1] != '\r');
+; 102  : 	} while (s[i-1] != '\r');
 
 	cmp	BYTE PTR [edi+esi-1], 13		; 0000000dH
 	jne	SHORT $LL7@gets
 
-; 100  : 	s[i-1] = 0;
+; 103  : 	s[i-1] = 0;
 
 	mov	BYTE PTR [esi+edi-1], 0
 	pop	edi
 	pop	esi
 	pop	ebx
 
-; 101  : }
+; 104  : }
 
 	ret	0
 ?gets@@YAXPADH@Z ENDP					; gets
@@ -262,18 +412,18 @@ _TEXT	ENDS
 _TEXT	SEGMENT
 ?getch@@YAEXZ PROC					; getch, COMDAT
 
-; 86   : uint8_t getch(){
+; 89   : uint8_t getch(){
 
 $LL2@getch:
 
-; 87   : 	uint8_t ch;
-; 88   : 	while (kbrd_get_last_std_char() == 0);
+; 90   : 	uint8_t ch;
+; 91   : 	while (kbrd_get_last_std_char() == 0);
 
 	call	?kbrd_get_last_std_char@@YAEXZ		; kbrd_get_last_std_char
 	test	al, al
 	je	SHORT $LL2@getch
 
-; 89   : 	ch = kbrd_make(kbrd_get_last_std_char());
+; 92   : 	ch = kbrd_make(kbrd_get_last_std_char());
 
 	push	ebx
 	call	?kbrd_get_last_std_char@@YAEXZ		; kbrd_get_last_std_char
@@ -283,16 +433,16 @@ $LL2@getch:
 	add	esp, 4
 	mov	bl, al
 
-; 90   : 	kbrd_destroy_last_char();
+; 93   : 	kbrd_destroy_last_char();
 
 	call	?kbrd_destroy_last_char@@YAXXZ		; kbrd_destroy_last_char
 
-; 91   : 	return ch;
+; 94   : 	return ch;
 
 	mov	al, bl
 	pop	ebx
 
-; 92   : }
+; 95   : }
 
 	ret	0
 ?getch@@YAEXZ ENDP					; getch
@@ -304,8 +454,8 @@ _TEXT	SEGMENT
 _ms$ = 8						; size = 4
 ?sleep@@YAXH@Z PROC					; sleep, COMDAT
 
-; 79   : 
-; 80   : 	static int ticks = ms + get_tick();
+; 82   : 
+; 83   : 	static int ticks = ms + get_tick();
 
 	mov	eax, DWORD PTR ?$S1@?1??sleep@@YAXH@Z@4IA
 	test	al, 1
@@ -318,14 +468,14 @@ _ms$ = 8						; size = 4
 	npad	1
 $LL2@sleep:
 
-; 81   : 	while (ticks > get_tick())
+; 84   : 	while (ticks > get_tick())
 
 	call	?get_tick@@YAIXZ			; get_tick
 	cmp	DWORD PTR ?ticks@?1??sleep@@YAXH@Z@4HA, eax
 	ja	SHORT $LL2@sleep
 
-; 82   : 		;
-; 83   : }
+; 85   : 		;
+; 86   : }
 
 	ret	0
 ?sleep@@YAXH@Z ENDP					; sleep
@@ -338,148 +488,148 @@ _kernel_img_size$ = -4					; size = 4
 _info$ = 8						; size = 4
 ?kernel_initialize@@YAHPAUmultiboot_info@@@Z PROC	; kernel_initialize, COMDAT
 
-; 20   : int _cdecl kernel_initialize (multiboot_info* info) {
+; 21   : int _cdecl kernel_initialize (multiboot_info* info) {
 
 	push	ecx
 	push	esi
 	push	edi
 
-; 21   : 	uint32_t kernel_img_size;
-; 22   : 	_asm mov word ptr[kernel_img_size], dx /*Get Kernel Image Size form Bootloader*/
+; 22   : 	uint32_t kernel_img_size;
+; 23   : 	_asm mov word ptr[kernel_img_size], dx /*Get Kernel Image Size form Bootloader*/
 
 	mov	WORD PTR _kernel_img_size$[esp+12], dx
 
-; 23   : 	hal_initialize();
+; 24   : 	hal_initialize();
 
 	call	?hal_initialize@@YAXXZ			; hal_initialize
 
-; 24   : 
-; 25   : 	//! install our exception handlers
-; 26   : 	setvect(0, (void(__cdecl &)(void))divide_by_zero_fault);
+; 25   : 
+; 26   : 	//! install our exception handlers
+; 27   : 	setvect(0, (void(__cdecl &)(void))divide_by_zero_fault);
 
 	push	OFFSET ?divide_by_zero_fault@@YAXIII@Z	; divide_by_zero_fault
 	push	0
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 27   : 	setvect(1, (void(__cdecl &)(void))single_step_trap);
+; 28   : 	setvect(1, (void(__cdecl &)(void))single_step_trap);
 
 	push	OFFSET ?single_step_trap@@YAXIII@Z	; single_step_trap
 	push	1
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 28   : 	setvect(2, (void(__cdecl &)(void))nmi_trap);
+; 29   : 	setvect(2, (void(__cdecl &)(void))nmi_trap);
 
 	push	OFFSET ?nmi_trap@@YAXIII@Z		; nmi_trap
 	push	2
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 29   : 	setvect(3, (void(__cdecl &)(void))breakpoint_trap);
+; 30   : 	setvect(3, (void(__cdecl &)(void))breakpoint_trap);
 
 	push	OFFSET ?breakpoint_trap@@YAXIII@Z	; breakpoint_trap
 	push	3
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 30   : 	setvect(4, (void(__cdecl &)(void))overflow_trap);
+; 31   : 	setvect(4, (void(__cdecl &)(void))overflow_trap);
 
 	push	OFFSET ?overflow_trap@@YAXIII@Z		; overflow_trap
 	push	4
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 31   : 	setvect(5, (void(__cdecl &)(void))bounds_check_fault);
+; 32   : 	setvect(5, (void(__cdecl &)(void))bounds_check_fault);
 
 	push	OFFSET ?bounds_check_fault@@YAXIII@Z	; bounds_check_fault
 	push	5
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 32   : 	setvect(6, (void(__cdecl &)(void))invalid_opcode_fault);
+; 33   : 	setvect(6, (void(__cdecl &)(void))invalid_opcode_fault);
 
 	push	OFFSET ?invalid_opcode_fault@@YAXIII@Z	; invalid_opcode_fault
 	push	6
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 33   : 	setvect(7, (void(__cdecl &)(void))no_device_fault);
+; 34   : 	setvect(7, (void(__cdecl &)(void))no_device_fault);
 
 	push	OFFSET ?no_device_fault@@YAXIII@Z	; no_device_fault
 	push	7
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 	add	esp, 64					; 00000040H
 
-; 34   : 	setvect(8, (void(__cdecl &)(void))double_fault_abort);
+; 35   : 	setvect(8, (void(__cdecl &)(void))double_fault_abort);
 
 	push	OFFSET ?double_fault_abort@@YAXIIII@Z	; double_fault_abort
 	push	8
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 35   : 	setvect(10, (void(__cdecl &)(void))invalid_tss_fault);
+; 36   : 	setvect(10, (void(__cdecl &)(void))invalid_tss_fault);
 
 	push	OFFSET ?invalid_tss_fault@@YAXIIII@Z	; invalid_tss_fault
 	push	10					; 0000000aH
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 36   : 	setvect(11, (void(__cdecl &)(void))no_segment_fault);
+; 37   : 	setvect(11, (void(__cdecl &)(void))no_segment_fault);
 
 	push	OFFSET ?no_segment_fault@@YAXIIII@Z	; no_segment_fault
 	push	11					; 0000000bH
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 37   : 	setvect(12, (void(__cdecl &)(void))stack_fault);
+; 38   : 	setvect(12, (void(__cdecl &)(void))stack_fault);
 
 	push	OFFSET ?stack_fault@@YAXIIII@Z		; stack_fault
 	push	12					; 0000000cH
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 38   : 	setvect(13, (void(__cdecl &)(void))general_protection_fault);
+; 39   : 	setvect(13, (void(__cdecl &)(void))general_protection_fault);
 
 	push	OFFSET ?general_protection_fault@@YAXIIII@Z ; general_protection_fault
 	push	13					; 0000000dH
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 39   : 	setvect(14, (void(__cdecl &)(void))page_fault);
+; 40   : 	setvect(14, (void(__cdecl &)(void))page_fault);
 
 	push	OFFSET ?page_fault@@YAXIIII@Z		; page_fault
 	push	14					; 0000000eH
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 40   : 	setvect(16, (void(__cdecl &)(void))fpu_fault);
+; 41   : 	setvect(16, (void(__cdecl &)(void))fpu_fault);
 
 	push	OFFSET ?fpu_fault@@YAXIII@Z		; fpu_fault
 	push	16					; 00000010H
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 41   : 	setvect(17, (void(__cdecl &)(void))alignment_check_fault);
+; 42   : 	setvect(17, (void(__cdecl &)(void))alignment_check_fault);
 
 	push	OFFSET ?alignment_check_fault@@YAXIIII@Z ; alignment_check_fault
 	push	17					; 00000011H
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 	add	esp, 64					; 00000040H
 
-; 42   : 	setvect(18, (void(__cdecl &)(void))machine_check_abort);
+; 43   : 	setvect(18, (void(__cdecl &)(void))machine_check_abort);
 
 	push	OFFSET ?machine_check_abort@@YAXIII@Z	; machine_check_abort
 	push	18					; 00000012H
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 43   : 	setvect(19, (void(__cdecl &)(void))simd_fpu_fault);
+; 44   : 	setvect(19, (void(__cdecl &)(void))simd_fpu_fault);
 
 	push	OFFSET ?simd_fpu_fault@@YAXIII@Z	; simd_fpu_fault
 	push	19					; 00000013H
 	call	?setvect@@YAXIA6AXXZ@Z			; setvect
 
-; 44   : 	kbrd_initilize();
+; 45   : 	kbrd_initilize();
 
 	call	?kbrd_initilize@@YAXXZ			; kbrd_initilize
 
-; 45   : 
 ; 46   : 
-; 47   : 	interrupt_enable(); /*Enabling interrupt*/
+; 47   : 
+; 48   : 	interrupt_enable(); /*Enabling interrupt*/
 
 	call	?interrupt_enable@@YAXXZ		; interrupt_enable
 
-; 48   : 
-; 49   : 	unsigned int memory_amount = 1024;
-; 50   : 	memory_amount += info->m_memoryLo;
-; 51   : 	memory_amount += info->m_memoryHi * 64;
-; 52   : 	pmm_initialize(memory_amount,0x100000+kernel_img_size*512);
+; 49   : 
+; 50   : 	unsigned int memory_amount = 1024;
+; 51   : 	memory_amount += info->m_memoryLo;
+; 52   : 	memory_amount += info->m_memoryHi * 64;
+; 53   : 	pmm_initialize(memory_amount,0x100000+kernel_img_size*512);
 
 	mov	eax, DWORD PTR _kernel_img_size$[esp+28]
 	add	eax, 2048				; 00000800H
@@ -493,10 +643,10 @@ _info$ = 8						; size = 4
 	push	ecx
 	call	?pmm_initialize@@YAXII@Z		; pmm_initialize
 
-; 53   : 
 ; 54   : 
-; 55   : 	memory_region *mem_mep = (memory_region*)0x1000;
-; 56   : 	DebugGotoXY(0, 3);
+; 55   : 
+; 56   : 	memory_region *mem_mep = (memory_region*)0x1000;
+; 57   : 	DebugGotoXY(0, 3);
 
 	push	3
 	push	0
@@ -504,13 +654,13 @@ _info$ = 8						; size = 4
 	add	esp, 32					; 00000020H
 	mov	esi, 4096				; 00001000H
 
-; 57   : 	for (int i = 0; i < 15; i++){
+; 58   : 	for (int i = 0; i < 15; i++){
 
 	xor	edi, edi
 	npad	5
 $LL5@kernel_ini:
 
-; 58   : 		if (i>0 && mem_mep[i].startLow == 0)
+; 59   : 		if (i>0 && mem_mep[i].startLow == 0)
 
 	test	edi, edi
 	jle	SHORT $LN2@kernel_ini
@@ -518,13 +668,13 @@ $LL5@kernel_ini:
 	je	SHORT $LN9@kernel_ini
 $LN2@kernel_ini:
 
-; 59   : 			break;
-; 60   : 		if (mem_mep[i].type == 1)	/*We Can Use it region*/
+; 60   : 			break;
+; 61   : 		if (mem_mep[i].type == 1)	/*We Can Use it region*/
 
 	cmp	DWORD PTR [esi+16], 1
 	jne	SHORT $LN4@kernel_ini
 
-; 61   : 			 pmm_clr_region(mem_mep[i].startLow, mem_mep[i].sizeLow);
+; 62   : 			 pmm_clr_region(mem_mep[i].startLow, mem_mep[i].sizeLow);
 
 	push	DWORD PTR [esi+8]
 	push	DWORD PTR [esi]
@@ -532,7 +682,7 @@ $LN2@kernel_ini:
 	add	esp, 8
 $LN4@kernel_ini:
 
-; 57   : 	for (int i = 0; i < 15; i++){
+; 58   : 	for (int i = 0; i < 15; i++){
 
 	add	esi, 24					; 00000018H
 	inc	edi
@@ -540,8 +690,8 @@ $LN4@kernel_ini:
 	jl	SHORT $LL5@kernel_ini
 $LN9@kernel_ini:
 
-; 62   : 	}
-; 63   : 	pmm_set_region(0x100000,kernel_img_size*512);
+; 63   : 	}
+; 64   : 	pmm_set_region(0x100000,kernel_img_size*512);
 
 	mov	eax, DWORD PTR _kernel_img_size$[esp+12]
 	shl	eax, 9
@@ -549,37 +699,42 @@ $LN9@kernel_ini:
 	push	1048576					; 00100000H
 	call	?pmm_set_region@@YAXII@Z		; pmm_set_region
 
-; 64   : 	vmm_initialize();
+; 65   : 	vmm_initialize();
 
 	call	?vmm_initialize@@YAXXZ			; vmm_initialize
 
-; 65   : 
-; 66   : 	//! set drive 0 as current drive
-; 67   : 	flpydsk_set_working_drive(0);
+; 66   : 
+; 67   : 	//! set drive 0 as current drive
+; 68   : 	flpydsk_set_working_drive(0);
 
 	push	0
 	call	?flpydsk_set_working_drive@@YAXE@Z	; flpydsk_set_working_drive
 
-; 68   : 
-; 69   : 	//! install floppy disk to IR 38, uses IRQ 6
-; 70   : 	flpydsk_install(38);
+; 69   : 
+; 70   : 	//! install floppy disk to IR 38, uses IRQ 6
+; 71   : 	flpydsk_install(38);
 
 	push	38					; 00000026H
 	call	?flpydsk_install@@YAXH@Z		; flpydsk_install
-	add	esp, 16					; 00000010H
+
+; 72   : 	//! set DMA buffer to 64k
+; 73   : 	flpydsk_set_dma(0x8000);
+
+	push	32768					; 00008000H
+	call	?flpydsk_set_dma@@YAXH@Z		; flpydsk_set_dma
+	add	esp, 20					; 00000014H
 	pop	edi
 	pop	esi
 
-; 73   : 
-; 74   : }
+; 76   : 
+; 77   : }
 
 	add	esp, 4
 
-; 71   : 	//! set DMA buffer to 64k
-; 72   : 	flpydsk_set_dma(0x8000);
+; 74   : 
+; 75   : 	vfs_initialize();
 
-	mov	DWORD PTR _info$[esp-4], 32768		; 00008000H
-	jmp	?flpydsk_set_dma@@YAXH@Z		; flpydsk_set_dma
+	jmp	?vfs_initialize@@YAXXZ			; vfs_initialize
 ?kernel_initialize@@YAHPAUmultiboot_info@@@Z ENDP	; kernel_initialize
 _TEXT	ENDS
 END

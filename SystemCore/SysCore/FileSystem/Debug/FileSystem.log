@@ -1,0 +1,16 @@
+﻿Build started 08/11/1397 12:54:27 ق.ظ.
+     1>Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\FileSystem\FileSystem.vcxproj" on node 2 (Rebuild target(s)).
+     1>ClCompile:
+         G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\FlopyDisk /I..\Include /I..\Kernel /Zi /nologo /W1 /WX- /O2 /Oy- /Gm- /EHsc /MD /GS- /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt fat12.cpp
+         fat12.cpp
+     1>C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Include\ctype.h(39): warning C4005: 'isascii' : macro redefinition
+                 C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Include\ctype.h(28) : see previous definition of 'isascii'
+     1>c:\users\ali\desktop\mangos\systemcore\syscore\filesystem\fat12.cpp(95): warning C4715: 'fat12_read_one_sector_from_device' : not all control paths return a value
+       Lib:
+         G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\Lib.exe /OUT:"C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Debug\FileSystem.lib" /NOLOGO Debug\fat12.obj
+         FileSystem.vcxproj -> C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Debug\FileSystem.lib
+     1>Done Building Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\FileSystem\FileSystem.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:01.17

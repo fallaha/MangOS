@@ -49,7 +49,7 @@
       <Optimization>MaxSpeed</Optimization>
       <SDLCheck>
       </SDLCheck>
-      <AdditionalIncludeDirectories>..\FlopyDisk;..\Include;..\keyboard;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\FlopyDisk;..\Include;..\keyboard;..\FileSystem;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat />
       <OmitFramePointers>true</OmitFramePointers>
       <PreprocessorDefinitions>ARCH_X86;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -69,7 +69,7 @@
       </GenerateDebugInformation>
       <OutputFile>A:\KRNL32.EXE</OutputFile>
       <AdditionalLibraryDirectories>..\Lib\;..\Debug\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>keyboard.lib;flopydisk.lib</AdditionalDependencies>
+      <AdditionalDependencies>keyboard.lib;flopydisk.lib;FileSystem.lib</AdditionalDependencies>
       <SubSystem>Native</SubSystem>
       <Driver>Driver</Driver>
       <OptimizeReferences>true</OptimizeReferences>

@@ -1,5 +1,7 @@
 c:\users\ali\desktop\mangos\systemcore\syscore\kernel\debug\vmm.obj
 c:\users\ali\desktop\mangos\systemcore\syscore\kernel\debug\vmm.asm
+c:\users\ali\desktop\mangos\systemcore\syscore\kernel\debug\vfs.obj
+c:\users\ali\desktop\mangos\systemcore\syscore\kernel\debug\vfs.asm
 c:\users\ali\desktop\mangos\systemcore\syscore\kernel\debug\pmm.obj
 c:\users\ali\desktop\mangos\systemcore\syscore\kernel\debug\pmm.asm
 c:\users\ali\desktop\mangos\systemcore\syscore\kernel\debug\panic.obj
