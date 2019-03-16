@@ -31,11 +31,11 @@ inline bool vmm_pd_switch(pdir *pd){
 	return true;
 }
 
-void vmm_flush_tlb_entry (virtual_addr addr){
+void vmm_flush_tlb_entry(virtual_addr addr){
 	_asm{
-		cli 
-		invlpg addr 
-		sti
+		cli
+			invlpg addr
+			sti
 	}
 }
 
@@ -53,7 +53,7 @@ bool vmm_alloc_frame(pt_entry * pe){
 	return true;
 }
 
-bool vmm_free_frame (pt_entry * pe){
+bool vmm_free_frame(pt_entry * pe){
 	pmm_free_block(pe); /*Maybe this wrong because we send Address of entry ?*/
 	vmm_pt_entry_del_attrib(pe, VMM_PT_ENTRY_PRESENT);
 	return true;
@@ -78,7 +78,7 @@ void vmm_map_page(void* phys, void* virt){
 		vmm_pd_entry_add_attrib(entry, VMM_PT_ENTRY_PRESENT);
 		vmm_pd_entry_add_attrib(entry, VMM_PT_ENTRY_WRITABLE);
 		vmm_pd_entry_set_frame(entry, (physical_addr)table);
-		
+
 	}
 	ptable *table = (ptable *)(*pde& ~0xfff);
 	pt_entry *page = &table->entry[VMM_GET_PT_ENTRY((pt_entry)virt)];
@@ -86,8 +86,9 @@ void vmm_map_page(void* phys, void* virt){
 	vmm_pt_entry_add_attrib(page, VMM_PT_ENTRY_PRESENT);
 }
 
+
 void vmm_initialize(){
-	ptable * pt_first4mb = (ptable * )pmm_alloc_block();
+	ptable * pt_first4mb = (ptable *)pmm_alloc_block();
 	if (!pt_first4mb)
 		return;
 	ptable * pt_1mb_to_3gb = (ptable *)pmm_alloc_block();
@@ -96,12 +97,12 @@ void vmm_initialize(){
 	/* Map 1st 4Mb (phys) to 1st 4Mb (virt) - identity map */
 	for (uint32_t i = 0, frame = 0; i < 1024; i++, frame += 4096)
 		pt_first4mb->entry[i] = frame | VMM_PT_ENTRY_PRESENT;
-	
+
 	for (uint32_t i = 0, frame = 0x100000; i < 1024; i++, frame += 4096)
 		pt_1mb_to_3gb->entry[i] = frame | VMM_PT_ENTRY_PRESENT;
 
 	/*set Page table to page directory*/
-	pdir *dir = (pdir*) pmm_alloc_block();
+	pdir *dir = (pdir*)pmm_alloc_block();
 	if (!dir)
 		return;
 
@@ -110,7 +111,7 @@ void vmm_initialize(){
 	dir->entry[VMM_GET_PD_ENTRY(0xC0000000)] = (pt_entry)pt_1mb_to_3gb | VMM_PT_ENTRY_PRESENT | VMM_PT_ENTRY_WRITABLE;
 
 	/*Set Page Directory Base Address*/
-	vmm_pd_switch (dir);
+	vmm_pd_switch(dir);
 
 	/* paging Enable */
 	vmm_paging_enable(true);
@@ -121,14 +122,14 @@ void vmm_initialize(){
 void vmm_paging_enable(bool b){
 	_asm {
 		mov eax, cr0
-		cmp byte ptr[b],1
-		jnz fal
-		or eax, 0x80000000; Bit 31 (PG) : Enables Memory Paging.
-		jmp set
-	fal:
+			cmp byte ptr[b], 1
+			jnz fal
+			or eax, 0x80000000; Bit 31 (PG) : Enables Memory Paging.
+			jmp set
+		fal :
 		and eax, 0x7FFFFFFF; clear Bit 31 (PG) : Enables Memory Paging.
-	set:
-		mov cr0, eax
+		set :
+			mov cr0, eax
 	}
 }
 
@@ -136,7 +137,7 @@ void vmm_paging_enable(bool b){
 void vmm_load_pdbr(pdir *dir){
 	_asm {
 		mov eax, dword ptr[dir]
-		mov cr3, eax
+			mov cr3, eax
 	}
 }
 
@@ -192,3 +193,43 @@ inline bool vmm_pd_entry_is_4mb(pd_entry e) {
 inline void pd_entry_enable_global(pd_entry e) {
 
 }
+
+
+/**
+* Allocates new page table
+* \param dir Page directory
+* \param virt Virtual address
+* \param flags Page flags
+* \ret Status code
+*/
+int vmmngr_createPageTable(pdir* dir, uint32_t virt, uint32_t flags) {
+
+	pd_entry* pagedir = dir->entry;
+	if (pagedir[virt >> 22] == 0) {
+		void* block = pmm_alloc_block();
+		if (!block)
+			return 0; /* Should call debugger */
+		pagedir[virt >> 22] = ((uint32_t)block) | flags;
+		memset((uint32_t*)pagedir[virt >> 22], 0, 4096);
+
+		/* map page table into directory */
+		vmm_mapPhysicalAddress(dir, (uint32_t)block, (uint32_t)block, flags);
+	}
+	return 1; /* success */
+}
+
+/**
+* Map physical address to virtual
+* \param dir Page directory
+* \param virt Virtual address
+* \param phys Physical address
+* \param flags Page flags
+*/
+void vmm_mapPhysicalAddress(pdir* dir, uint32_t virt, uint32_t phys, uint32_t flags) {
+
+	pd_entry* pagedir = dir->entry;
+	if (pagedir[virt >> 22] == 0)
+		vmmngr_createPageTable(dir, virt, flags);
+	((uint32_t*)(pagedir[virt >> 22] & ~0xfff))[virt << 10 >> 10 >> 12] = phys | flags;
+}
+

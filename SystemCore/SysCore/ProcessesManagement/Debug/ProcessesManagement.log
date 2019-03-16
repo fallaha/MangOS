@@ -1,4 +1,4 @@
-﻿Build started 25/12/1397 08:12:56 ق.ظ.
+﻿Build started 25/12/1397 09:50:48 ق.ظ.
      1>Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\ProcessesManagement\ProcessesManagement.vcxproj" on node 2 (Rebuild target(s)).
      1>ClCompile:
          G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\include\ /Zi /nologo /W4 /WX- /O2 /Oy- /Gm- /EHsc /MD /GS- /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt pm.cpp
@@ -11,4 +11,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:00.62
+Time Elapsed 00:00:00.71

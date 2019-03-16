@@ -1,4 +1,4 @@
-﻿Build started 08/11/1397 12:54:24 ق.ظ.
+﻿Build started 25/12/1397 08:47:39 ق.ظ.
      1>Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\FlopyDisk\FlopyDisk.vcxproj" on node 2 (Rebuild target(s)).
      1>ClCompile:
          G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\Include /Zi /nologo /W4 /WX- /Ox /Oy /D ARCH_X86 /X /Gm- /EHsc /MD /Zp1 /GS- /fp:precise /Zc:wchar_t /Zc:forScope /GR- /FAs /Fa"Debug\\" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt flopy.cpp
@@ -10,4 +10,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.53
+Time Elapsed 00:00:02.22

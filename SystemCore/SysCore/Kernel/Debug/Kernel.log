@@ -1,38 +1,19 @@
-﻿Build started 08/11/1397 12:54:28 ق.ظ.
-     1>Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Kernel\Kernel.vcxproj" on node 3 (Rebuild target(s)).
+﻿Build started 25/12/1397 10:14:54 ق.ظ.
+     1>Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Kernel\Kernel.vcxproj" on node 2 (Build target(s)).
      1>ClCompile:
-         G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\FlopyDisk /I..\Include /I..\keyboard /I..\FileSystem /nologo /W4 /WX- /O2 /Oy /D ARCH_X86 /D _DEBUG /X /GF- /Gm- /MD /Zp1 /GS- /fp:precise /Zc:wchar_t /Zc:forScope /FAs /Fa"Debug\\" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt /Oy DebugDisplay.cpp entry.cpp exception.cpp panic.cpp pmm.cpp vfs.cpp vmm.cpp
-         DebugDisplay.cpp
-         entry.cpp
-     1>entry.cpp(29): warning C4127: conditional expression is constant
-         exception.cpp
-         panic.cpp
-         pmm.cpp
-     1>pmm.cpp(35): warning C4800: 'uint32_t' : forcing value to bool 'true' or 'false' (performance warning)
-     1>pmm.cpp(76): warning C4309: 'argument' : truncation of constant value
-         vfs.cpp
-     1>..\Include\ctype.h(39): warning C4005: 'isascii' : macro redefinition
-                 ..\Include\ctype.h(28) : see previous definition of 'isascii'
-     1>vfs.cpp(50): warning C4100: 'device' : unreferenced formal parameter
-     1>vfs.cpp(58): warning C4100: 'name' : unreferenced formal parameter
-         vmm.cpp
-     1>vmm.cpp(161): warning C4800: 'pt_entry' : forcing value to bool 'true' or 'false' (performance warning)
-     1>vmm.cpp(181): warning C4800: 'pd_entry' : forcing value to bool 'true' or 'false' (performance warning)
-     1>vmm.cpp(185): warning C4800: 'pd_entry' : forcing value to bool 'true' or 'false' (performance warning)
-     1>vmm.cpp(189): warning C4800: 'pd_entry' : forcing value to bool 'true' or 'false' (performance warning)
-     1>vmm.cpp(192): warning C4100: 'e' : unreferenced formal parameter
-         Generating Code...
-     1>c:\users\ali\desktop\mangos\systemcore\syscore\kernel\vfs.cpp(60): warning C4700: uninitialized local variable 'doo' used
-         G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\Include\ /I..\FlopyDisk /I..\Include /I..\keyboard /I..\FileSystem /nologo /W4 /WX- /O2 /Oy /D ARCH_X86 /D _DEBUG /X /GF- /Gm- /MD /Zp1 /GS- /fp:precise /Zc:wchar_t /Zc:forScope /GR- /FAs /Fa"Debug\\" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt /Oy main.cpp
+         G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\Include\ /I..\FlopyDisk /I..\Include /I..\keyboard /I..\FileSystem /I..\ProcessesManagement /nologo /W4 /WX- /O2 /Oy /D ARCH_X86 /D _DEBUG /X /GF- /Gm- /MD /Zp1 /GS- /fp:precise /Zc:wchar_t /Zc:forScope /GR- /FAs /Fa"Debug\\" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt /Oy main.cpp
          main.cpp
-     1>main.cpp(84): warning C4018: '>' : signed/unsigned mismatch
-     1>main.cpp(97): warning C4100: 'max' : unreferenced formal parameter
-       ResourceCompile:
-         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\rc.exe /l"0x0409" /nologo /fo"Debug\Kernel.res" Kernel.rc 
+     1>main.cpp(149): warning C4018: '>' : signed/unsigned mismatch
+     1>main.cpp(163): warning C4100: 'max' : unreferenced formal parameter
+     1>main.cpp(204): warning C4018: '<' : signed/unsigned mismatch
+     1>main.cpp(205): warning C4018: '<' : signed/unsigned mismatch
+     1>main.cpp(214): warning C4127: conditional expression is constant
+     1>main.cpp(230): warning C4127: conditional expression is constant
+     1>main.cpp(246): warning C4127: conditional expression is constant
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(1193,5): warning MSB8012: TargetPath(C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Debug\Kernel.exe) does not match the Linker's OutputFile property value (A:\KRNL32.EXE). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
      1>C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V120\Microsoft.CppBuild.targets(1195,5): warning MSB8012: TargetName(Kernel) does not match the Linker's OutputFile property value (KRNL32). This may cause your project to build incorrectly. To correct this, please make sure that $(OutDir), $(TargetName) and $(TargetExt) property values match the value specified in %(Link.OutputFile).
        Link:
-         G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"A:\KRNL32.EXE" /INCREMENTAL:NO /NOLOGO /LIBPATH:..\Lib\ /LIBPATH:..\Debug\ keyboard.lib flopydisk.lib FileSystem.lib /NODEFAULTLIB /MANIFEST:NO /PDB:"C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Debug\Kernel.pdb" /MAP:"Kernel.map" /SUBSYSTEM:NATIVE /Driver /OPT:REF /OPT:ICF /TLBID:1 /ENTRY:"kernel_entry" /BASE:"0xC0000000" /DYNAMICBASE /FIXED:NO /NXCOMPAT /IMPLIB:"C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Debug\Kernel.lib" /MACHINE:X86 /SAFESEH /ALIGN:512 Debug\Kernel.res
+         G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"A:\KRNL32.EXE" /INCREMENTAL:NO /NOLOGO /LIBPATH:..\Lib\ /LIBPATH:..\Debug\ keyboard.lib flopydisk.lib FileSystem.lib ProcessesManagement.lib /NODEFAULTLIB /MANIFEST:NO /PDB:"C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Debug\Kernel.pdb" /MAP:"Kernel.map" /SUBSYSTEM:NATIVE /Driver /OPT:REF /OPT:ICF /TLBID:1 /ENTRY:"kernel_entry" /BASE:"0xC0000000" /DYNAMICBASE /FIXED:NO /NXCOMPAT /IMPLIB:"C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Debug\Kernel.lib" /MACHINE:X86 /SAFESEH /ALIGN:512 Debug\Kernel.res
          Debug\DebugDisplay.obj
          Debug\entry.obj
          Debug\exception.obj
@@ -44,8 +25,8 @@
          C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Debug\HAL.lib
          C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Debug\Lib.lib
          Kernel.vcxproj -> C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Debug\Kernel.exe
-     1>Done Building Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Kernel\Kernel.vcxproj" (Rebuild target(s)).
+     1>Done Building Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\Kernel\Kernel.vcxproj" (Build target(s)).
 
 Build succeeded.
 
-Time Elapsed 00:00:01.34
+Time Elapsed 00:00:00.96

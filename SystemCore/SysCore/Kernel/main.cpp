@@ -7,6 +7,71 @@
 #include <kbrd.h>
 #include <flopy.h>
 #include <vfs.h>
+#include <pm.h>
+
+/*** BGA Support ****************************************/
+
+/* We'll be needing this. */
+void outportw(unsigned short portid, unsigned short value) {
+	_asm {
+		mov		ax, word ptr[value]
+			mov		dx, word ptr[portid]
+			out		dx, ax
+	}
+}
+
+/* Definitions for BGA. Reference Graphics 1. */
+#define VBE_DISPI_IOPORT_INDEX          0x01CE
+#define VBE_DISPI_IOPORT_DATA           0x01CF
+#define VBE_DISPI_INDEX_XRES            0x1
+#define VBE_DISPI_INDEX_YRES            0x2
+#define VBE_DISPI_INDEX_BPP             0x3
+#define VBE_DISPI_INDEX_ENABLE          0x4
+#define VBE_DISPI_DISABLED              0x00
+#define VBE_DISPI_ENABLED               0x01
+#define VBE_DISPI_LFB_ENABLED           0x40
+
+/* writes to BGA port. */
+void VbeBochsWrite(uint16_t index, uint16_t value) {
+	outportw(VBE_DISPI_IOPORT_INDEX, index);
+	outportw(VBE_DISPI_IOPORT_DATA, value);
+}
+
+/* sets video mode. */
+void VbeBochsSetMode(uint16_t xres, uint16_t yres, uint16_t bpp) {
+	VbeBochsWrite(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_DISABLED);
+	VbeBochsWrite(VBE_DISPI_INDEX_XRES, xres);
+	VbeBochsWrite(VBE_DISPI_INDEX_YRES, yres);
+	VbeBochsWrite(VBE_DISPI_INDEX_BPP, bpp);
+	VbeBochsWrite(VBE_DISPI_INDEX_ENABLE, VBE_DISPI_ENABLED | VBE_DISPI_LFB_ENABLED);
+}
+
+/* video mode info. */
+#define WIDTH           800
+#define HEIGHT          600
+#define BPP             32
+#define BYTES_PER_PIXEL 4
+
+/* BGA LFB is at LFB_PHYSICAL. */
+#define LFB_PHYSICAL 0xE0000000
+#define LFB_VIRTUAL  0x300000
+#define PAGE_SIZE    0x1000
+
+/* map LFB into current process address space. */
+void* VbeBochsMapLFB() {
+	int pfcount = WIDTH*HEIGHT*BYTES_PER_PIXEL / PAGE_SIZE;
+	for (int c = 0; c <= pfcount; c++)
+		vmm_mapPhysicalAddress(vmm_get_cur_dir(), LFB_VIRTUAL + c * PAGE_SIZE, LFB_PHYSICAL + c * PAGE_SIZE, 7);
+	return (void*)LFB_VIRTUAL;
+}
+
+/* clear screen to white. */
+void fillScreen32() {
+	uint32_t* lfb = (uint32_t*)LFB_VIRTUAL;
+	for (uint32_t c = 0; c<WIDTH*HEIGHT; c++)
+		lfb[c] = 0xffffffff;
+}
+
 
 //! format of a memory region
 struct memory_region {
@@ -18,8 +83,8 @@ struct memory_region {
 	uint32_t	acpi_3_0;
 };
 
-int _cdecl kernel_initialize (multiboot_info* info) {
-	uint32_t kernel_img_size;
+uint32_t kernel_img_size;
+void _cdecl kernel_initialize(multiboot_info* info) {
 	_asm mov word ptr[kernel_img_size], dx /*Get Kernel Image Size form Bootloader*/
 	hal_initialize();
 
@@ -50,18 +115,18 @@ int _cdecl kernel_initialize (multiboot_info* info) {
 	unsigned int memory_amount = 1024;
 	memory_amount += info->m_memoryLo;
 	memory_amount += info->m_memoryHi * 64;
-	pmm_initialize(memory_amount,0x100000+kernel_img_size*512);
+	pmm_initialize(memory_amount, 0x100000 + kernel_img_size * 512);
 
 
 	memory_region *mem_mep = (memory_region*)0x1000;
-	DebugGotoXY(0, 3);
+	//DebugGotoXY(0, 3);
 	for (int i = 0; i < 15; i++){
 		if (i>0 && mem_mep[i].startLow == 0)
 			break;
 		if (mem_mep[i].type == 1)	/*We Can Use it region*/
-			 pmm_clr_region(mem_mep[i].startLow, mem_mep[i].sizeLow);
+			pmm_clr_region(mem_mep[i].startLow, mem_mep[i].sizeLow);
 	}
-	pmm_set_region(0x100000,kernel_img_size*512);
+	pmm_set_region(0x100000, kernel_img_size * 512);
 	vmm_initialize();
 
 	//! set drive 0 as current drive
@@ -86,6 +151,7 @@ void sleep(int ms) {
 }
 
 
+
 uint8_t getch(){
 	uint8_t ch;
 	while (kbrd_get_last_std_char() == 0);
@@ -94,13 +160,13 @@ uint8_t getch(){
 	return ch;
 }
 
-void gets (char *s,int max){
-	int i = 0; 
+void gets(char *s, int max){
+	int i = 0;
 	do{
 		s[i] = getch();
 		DebugPutc(s[i++]);
-	} while (s[i-1] != '\r');
-	s[i-1] = 0;
+	} while (s[i - 1] != '\r');
+	s[i - 1] = 0;
 }
 
 int stoi(char *s){
@@ -121,41 +187,108 @@ int stoi(char *s){
 	return n;
 }
 
-int _cdecl main (multiboot_info* info) {
-	kernel_initialize(info);
-	DebugClrScreen(0x1f);
-	DebugGotoXY(0, 0);
 
-	DIRECTORY file;
+#include "..\ProcessesManagement\PCB.h"
+#include "..\HAL\gdt.h"
 
-	/* Only Support Absolute Addressing (e.g. a:/f1/f2/f3/f4/f5/f6.txt/ */
-	/* note: place '/' in last character! */
-	vfs_open_file(&file,"a:/a.txt/");
-	DebugPrintf("%d\t", file.flag);
-	DebugPrintf("%d\t", file.current_cluster);
-	DebugPrintf("%d\t", file.device);
-	DebugPrintf("%d\t", file.eof);
-	DebugPrintf("%d\t", file.first_cluster);
-	DebugPrintf("%d\t", file.length);
-	DebugPrintf("%d\t", file.offset_cluster);
-	DebugPrintf("%s\n", file.name);
-	char buff[1024];
-	vfs_read_file(&file, buff, 18);
-	DebugPrintf("%s\n", buff);
+PROCESS pp1;
 
-	DebugPrintf("%d\t", file.flag);
-	DebugPrintf("%d\t", file.current_cluster);
-	DebugPrintf("%d\t", file.device);
-	DebugPrintf("%d\t", file.eof);
-	DebugPrintf("%d\t", file.first_cluster);
-	DebugPrintf("%d\t", file.length);
-	DebugPrintf("%d\t", file.offset_cluster);
-	DebugPrintf("%s\n", file.name);
-	char buff2[1024];
-	vfs_rewind(&file);
-	vfs_read_file(&file, buff2, 30);
-	DebugPrintf("%s\n", buff2);
-	for (;;);
+
+void p1();
+void p2();
+void p3();
+
+/* render rectangle in 32 bpp modes. */
+void rect32(int x, int y, int w, int h, int col) {
+	uint32_t* lfb = (uint32_t*)LFB_VIRTUAL;
+	for (uint32_t k = 0; k < h; k++)
+		for (uint32_t j = 0; j < w; j++)
+			lfb[(j + x) + (k + y) * WIDTH] = col;
+}
+
+
+/* thread cycles through colors of red. */
+void p1() {
+	int col = 0;
+	bool dir = true;
+	while (1) {
+		rect32(200, 250, 100, 100, col << 16);
+		if (dir) {
+			if (col++ == 0xfe)
+				dir = false;
+		}
+		else
+			if (col-- == 1)
+				dir = true;
+	}
+}
+
+/* thread cycles through colors of green. */
+void p2() {
+	int col = 0;
+	bool dir = true;
+	while (1) {
+		rect32(350, 250, 100, 100, col << 8);
+		if (dir) {
+			if (col++ == 0xfe)
+				dir = false;
+		}
+		else
+			if (col-- == 1)
+				dir = true;
+	}
+}
+
+/* thread cycles through colors of blue. */
+void p3() {
+	int col = 0;
+	bool dir = true;
+	while (1) {
+		rect32(500, 250, 100, 100, col);
+		if (dir) {
+			if (col++ == 0xfe)
+				dir = false;
+		}
+		else
+			if (col-- == 1)
+				dir = true;
+	}
+}
+
+
+__declspec(align(16)) char _kernel_stack[8096];
+
+void _cdecl main(multiboot_info* bootinfo) {
+
+	kernel_initialize(bootinfo);
+
+	/* adjust stack. */
+	_asm lea esp, dword ptr[_kernel_stack + 8096];
+
+
+
+	//DebugClrScreen(0x1f);
+	/* set video mode and map framebuffer. */
+	VbeBochsSetMode(WIDTH, HEIGHT, BPP);
+	VbeBochsMapLFB();
+	fillScreen32();
+
+	create_thread(p1, &pp1.thread[0]);
+	create_thread(p2, &pp1.thread[1]);
+	create_thread(p3, &pp1.thread[2]);
+
+	pp1.thread[0].t_next = &pp1.thread[1];
+	pp1.thread[1].t_next = &pp1.thread[2];
+	pp1.thread[2].t_next = &pp1.thread[0];
+
+	pm_set_current_task(&pp1.thread[0]);
+
+	start_scheduler();
+	_asm cli
+
+	task_exe();
 
 
 }
+
+

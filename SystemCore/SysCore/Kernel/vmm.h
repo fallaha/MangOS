@@ -35,6 +35,8 @@ bool vmm_alloc_frame(pt_entry * pe);
 bool vmm_free_frame(pt_entry * pe);
 void vmm_map_page(void* phys, void* virt);
 void vmm_initialize();
+void vmm_mapPhysicalAddress(pdir* dir, uint32_t virt, uint32_t phys, uint32_t flags);
+int vmmngr_createPageTable(pdir* dir, uint32_t virt, uint32_t flags);
 
 //! sets a flag in the page table entry
 extern void vmm_pd_entry_add_attrib(pd_entry* e, uint32_t attrib);

@@ -42,16 +42,16 @@ _doo$ = -4						; size = 4
 _name$ = 8						; size = 4
 ?vfsOpenSubDir@@YAPAUDIRECTORY@@PAD@Z PROC		; vfsOpenSubDir, COMDAT
 
-; 58   : DIRECTORY* vfsOpenSubDir(char* name){
+; 66   : DIRECTORY* vfsOpenSubDir(char* name){
 
 	push	ecx
 
-; 59   : 	DIRECTORY* doo;
-; 60   : 	return doo;
+; 67   : 	DIRECTORY* doo;
+; 68   : 	return doo;
 
 	mov	eax, DWORD PTR _doo$[esp+4]
 
-; 61   : }
+; 69   : }
 
 	pop	ecx
 	ret	0
@@ -63,11 +63,11 @@ _TEXT	ENDS
 _TEXT	SEGMENT
 ?vfsUnMountFS@@YAHXZ PROC				; vfsUnMountFS, COMDAT
 
-; 55   : 	return 1;
+; 63   : 	return 1;
 
 	mov	eax, 1
 
-; 56   : }
+; 64   : }
 
 	ret	0
 ?vfsUnMountFS@@YAHXZ ENDP				; vfsUnMountFS
@@ -78,11 +78,11 @@ _TEXT	ENDS
 _TEXT	SEGMENT
 ?vfsCloseFile@@YAHXZ PROC				; vfsCloseFile, COMDAT
 
-; 47   : 	return 1;
+; 55   : 	return 1;
 
 	mov	eax, 1
 
-; 48   : }
+; 56   : }
 
 	ret	0
 ?vfsCloseFile@@YAHXZ ENDP				; vfsCloseFile
@@ -93,11 +93,11 @@ _TEXT	ENDS
 _TEXT	SEGMENT
 ?vfsWriteFile@@YAHXZ PROC				; vfsWriteFile, COMDAT
 
-; 43   : 	return 1;
+; 51   : 	return 1;
 
 	mov	eax, 1
 
-; 44   : }
+; 52   : }
 
 	ret	0
 ?vfsWriteFile@@YAHXZ ENDP				; vfsWriteFile
@@ -108,13 +108,13 @@ _TEXT	ENDS
 _TEXT	SEGMENT
 ?fat12_default_device_init@@YAXXZ PROC			; fat12_default_device_init, COMDAT
 
-; 79   : 	BOOT_SECTOR_STRUCT* btsect;
-; 80   : 	btsect = (BOOT_SECTOR_STRUCT*)flpydsk_read_sector(0);
+; 87   : 	BOOT_SECTOR_STRUCT* btsect;
+; 88   : 	btsect = (BOOT_SECTOR_STRUCT*)flpydsk_read_sector(0);
 
 	push	0
 	call	?flpydsk_read_sector@@YAPAEH@Z		; flpydsk_read_sector
 
-; 81   : 	memcpy(&FAT12_FS_DF.bpb, &btsect->bpb, sizeof(FAT12_FS_DF.bpb));
+; 89   : 	memcpy(&FAT12_FS_DF.bpb, &btsect->bpb, sizeof(FAT12_FS_DF.bpb));
 
 	push	33					; 00000021H
 	add	eax, 3
@@ -122,7 +122,7 @@ _TEXT	SEGMENT
 	push	OFFSET ?FAT12_FS_DF@@3UFILE_SYSTEM@@A+8
 	call	?memcpy@@YAPAXPAXPBXI@Z			; memcpy
 
-; 82   : 	memcpy(FAT12_FS_DF.name, "FAT 12", sizeof(FAT12_FS_DF.name));
+; 90   : 	memcpy(FAT12_FS_DF.name, "FAT 12", sizeof(FAT12_FS_DF.name));
 
 	push	8
 	push	OFFSET $SG2820
@@ -130,29 +130,29 @@ _TEXT	SEGMENT
 	call	?memcpy@@YAPAXPAXPBXI@Z			; memcpy
 	add	esp, 28					; 0000001cH
 
-; 83   : 
-; 84   : 	FAT12_FS_DF.Open = fat12_open_file;
+; 91   : 
+; 92   : 	FAT12_FS_DF.Open = fat12_open_file;
 
 	mov	DWORD PTR ?FAT12_FS_DF@@3UFILE_SYSTEM@@A+49, OFFSET ?fat12_open_file@@YAXPAUDIRECTORY@@PBD@Z ; fat12_open_file
 
-; 85   : 	FAT12_FS_DF.Close = fat12_close_file;
+; 93   : 	FAT12_FS_DF.Close = fat12_close_file;
 
 	mov	DWORD PTR ?FAT12_FS_DF@@3UFILE_SYSTEM@@A+61, OFFSET ?fat12_close_file@@YAXPAUDIRECTORY@@@Z ; fat12_close_file
 
-; 86   : 	FAT12_FS_DF.Read = fat12_read_one_sector_file;
+; 94   : 	FAT12_FS_DF.Read = fat12_read_one_sector_file;
 
 	mov	DWORD PTR ?FAT12_FS_DF@@3UFILE_SYSTEM@@A+57, OFFSET ?fat12_read_one_sector_file@@YAXPAUDIRECTORY@@PAE@Z ; fat12_read_one_sector_file
 
-; 87   : 	FAT12_FS_DF.UnMount = fat12_UnMount;
+; 95   : 	FAT12_FS_DF.UnMount = fat12_UnMount;
 
 	mov	DWORD PTR ?FAT12_FS_DF@@3UFILE_SYSTEM@@A+45, OFFSET ?fat12_UnMount@@YAXXZ ; fat12_UnMount
 
-; 88   : 	vfs_mount_fs(&FAT12_FS_DF, 0);
+; 96   : 	vfs_mount_fs(&FAT12_FS_DF, 0);
 
 	mov	DWORD PTR ?FILE_SYSTEMS@@3PAPAUFILE_SYSTEM@@A, OFFSET ?FAT12_FS_DF@@3UFILE_SYSTEM@@A ; FAT12_FS_DF
 
-; 89   : 
-; 90   : }
+; 97   : 
+; 98   : }
 
 	ret	0
 ?fat12_default_device_init@@YAXXZ ENDP			; fat12_default_device_init
@@ -164,17 +164,17 @@ _TEXT	SEGMENT
 _dir$ = 8						; size = 4
 ?vfs_rewind@@YAXPAUDIRECTORY@@@Z PROC			; vfs_rewind, COMDAT
 
-; 23   : 	dir->eof = 0;
+; 31   : 	dir->eof = 0;
 
 	mov	ecx, DWORD PTR _dir$[esp-4]
 
-; 24   : 	dir->current_cluster = dir->first_cluster;
+; 32   : 	dir->current_cluster = dir->first_cluster;
 
 	mov	eax, DWORD PTR [ecx+8]
 	mov	DWORD PTR [ecx+16], 0
 	mov	DWORD PTR [ecx+12], eax
 
-; 25   : }
+; 33   : }
 
 	ret	0
 ?vfs_rewind@@YAXPAUDIRECTORY@@@Z ENDP			; vfs_rewind
@@ -186,12 +186,12 @@ _TEXT	SEGMENT
 _device$ = 8						; size = 4
 ?vfs_get_device_name@@YAPADH@Z PROC			; vfs_get_device_name, COMDAT
 
-; 70   : 	return FILE_SYSTEMS[device]->name;
+; 78   : 	return FILE_SYSTEMS[device]->name;
 
 	mov	eax, DWORD PTR _device$[esp-4]
 	mov	eax, DWORD PTR ?FILE_SYSTEMS@@3PAPAUFILE_SYSTEM@@A[eax*4]
 
-; 71   : }
+; 79   : }
 
 	ret	0
 ?vfs_get_device_name@@YAPADH@Z ENDP			; vfs_get_device_name
@@ -204,12 +204,12 @@ _pfs$ = 8						; size = 4
 _device$ = 12						; size = 1
 ?vfs_mount_fs@@YAXPAUFILE_SYSTEM@@D@Z PROC		; vfs_mount_fs, COMDAT
 
-; 51   : 	FILE_SYSTEMS[0] = pfs;
+; 59   : 	FILE_SYSTEMS[0] = pfs;
 
 	mov	eax, DWORD PTR _pfs$[esp-4]
 	mov	DWORD PTR ?FILE_SYSTEMS@@3PAPAUFILE_SYSTEM@@A, eax
 
-; 52   : }
+; 60   : }
 
 	ret	0
 ?vfs_mount_fs@@YAXPAUFILE_SYSTEM@@D@Z ENDP		; vfs_mount_fs
@@ -224,20 +224,20 @@ _buffer$ = 12						; size = 4
 _size$ = 16						; size = 4
 ?vfs_read_file@@YAXPAUDIRECTORY@@PADH@Z PROC		; vfs_read_file, COMDAT
 
-; 27   : void vfs_read_file(DIRECTORY* dir, char* buffer,int size){
+; 35   : void vfs_read_file(DIRECTORY* dir, char* buffer,int size){
 
 	sub	esp, 512				; 00000200H
 	push	esi
 
-; 29   : 	char sector[512];
-; 30   : 	
-; 31   : 	while (size > 0 && !dir->eof){
+; 37   : 	char sector[512];
+; 38   : 	
+; 39   : 	while (size > 0 && !dir->eof){
 
 	mov	esi, DWORD PTR _size$[esp+512]
 	test	esi, esi
 	jle	SHORT $LN11@vfs_read_f
 
-; 28   : 	int i = 0;
+; 36   : 	int i = 0;
 
 	push	ebx
 	mov	ebx, DWORD PTR _dir$[esp+516]
@@ -245,14 +245,14 @@ _size$ = 16						; size = 4
 	mov	edi, DWORD PTR _buffer$[esp+520]
 $LL4@vfs_read_f:
 
-; 29   : 	char sector[512];
-; 30   : 	
-; 31   : 	while (size > 0 && !dir->eof){
+; 37   : 	char sector[512];
+; 38   : 	
+; 39   : 	while (size > 0 && !dir->eof){
 
 	cmp	DWORD PTR [ebx+16], 0
 	jne	SHORT $LN12@vfs_read_f
 
-; 32   : 		FILE_SYSTEMS[dir->device]->Read(dir, (unsigned char *)sector);
+; 40   : 		FILE_SYSTEMS[dir->device]->Read(dir, (unsigned char *)sector);
 
 	movzx	eax, BYTE PTR [ebx+24]
 	lea	ecx, DWORD PTR _sector$[esp+524]
@@ -263,23 +263,23 @@ $LL4@vfs_read_f:
 	call	eax
 	add	esp, 8
 
-; 33   : 		if (size<512)
+; 41   : 		if (size<512)
 
 	cmp	esi, 512				; 00000200H
 	jge	SHORT $LN2@vfs_read_f
 
-; 34   : 			memcpy(buffer + i * 512, sector, size%512);
+; 42   : 			memcpy(buffer + i * 512, sector, size%512);
 
 	mov	eax, esi
 	and	eax, 511				; 000001ffH
 	push	eax
 
-; 35   : 		else
+; 43   : 		else
 
 	jmp	SHORT $LN14@vfs_read_f
 $LN2@vfs_read_f:
 
-; 36   : 			memcpy(buffer+i*512, sector, 512);
+; 44   : 			memcpy(buffer+i*512, sector, 512);
 
 	push	512					; 00000200H
 $LN14@vfs_read_f:
@@ -288,8 +288,8 @@ $LN14@vfs_read_f:
 	push	edi
 	call	?memcpy@@YAPAXPAXPBXI@Z			; memcpy
 
-; 37   : 		i ++;
-; 38   : 		size -= 512;
+; 45   : 		i ++;
+; 46   : 		size -= 512;
 
 	sub	esi, 512				; 00000200H
 	add	esp, 12					; 0000000cH
@@ -302,8 +302,8 @@ $LN12@vfs_read_f:
 $LN11@vfs_read_f:
 	pop	esi
 
-; 39   : 	}
-; 40   : }
+; 47   : 	}
+; 48   : }
 
 	add	esp, 512				; 00000200H
 	ret	0
@@ -317,15 +317,15 @@ _file$ = 8						; size = 4
 _path$ = 12						; size = 4
 ?vfs_open_file@@YAXPAUDIRECTORY@@PBD@Z PROC		; vfs_open_file, COMDAT
 
-; 11   : 	char device = 0; /* a */
-; 12   : 	if (path){
+; 16   : 	char device = 0; /* a */
+; 17   : 	if (path){
 
 	mov	eax, DWORD PTR _path$[esp-4]
 	test	eax, eax
 	je	SHORT $LN1@vfs_open_f
 
-; 13   : 		
-; 14   : 		FILE_SYSTEMS[device]->Open(file,path);
+; 18   : 		
+; 19   : 		FILE_SYSTEMS[device]->Open(file,path);
 
 	mov	DWORD PTR _path$[esp-4], eax
 	mov	eax, DWORD PTR ?FILE_SYSTEMS@@3PAPAUFILE_SYSTEM@@A
@@ -333,16 +333,16 @@ _path$ = 12						; size = 4
 	jmp	eax
 $LN1@vfs_open_f:
 
-; 15   : 		return ;
-; 16   : 	}
-; 17   : 
-; 18   : 	file->flag = 5;
+; 20   : 		return ;
+; 21   : 	}
+; 22   : 
+; 23   : 	file->flag = 5;
 
 	mov	eax, DWORD PTR _file$[esp-4]
 	mov	DWORD PTR [eax+20], 5
 
-; 19   : 	return ;
-; 20   : }
+; 24   : 	return ;
+; 25   : }
 
 	ret	0
 ?vfs_open_file@@YAXPAUDIRECTORY@@PBD@Z ENDP		; vfs_open_file
@@ -353,7 +353,7 @@ _TEXT	ENDS
 _TEXT	SEGMENT
 ?vfs_initialize@@YAXXZ PROC				; vfs_initialize, COMDAT
 
-; 64   : 	fat12_default_device_init();
+; 72   : 	fat12_default_device_init();
 
 	jmp	?fat12_default_device_init@@YAXXZ	; fat12_default_device_init
 ?vfs_initialize@@YAXXZ ENDP				; vfs_initialize

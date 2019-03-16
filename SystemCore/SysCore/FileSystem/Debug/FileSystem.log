@@ -1,4 +1,4 @@
-﻿Build started 08/11/1397 12:54:27 ق.ظ.
+﻿Build started 25/12/1397 08:47:41 ق.ظ.
      1>Project "C:\Users\Ali\Desktop\MangOS\SystemCore\SysCore\FileSystem\FileSystem.vcxproj" on node 2 (Rebuild target(s)).
      1>ClCompile:
          G:\Program Files (x86)\Microsoft Visual Studio 12.0\VC\bin\CL.exe /c /I..\FlopyDisk /I..\Include /I..\Kernel /Zi /nologo /W1 /WX- /O2 /Oy- /Gm- /EHsc /MD /GS- /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt fat12.cpp
@@ -13,4 +13,4 @@
 
 Build succeeded.
 
-Time Elapsed 00:00:01.17
+Time Elapsed 00:00:01.04
