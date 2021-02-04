@@ -1,5 +1,5 @@
 # MangOS
-Light Operating System! (with GUI)
+Light Operating System! (Not Yet Compeleted)
 ##for more information
 click here
 Change Ok!
